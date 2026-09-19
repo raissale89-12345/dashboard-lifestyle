@@ -6,19 +6,17 @@
     <title>Dashboard Integral - Lifestyle MPT</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- PapaParse para leer Google Sheets en vivo -->
+    <!-- PapaParse -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        // COLORES OFICIALES MALLPLAZA (Basados en tu imagen)
                         mallplaza: '#E3004F', // Magenta principal
                         plum: '#4A154B',      // Morado/Ciruela oscuro
                         crimson: '#D32F4C',   // Rojo carmesí
-                        lightpink: '#F0B3F0', // Rosa claro / Lavanda
-                        bglight: '#FFFFFF'    // Blanco puro
+                        lightpink: '#F0B3F0', // Rosa claro
                     }
                 }
             }
@@ -26,52 +24,62 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #FFFFFF; color: #1e293b; }
+        /* Fondo de la página entero un poco gris para que resalten las burbujas blancas */
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         
         #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: opacity 0.5s ease; }
         .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #E3004F; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        /* Estilo Burbuja para cada sección */
+        .burbuja-seccion { background-color: #ffffff; padding: 24px; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 32px; }
+        @media (min-width: 768px) { .burbuja-seccion { padding: 32px; } }
+
+        .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .map-bg { width: 100%; height: auto; display: block; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
         .store-polygon { fill: rgba(227, 0, 79, 0.05); stroke: transparent; stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
         .store-polygon:hover { fill: rgba(240, 179, 240, 0.5); stroke: #F0B3F0; }
         .store-polygon.selected { fill: rgba(227, 0, 79, 0.2); stroke: #E3004F; stroke-width: 4px; }
-        
-        /* Estilo para los nombres sobre el mapa */
-        .svg-text-label { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 800; fill: #4A154B; paint-order: stroke; stroke: #ffffff; stroke-width: 3.5px; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; text-transform: uppercase; }
 
-        .info-panel { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.98); padding: 20px; border: 2px solid #F0B3F0; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15); width: calc(100% - 40px); max-width: 340px; z-index: 20; display: none; backdrop-filter: blur(8px); }
-        .progress-bar-container { display: flex; align-items: center; margin-bottom: 12px; }
-        .progress-label { width: 140px; font-size: 11px; font-weight: 700; color: #4A154B; }
-        .progress-track { flex-grow: 1; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; margin: 0 10px; }
+        /* Popup Rediseñado: Más fino y sutil */
+        .info-panel { position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.97); padding: 16px; border: 1px solid #F0B3F0; border-radius: 12px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); width: calc(100% - 30px); max-width: 300px; z-index: 20; display: none; backdrop-filter: blur(8px); }
+        .progress-bar-container { display: flex; align-items: center; margin-bottom: 10px; }
+        .progress-label { width: 130px; font-size: 9px; font-weight: 700; color: #4A154B; letter-spacing: 0.5px; }
+        .progress-track { flex-grow: 1; height: 6px; background: #f1f5f9; border-radius: 4px; overflow: hidden; margin: 0 8px; }
+        /* Efecto Degradé en Barras */
         .progress-fill { height: 100%; transition: width 0.6s ease; }
-        .progress-text { width: 35px; font-size: 11px; font-weight: 800; text-align: right; color: #E3004F; }
-
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);}
-        table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 0.8rem; }
-        th { background-color: #4A154B; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; transition: background-color 0.2s; }
-        th:hover { background-color: #6a1e6b; }
-        .filter-row th { background-color: #f8fafc; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; cursor: default; }
-        .filter-row th:hover { background-color: #f8fafc; }
-        .filter-input { width: 100%; text-align: left; font-size: 0.75rem; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 400; color: #334155; outline: none; }
-        .filter-input:focus { border-color: #E3004F; box-shadow: 0 0 0 1px #E3004F; }
-        td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; vertical-align: middle; }
-        tr:hover { background-color: #fff1f2; } /* Hover rosado claro */
+        #bar-pc { background: linear-gradient(90deg, #E3004F 0%, rgba(227,0,79,0.3) 100%); }
+        #bar-implem { background: linear-gradient(90deg, #4A154B 0%, rgba(74,21,75,0.3) 100%); }
         
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
+        .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; color: #E3004F; }
+
+        /* Configuración de Tablas con Scroll para mostrar ~9 filas */
+        .table-wrapper { width: 100%; max-height: 480px; overflow-y: auto; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 0.75rem; }
+        /* Congelar los títulos arriba al hacer scroll */
+        thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
+        thead tr:first-child th:hover { background-color: #6a1e6b; }
+        thead tr.filter-row th { position: sticky; top: 43px; z-index: 19; background-color: #f8fafc; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; }
+        
+        .filter-input { width: 100%; text-align: left; font-size: 0.7rem; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 400; color: #334155; outline: none; }
+        .filter-input:focus { border-color: #E3004F; box-shadow: 0 0 0 1px #E3004F; }
+        td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; vertical-align: middle; }
+        tr:hover { background-color: #fff1f2; }
+        
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; }
         .badge-ok { background-color: #d1fae5; color: #047857; }
         .badge-alert { background-color: #fee2e2; color: #b91c1c; }
         .badge-warn { background-color: #fef3c7; color: #b45309; }
         .badge-neutral { background-color: #e2e8f0; color: #475569; }
         
-        .section-title { color: #4A154B; border-bottom: 3px solid #E3004F; padding-bottom: 8px; margin-bottom: 20px; font-weight: 800; font-size: 1.35rem; display: inline-block;}
-        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 18px; font-weight: 800; font-size: 1.25rem; display: inline-block; position: relative;}
+        .section-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 4px; background-color: #E3004F; border-radius: 2px; }
+        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 0.65rem; text-decoration: none; transition: all 0.2s; cursor: pointer; }
         .btn-mail:hover { background-color: #E3004F; color: #fff; }
     </style>
 </head>
-<body class="p-4 md:p-8 max-w-[1600px] mx-auto space-y-12">
+<body class="p-4 md:p-8 max-w-[1600px] mx-auto">
 
     <!-- PANTALLA DE CARGA -->
     <div id="loading-screen">
@@ -80,7 +88,8 @@
         <p class="text-sm text-slate-500 mt-2">Conectando en vivo con Google Sheets</p>
     </div>
 
-    <header class="flex flex-col md:flex-row md:justify-between md:items-end border-b-2 border-slate-100 pb-4 gap-3">
+    <!-- CABECERA DE LA PÁGINA -->
+    <header class="flex flex-col md:flex-row md:justify-between md:items-end pb-6 mb-6 gap-3">
         <div>
             <h1 class="text-3xl md:text-4xl font-black text-mallplaza tracking-tight">Lifestyle Mallplaza Trujillo</h1>
             <p class="text-slate-500 text-xs md:text-sm mt-1 font-semibold uppercase tracking-widest">Tablero de Control Integrado</p>
@@ -91,36 +100,36 @@
         </div>
     </header>
 
-    <!-- SECCIÓN 1: AVANCE GENERAL -->
-    <section id="sec-1">
+    <!-- BURBUJA 1: AVANCE GENERAL Y MAPA -->
+    <section id="sec-1" class="burbuja-seccion">
         <h2 class="section-title">1. Avance General</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 md:gap-4 mb-8">
-            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
-                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-4xl font-black text-plum mt-1" id="kpi-loc-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-[10px] font-bold text-slate-500"><span>Con contrato: <strong class="text-slate-800 text-xs" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza text-xs" id="kpi-loc-vacancy">0</strong></span></div>
+            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-4xl font-black text-plum mt-1" id="kpi-loc-tot">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con contrato: <strong class="text-slate-800 text-[10px]" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza text-[10px]" id="kpi-loc-vacancy">0</strong></span></div>
             </div>
-            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
-                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-4xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-[10px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800 text-xs" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson text-xs" id="kpi-mod-vacancy">0</strong></span></div>
+            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-4xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800 text-[10px]" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson text-[10px]" id="kpi-mod-vacancy">0</strong></span></div>
             </div>
-            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
-                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
-                <div class="grid grid-cols-2 gap-x-2 gap-y-1 pt-3 mt-2 border-t border-slate-100 text-[9px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span>Terminados: <strong class="text-slate-800" id="kpi-pc-term">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
+            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
+                <div class="grid grid-cols-2 gap-x-2 gap-y-1 pt-3 mt-2 border-t border-slate-200 text-[8px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span>Terminados: <strong class="text-slate-800" id="kpi-pc-term">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
             </div>
-            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
-                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Estatus HDL</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-hdl-tot">0</p></div>
-                <div class="grid grid-cols-1 gap-y-1 pt-3 mt-2 border-t border-slate-100 text-[10px] font-bold text-slate-500">
+            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Estatus HDL</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-hdl-tot">0</p></div>
+                <div class="grid grid-cols-1 gap-y-1 pt-3 mt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500">
                     <div class="flex justify-between"><span>Entregas Coordinadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
                     <div class="flex justify-between text-mallplaza"><span>Locales Entregados:</span> <strong class="text-mallplaza" id="kpi-hdl-ent-reales">0</strong></div>
                 </div>
             </div>
             <div class="p-5 bg-plum text-white rounded-xl shadow-md flex flex-col justify-between transform transition hover:-translate-y-1">
-                <div><p class="text-[10px] font-extrabold text-lightpink uppercase tracking-wider">En Obra (Implem.)</p><p class="text-4xl font-black text-white mt-1" id="kpi-obra-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[10px] font-bold text-white/90"><span>Locales: <strong class="text-white text-xs" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white text-xs" id="kpi-obra-mod">0</strong></span></div>
+                <div><p class="text-[9px] font-extrabold text-lightpink uppercase tracking-wider">En Obra (Implem.)</p><p class="text-4xl font-black text-white mt-1" id="kpi-obra-tot">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[9px] font-bold text-white/90"><span>Locales: <strong class="text-white text-[10px]" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white text-[10px]" id="kpi-obra-mod">0</strong></span></div>
             </div>
             <div class="p-5 bg-mallplaza text-white rounded-xl shadow-md flex flex-col justify-between transform transition hover:-translate-y-1">
-                <div><p class="text-[10px] font-extrabold text-pink-200 uppercase tracking-wider">Aperturas</p><p class="text-4xl font-black text-white mt-1" id="kpi-aperturas">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[10px] font-bold text-pink-100"><span>Total Aperturados a la fecha</span></div>
+                <div><p class="text-[9px] font-extrabold text-pink-200 uppercase tracking-wider">Aperturas</p><p class="text-4xl font-black text-white mt-1" id="kpi-aperturas">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[9px] font-bold text-pink-100"><span>Total Aperturados a la fecha</span></div>
             </div>
         </div>
 
@@ -128,7 +137,7 @@
         <div class="map-container">
             <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
             <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none" id="svg-map">
-                <!-- Polígonos originales -->
+                <!-- Polígonos de locales -->
                 <polygon class="store-polygon" data-store="capriccio" points="3459,660 3455,844 3295,812 3295,664" />
                 <polygon class="store-polygon" data-store="fridays" points="3451,840 3475,848 3690,788 3714,652 3499,652 3463,660" />
                 <polygon class="store-polygon" data-store="pardos" points="3088,1083 3092,928 3299,876 3299,1095" />
@@ -179,55 +188,55 @@
 
             <!-- CUADRO EMERGENTE POPUP -->
             <div class="info-panel" id="info-panel">
-                <div class="flex justify-between items-start mb-5 border-b border-slate-100 pb-3">
-                    <h2 id="store-name" class="text-xl font-black text-plum">NOMBRE LOCAL</h2>
-                    <button id="close-panel" class="text-slate-400 hover:text-mallplaza font-bold text-2xl leading-none">&times;</button>
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-pink-100">
+                    <h2 id="store-name" class="text-lg font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
+                    <button id="close-panel" class="text-slate-400 hover:text-mallplaza font-bold text-xl leading-none">&times;</button>
                 </div>
                 
                 <div class="progress-bar-container">
                     <div class="progress-label">AVANCE OBRA P&C</div>
-                    <div class="progress-track"><div id="bar-pc" class="progress-fill" style="background-color: #E3004F; width: 0%;"></div></div>
+                    <div class="progress-track"><div id="bar-pc" class="progress-fill" style="width: 0%;"></div></div>
                     <div id="text-pc" class="progress-text text-mallplaza">0%</div>
                 </div>
                 
-                <div class="mb-3 text-[11px]">
+                <div class="mb-2 text-[9px]">
                     <span class="font-bold text-plum">HDL - ESTATUS PROYECTO:</span>
                     <span id="text-hdl" class="ml-1 text-slate-700 font-medium">Pendiente</span>
                 </div>
                 
-                <div class="mb-3 text-[11px]">
+                <div class="mb-2 text-[9px]">
                     <span class="font-bold text-plum">FECHA PACTADA ENTREGA LOCAL:</span>
                     <span id="text-fecha-pactada" class="ml-1 text-slate-700 font-medium">-</span>
                 </div>
                 
-                <div class="mb-4 text-[11px] pb-3 border-b border-slate-100">
-                    <span class="font-bold text-plum">RECEPCIONADO (SI/NO):</span>
+                <div class="mb-3 text-[9px] pb-2 border-b border-pink-100">
+                    <span class="font-bold text-plum">LOCAL RECEPCIONADO (SI/NO):</span>
                     <span id="text-recepcionado" class="ml-1 font-bold text-mallplaza">-</span>
                 </div>
                 
                 <div class="progress-bar-container">
                     <div class="progress-label">IMPLEMENTACIÓN</div>
-                    <div class="progress-track"><div id="bar-implem" class="progress-fill" style="background-color: #4A154B; width: 0%;"></div></div>
+                    <div class="progress-track"><div id="bar-implem" class="progress-fill" style="width: 0%;"></div></div>
                     <div id="text-implem" class="progress-text text-plum">0%</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN 2: ENTREGAS P&C -->
-    <section id="sec-2">
+    <!-- BURBUJA 2: ENTREGAS P&C -->
+    <section id="sec-2" class="burbuja-seccion">
         <h2 class="section-title">2. Seguimiento de Entregas (P&C a Operaciones)</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Coordinados</p>
                 <p class="text-2xl font-black text-plum" id="kpi-sec2-coord">0</p>
             </div>
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Entregados</p>
                 <p class="text-2xl font-black text-emerald-600" id="kpi-sec2-ent">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm table-wrapper">
+        <div class="table-wrapper">
             <table id="table-sec2">
                 <thead>
                     <tr>
@@ -260,23 +269,23 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 3: HABILITACIONES -->
-    <section id="sec-3">
+    <!-- BURBUJA 3: HABILITACIONES -->
+    <section id="sec-3" class="burbuja-seccion">
         <h2 class="section-title">3. Detalle Habilitaciones y Revisiones</h2>
         <div class="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Rev. Arq</p>
                 <p class="text-xl font-black text-plum" id="kpi-rev-arq">0</p>
             </div>
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Rev. Esp</p>
                 <p class="text-xl font-black text-plum" id="kpi-rev-esp">0</p>
             </div>
-            <div class="p-3 bg-teal-50 border border-teal-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-teal-50 border border-teal-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-teal-700 uppercase">Aprobados</p>
                 <p class="text-xl font-black text-teal-800" id="kpi-aprob-hdl">0</p>
             </div>
-            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Con Permiso<br>(Sin Ingreso)</p>
                 <p class="text-xl font-black text-emerald-800" id="kpi-permiso">0</p>
             </div>
@@ -284,12 +293,12 @@
                 <p class="text-[9px] font-bold text-lightpink uppercase">En Obra</p>
                 <p class="text-xl font-black text-white" id="kpi-enobra-hdl">0</p>
             </div>
-            <div class="p-3 bg-red-50 border border-red-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-red-400 uppercase">Sin Proyecto</p>
                 <p class="text-xl font-black text-crimson" id="kpi-sin-proy">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm table-wrapper">
+        <div class="table-wrapper">
             <table id="table-sec3">
                 <thead>
                     <tr>
@@ -322,24 +331,24 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 4: SOLICITUDES DE ACOMETIDAS -->
-    <section id="sec-4">
+    <!-- BURBUJA 4: ACOMETIDAS -->
+    <section id="sec-4" class="burbuja-seccion">
         <h2 class="section-title">4. Solicitudes de Cambios de Acometidas</h2>
         <div class="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Solicitudes Totales</p>
                 <p class="text-2xl font-black text-slate-800" id="kpi-sec4-tot">0</p>
             </div>
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center border-b-4 border-plum">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-plum">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Pendientes</p>
                 <p class="text-2xl font-black text-plum" id="kpi-sec4-pend">0</p>
             </div>
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center border-b-4 border-emerald-500">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Atendidas</p>
                 <p class="text-2xl font-black text-emerald-600" id="kpi-sec4-aten">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm table-wrapper">
+        <div class="table-wrapper">
             <table id="table-sec4">
                 <thead>
                     <tr>
@@ -374,32 +383,32 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 5: DOCUMENTACIÓN DE INGRESO -->
-    <section id="sec-5">
+    <!-- BURBUJA 5: DOCUMENTACIÓN -->
+    <section id="sec-5" class="burbuja-seccion">
         <h2 class="section-title">5. Documentación de Ingreso a Obra</h2>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales que<br>Ingresaron Doc.</p>
                 <p class="text-xl font-black text-slate-800" id="kpi-sec5-ing">0</p>
             </div>
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes<br>de Revisión</p>
                 <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
             </div>
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En<br>Revisión</p>
                 <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
             </div>
-            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Estatus<br>Aprobado</p>
                 <p class="text-xl font-black text-emerald-800" id="kpi-sec5-apr">0</p>
             </div>
-            <div class="p-3 bg-red-50 border border-red-200 rounded-lg shadow-sm text-center">
+            <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Estatus<br>Observado</p>
                 <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm table-wrapper">
+        <div class="table-wrapper">
             <table id="table-sec5">
                 <thead>
                     <tr>
@@ -426,10 +435,10 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 6: DIRECTORIO DE CONTACTOS -->
-    <section id="sec-6">
+    <!-- BURBUJA 6: CONTACTOS -->
+    <section id="sec-6" class="burbuja-seccion">
         <h2 class="section-title">6. Directorio de Contactos Clave</h2>
-        <div class="bg-white rounded-xl shadow-sm table-wrapper">
+        <div class="table-wrapper">
             <table id="table-sec6">
                 <thead>
                     <tr>
@@ -454,9 +463,8 @@
         </div>
     </section>
 
-    <!-- LÓGICA JAVASCRIPT: CONEXIÓN EN VIVO DIRECTA -->
     <script>
-        // TUS ENLACES REALES AUTOMÁTICOS
+        // ENLACES EN VIVO
         const cacheBuster = `&_=${new Date().getTime()}`;
         const LINK_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=5692487&single=true&output=csv' + cacheBuster;
         const LINK_ACO  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=18642517&single=true&output=csv' + cacheBuster;
@@ -468,9 +476,7 @@
         function fetchCSV(url) {
             return new Promise((resolve, reject) => {
                 Papa.parse(url, {
-                    download: true,
-                    header: true,
-                    skipEmptyLines: true,
+                    download: true, header: true, skipEmptyLines: true,
                     complete: function(results) { resolve(results.data); },
                     error: function(err) { console.error("Error PapaParse:", err); reject(err); }
                 });
@@ -478,36 +484,6 @@
         }
 
         window.onload = function() {
-            // Algoritmo para poner nombres encima de los polígonos automáticamente
-            const svgOverlay = document.getElementById('svg-map');
-            const polygons = document.querySelectorAll('.store-polygon');
-            polygons.forEach(polygon => {
-                const points = polygon.getAttribute('points').split(' ').filter(p => p.trim() !== '').map(p => p.split(',').map(Number));
-                if(points.length > 0) {
-                    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-                    points.forEach(([x, y]) => {
-                        if(x < minX) minX = x; if(x > maxX) maxX = x;
-                        if(y < minY) minY = y; if(y > maxY) maxY = y;
-                    });
-                    const cx = (minX + maxX) / 2;
-                    const cy = (minY + maxY) / 2;
-                    
-                    const textNode = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    textNode.setAttribute("x", cx);
-                    textNode.setAttribute("y", cy);
-                    textNode.setAttribute("text-anchor", "middle");
-                    textNode.setAttribute("dominant-baseline", "middle");
-                    textNode.setAttribute("class", "svg-text-label");
-                    
-                    let rawName = polygon.getAttribute('data-store');
-                    if(!rawName.toLowerCase().includes('vacancy')) {
-                        textNode.textContent = rawName.replace(/-/g, ' ');
-                        svgOverlay.appendChild(textNode);
-                    }
-                }
-            });
-
-            // Descarga de datos
             Promise.all([
                 fetchCSV(LINK_BASE),
                 fetchCSV(LINK_DOC),
@@ -619,7 +595,6 @@
                 let estHdl = safeString(row['Estatus general']) || '-'; 
                 let estPc = safeString(row['Estatus']) || '-';
                 
-                // Variable que busca si está recepcionado
                 let recepcionadoStatus = safeString(row['Entregado']) || safeString(row['Recepcionado']) || safeString(row['Recepción Final']) || '-';
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
                 else if(recepcionadoStatus !== '-') recepcionadoStatus = 'NO';
@@ -638,7 +613,7 @@
                 if(tipo.toLowerCase() === 'local') { locTot++; if(isVacancy) locVacancy++; else locContrato++; } 
                 else { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
 
-                // NUEVA LÓGICA OBRA P&C (Si tiene % mayor a 0, está en ejecución)
+                // Lógica de P&C con el %
                 let estPcLower = estPc.toLowerCase();
                 if(avancePc > 0 && avancePc < 100) pcEjec++;
                 else if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
@@ -646,7 +621,6 @@
                 if(estPcLower.includes('observado')) pcObs++; 
                 if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) pcEnt++;
 
-                // NUEVA LÓGICA ESTATUS HDL
                 let estHdlLower = estHdl.toLowerCase();
                 if(estHdlLower.includes('revisión') || estHdlLower.includes('revision')) hdlRev++; 
                 if(estHdlLower.includes('aprobado')) { hdlApr++; totAprobHdl++; }
@@ -656,7 +630,6 @@
                 if(estHdlLower.includes('en obra')) { totEnObraHdl++; if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; }
                 if(estHdlLower.includes('sin proyecto')) totSinProy++;
                 
-                // Conteo locales entregados reales
                 if(recepcionadoStatus === 'SÍ') localesEntregados++;
 
                 let alertaArq = safeString(row['Estatus Arquitectura']);
@@ -684,7 +657,7 @@
                     let tr2 = document.createElement('tr');
                     let btnUpload = `<span class="cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[10px] rounded border border-slate-300">📎 Subir</span>`;
                     let badgeEstatusPc = estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (estPcLower.includes('entregado') || estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${estPc}</span>`);
-                    tr2.innerHTML = `<td class="font-bold text-plum">${marca}</td><td><div class="flex items-center gap-2"><div class="w-20 h-2 bg-slate-200 rounded"><div class="h-full bg-mallplaza" style="width: ${avancePc}%"></div></div><span class="text-xs font-bold">${avancePc}%</span></div></td><td class="text-xs">${printDate(fecComp)}</td><td class="text-xs font-bold">${printDate(fecReal)}</td><td>${calcDelay(fecComp, fecReal)}</td><td>${btnUpload}</td><td>${badgeEstatusPc}</td><td class="text-xs">${printDate(row['Fecha compromiso de Lev. Observ.'])}</td><td class="text-xs font-bold">${printDate(row['Recepción Final'])}</td><td>${btnUpload}</td>`;
+                    tr2.innerHTML = `<td class="font-bold text-plum">${marca}</td><td><div class="flex items-center gap-2"><div class="w-20 h-2 bg-slate-200 rounded"><div class="h-full" style="background: linear-gradient(90deg, #E3004F 0%, rgba(227,0,79,0.3) 100%); width: ${avancePc}%"></div></div><span class="text-xs font-bold">${avancePc}%</span></div></td><td class="text-xs">${printDate(fecComp)}</td><td class="text-xs font-bold">${printDate(fecReal)}</td><td>${calcDelay(fecComp, fecReal)}</td><td>${btnUpload}</td><td>${badgeEstatusPc}</td><td class="text-xs">${printDate(row['Fecha compromiso de Lev. Observ.'])}</td><td class="text-xs font-bold">${printDate(row['Recepción Final'])}</td><td>${btnUpload}</td>`;
                     t2.appendChild(tr2);
 
                     let tr3 = document.createElement('tr');
@@ -720,7 +693,6 @@
             document.getElementById('kpi-sec2-coord').innerText = s2_coord; document.getElementById('kpi-sec2-ent').innerText = s2_ent;
             document.getElementById('kpi-sec5-ing').innerText = s5_ing; document.getElementById('kpi-sec5-pend').innerText = s5_pend; document.getElementById('kpi-sec5-rev').innerText = s5_rev; document.getElementById('kpi-sec5-apr').innerText = s5_apr; document.getElementById('kpi-sec5-obs').innerText = s5_obs;
             
-            // Nuevos de HDL
             document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
             document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
         }
@@ -769,7 +741,7 @@
             });
         }
 
-        // INTERACCIÓN MAPA CON POPUP NUEVO
+        // INTERACCIÓN MAPA
         const polygons = document.querySelectorAll('.store-polygon');
         const infoPanel = document.getElementById('info-panel');
         polygons.forEach(polygon => {
