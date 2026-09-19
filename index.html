@@ -13,9 +13,12 @@
             theme: {
                 extend: {
                     colors: {
-                        mallplaza: '#E9004B', sunrays: '#F8D4A2', tearose: '#E0AFAA',
-                        morningmist: '#B1BEB7', canyonsunset: '#E0927B', lilypad: '#5D7A78',
-                        brass: '#D09E57', bglight: '#FFFCF9'
+                        // COLORES OFICIALES MALLPLAZA (Basados en tu imagen)
+                        mallplaza: '#E3004F', // Magenta principal
+                        plum: '#4A154B',      // Morado/Ciruela oscuro
+                        crimson: '#D32F4C',   // Rojo carmesí
+                        lightpink: '#F0B3F0', // Rosa claro / Lavanda
+                        bglight: '#FFFFFF'    // Blanco puro
                     }
                 }
             }
@@ -23,37 +26,39 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #FFFCF9; color: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background-color: #FFFFFF; color: #1e293b; }
         
         #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: opacity 0.5s ease; }
-        .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #E9004B; border-radius: 50%; animation: spin 1s linear infinite; }
+        .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #E3004F; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; background: white; }
+        .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .map-bg { width: 100%; height: auto; display: block; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
-        .store-polygon { fill: rgba(255, 255, 255, 0.1); stroke: transparent; stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
-        .store-polygon:hover { fill: rgba(224, 175, 170, 0.5); stroke: #E0AFAA; }
-        .store-polygon.selected { fill: rgba(248, 212, 162, 0.4); stroke: #E9004B; stroke-width: 4px; }
+        .store-polygon { fill: rgba(227, 0, 79, 0.05); stroke: transparent; stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
+        .store-polygon:hover { fill: rgba(240, 179, 240, 0.5); stroke: #F0B3F0; }
+        .store-polygon.selected { fill: rgba(227, 0, 79, 0.2); stroke: #E3004F; stroke-width: 4px; }
+        
+        /* Estilo para los nombres sobre el mapa */
+        .svg-text-label { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 800; fill: #4A154B; paint-order: stroke; stroke: #ffffff; stroke-width: 3.5px; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; text-transform: uppercase; }
 
-        .info-panel { position: absolute; top: 10px; right: 10px; background: rgba(255, 255, 255, 0.95); padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); width: calc(100% - 20px); max-width: 320px; z-index: 20; display: none; backdrop-filter: blur(4px); }
-        @media (min-width: 768px) { .info-panel { top: 20px; right: 20px; padding: 20px; } }
+        .info-panel { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.98); padding: 20px; border: 2px solid #F0B3F0; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15); width: calc(100% - 40px); max-width: 340px; z-index: 20; display: none; backdrop-filter: blur(8px); }
         .progress-bar-container { display: flex; align-items: center; margin-bottom: 12px; }
-        .progress-label { width: 90px; font-size: 11px; font-weight: 600; color: #5D7A78; }
-        .progress-track { flex-grow: 1; height: 6px; background: #f1f5f9; border-radius: 3px; overflow: hidden; margin: 0 10px; }
+        .progress-label { width: 140px; font-size: 11px; font-weight: 700; color: #4A154B; }
+        .progress-track { flex-grow: 1; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden; margin: 0 10px; }
         .progress-fill { height: 100%; transition: width 0.6s ease; }
-        .progress-text { width: 35px; font-size: 11px; font-weight: 700; text-align: right; color: #1e293b; }
+        .progress-text { width: 35px; font-size: 11px; font-weight: 800; text-align: right; color: #E3004F; }
 
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);}
         table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 0.8rem; }
-        th { background-color: #B1BEB7; color: #ffffff; padding: 10px 12px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; transition: background-color 0.2s; }
-        th:hover { background-color: #9ca3af; }
-        .filter-row th { background-color: #f1f5f9; padding: 6px 8px; border-bottom: 2px solid #e2e8f0; cursor: default; }
-        .filter-row th:hover { background-color: #f1f5f9; }
-        .filter-input { width: 100%; text-align: left; font-size: 0.75rem; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 400; color: #334155; outline: none; }
-        .filter-input:focus { border-color: #5D7A78; box-shadow: 0 0 0 1px #5D7A78; }
-        td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; vertical-align: middle; }
-        tr:hover { background-color: #f8fafc; }
+        th { background-color: #4A154B; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; transition: background-color 0.2s; }
+        th:hover { background-color: #6a1e6b; }
+        .filter-row th { background-color: #f8fafc; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; cursor: default; }
+        .filter-row th:hover { background-color: #f8fafc; }
+        .filter-input { width: 100%; text-align: left; font-size: 0.75rem; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 400; color: #334155; outline: none; }
+        .filter-input:focus { border-color: #E3004F; box-shadow: 0 0 0 1px #E3004F; }
+        td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; vertical-align: middle; }
+        tr:hover { background-color: #fff1f2; } /* Hover rosado claro */
         
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
         .badge-ok { background-color: #d1fae5; color: #047857; }
@@ -61,9 +66,9 @@
         .badge-warn { background-color: #fef3c7; color: #b45309; }
         .badge-neutral { background-color: #e2e8f0; color: #475569; }
         
-        .section-title { color: #5D7A78; border-bottom: 2px solid #F8D4A2; padding-bottom: 8px; margin-bottom: 16px; font-weight: 800; font-size: 1.25rem; }
-        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #5D7A78; border: 1px solid #5D7A78; padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; text-decoration: none; transition: all 0.2s; cursor: pointer; }
-        .btn-mail:hover { background-color: #5D7A78; color: #fff; }
+        .section-title { color: #4A154B; border-bottom: 3px solid #E3004F; padding-bottom: 8px; margin-bottom: 20px; font-weight: 800; font-size: 1.35rem; display: inline-block;}
+        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 0.7rem; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .btn-mail:hover { background-color: #E3004F; color: #fff; }
     </style>
 </head>
 <body class="p-4 md:p-8 max-w-[1600px] mx-auto space-y-12">
@@ -71,17 +76,17 @@
     <!-- PANTALLA DE CARGA -->
     <div id="loading-screen">
         <div class="spinner"></div>
-        <h2 class="mt-6 text-xl font-bold text-lilypad">Sincronizando Base de Datos...</h2>
+        <h2 class="mt-6 text-xl font-bold text-plum">Sincronizando Base de Datos...</h2>
         <p class="text-sm text-slate-500 mt-2">Conectando en vivo con Google Sheets</p>
     </div>
 
-    <header class="flex flex-col md:flex-row md:justify-between md:items-end border-b border-morningmist pb-4 gap-3">
+    <header class="flex flex-col md:flex-row md:justify-between md:items-end border-b-2 border-slate-100 pb-4 gap-3">
         <div>
-            <h1 class="text-2xl md:text-3xl font-black text-lilypad tracking-tight">Lifestyle Mallplaza Trujillo</h1>
-            <p class="text-slate-500 text-xs md:text-sm mt-1">Tablero de Control Integrado</p>
+            <h1 class="text-3xl md:text-4xl font-black text-mallplaza tracking-tight">Lifestyle Mallplaza Trujillo</h1>
+            <p class="text-slate-500 text-xs md:text-sm mt-1 font-semibold uppercase tracking-widest">Tablero de Control Integrado</p>
         </div>
-        <div class="text-xs font-bold text-green-700 bg-green-50 px-3 py-1 rounded-full border border-green-200 self-start md:self-auto flex items-center gap-2 shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        <div class="text-xs font-bold text-mallplaza bg-pink-50 px-4 py-2 rounded-full border border-pink-200 self-start md:self-auto flex items-center gap-2 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-mallplaza animate-pulse"></span>
             En Vivo (Tiempo Real)
         </div>
     </header>
@@ -90,36 +95,40 @@
     <section id="sec-1">
         <h2 class="section-title">1. Avance General</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 md:gap-4 mb-8">
-            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
-                <div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Total Locales</p><p class="text-3xl font-black text-slate-800" id="kpi-loc-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-100 text-[10px] font-semibold text-slate-500"><span>Con contrato: <strong class="text-slate-800 text-xs" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza text-xs" id="kpi-loc-vacancy">0</strong></span></div>
+            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
+                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-4xl font-black text-plum mt-1" id="kpi-loc-tot">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-[10px] font-bold text-slate-500"><span>Con contrato: <strong class="text-slate-800 text-xs" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza text-xs" id="kpi-loc-vacancy">0</strong></span></div>
             </div>
-            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-canyonsunset flex flex-col justify-between">
-                <div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Total Módulos</p><p class="text-3xl font-black text-slate-800" id="kpi-mod-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-100 text-[10px] font-semibold text-slate-500"><span>Con nombre: <strong class="text-slate-800 text-xs" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-canyonsunset text-xs" id="kpi-mod-vacancy">0</strong></span></div>
+            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
+                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-4xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 text-[10px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800 text-xs" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson text-xs" id="kpi-mod-vacancy">0</strong></span></div>
             </div>
-            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-brass flex flex-col justify-between">
-                <div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Obra P&C</p><p class="text-2xl font-black text-slate-800 leading-none mt-1" id="kpi-pc-tot">0</p></div>
-                <div class="grid grid-cols-2 gap-x-2 gap-y-1 pt-2 border-t border-slate-100 text-[9px] font-semibold text-slate-500"><span>Ejecución: <strong class="text-slate-800" id="kpi-pc-ejec">0</strong></span><span>Terminados: <strong class="text-slate-800" id="kpi-pc-term">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
+            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
+                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
+                <div class="grid grid-cols-2 gap-x-2 gap-y-1 pt-3 mt-2 border-t border-slate-100 text-[9px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span>Terminados: <strong class="text-slate-800" id="kpi-pc-term">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
             </div>
-            <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lilypad flex flex-col justify-between">
-                <div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Estatus HDL</p><p class="text-2xl font-black text-slate-800 leading-none mt-1" id="kpi-hdl-tot">0</p></div>
-                <div class="grid grid-cols-1 gap-y-1 pt-2 mt-2 border-t border-slate-100 text-[10px] font-semibold text-slate-500"><div class="flex justify-between"><span>En Revisión:</span> <strong class="text-slate-800" id="kpi-hdl-rev">0</strong></div><div class="flex justify-between"><span>Aprobados:</span> <strong class="text-slate-800" id="kpi-hdl-apr">0</strong></div><div class="flex justify-between"><span>Entregados:</span> <strong class="text-slate-800" id="kpi-hdl-ent">0</strong></div></div>
+            <div class="p-5 bg-white border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
+                <div><p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Estatus HDL</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-hdl-tot">0</p></div>
+                <div class="grid grid-cols-1 gap-y-1 pt-3 mt-2 border-t border-slate-100 text-[10px] font-bold text-slate-500">
+                    <div class="flex justify-between"><span>Entregas Coordinadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
+                    <div class="flex justify-between text-mallplaza"><span>Locales Entregados:</span> <strong class="text-mallplaza" id="kpi-hdl-ent-reales">0</strong></div>
+                </div>
             </div>
-            <div class="p-4 bg-brass text-white rounded-xl shadow-sm flex flex-col justify-between transform transition hover:scale-105">
-                <div><p class="text-[10px] font-bold text-white/80 uppercase tracking-wide">En Obra (Implem.)</p><p class="text-3xl font-black text-white" id="kpi-obra-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-2 border-t border-white/30 text-[10px] font-semibold text-white/90"><span>Locales: <strong class="text-white text-xs" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white text-xs" id="kpi-obra-mod">0</strong></span></div>
+            <div class="p-5 bg-plum text-white rounded-xl shadow-md flex flex-col justify-between transform transition hover:-translate-y-1">
+                <div><p class="text-[10px] font-extrabold text-lightpink uppercase tracking-wider">En Obra (Implem.)</p><p class="text-4xl font-black text-white mt-1" id="kpi-obra-tot">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[10px] font-bold text-white/90"><span>Locales: <strong class="text-white text-xs" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white text-xs" id="kpi-obra-mod">0</strong></span></div>
             </div>
-            <div class="p-4 bg-emerald-500 text-white rounded-xl shadow-sm flex flex-col justify-between transform transition hover:scale-105">
-                <div><p class="text-[10px] font-bold text-emerald-100 uppercase tracking-wide">Aperturas</p><p class="text-3xl font-black text-white" id="kpi-aperturas">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-2 border-t border-emerald-400 text-[10px] font-semibold text-emerald-50"><span>Total Aperturados a la fecha</span></div>
+            <div class="p-5 bg-mallplaza text-white rounded-xl shadow-md flex flex-col justify-between transform transition hover:-translate-y-1">
+                <div><p class="text-[10px] font-extrabold text-pink-200 uppercase tracking-wider">Aperturas</p><p class="text-4xl font-black text-white mt-1" id="kpi-aperturas">0</p></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[10px] font-bold text-pink-100"><span>Total Aperturados a la fecha</span></div>
             </div>
         </div>
 
         <!-- MAPA INTERACTIVO -->
         <div class="map-container">
             <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
-            <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none">
+            <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none" id="svg-map">
+                <!-- Polígonos originales -->
                 <polygon class="store-polygon" data-store="capriccio" points="3459,660 3455,844 3295,812 3295,664" />
                 <polygon class="store-polygon" data-store="fridays" points="3451,840 3475,848 3690,788 3714,652 3499,652 3463,660" />
                 <polygon class="store-polygon" data-store="pardos" points="3088,1083 3092,928 3299,876 3299,1095" />
@@ -168,15 +177,39 @@
                 <polygon class="store-polygon" data-store="dermotienda" points="2821,1017 2856,1017 2864,933 2821,941" />
             </svg>
 
+            <!-- CUADRO EMERGENTE POPUP -->
             <div class="info-panel" id="info-panel">
-                <div class="flex justify-between items-start mb-4">
-                    <h2 id="store-name" class="text-xl font-extrabold text-lilypad">NOMBRE LOCAL</h2>
-                    <button id="close-panel" class="text-slate-400 hover:text-mallplaza font-bold md:hidden">✕</button>
+                <div class="flex justify-between items-start mb-5 border-b border-slate-100 pb-3">
+                    <h2 id="store-name" class="text-xl font-black text-plum">NOMBRE LOCAL</h2>
+                    <button id="close-panel" class="text-slate-400 hover:text-mallplaza font-bold text-2xl leading-none">&times;</button>
                 </div>
-                <div class="progress-bar-container"><div class="progress-label">Obra P&C</div><div class="progress-track"><div id="bar-pc" class="progress-fill" style="background-color: #D09E57; width: 0%;"></div></div><div id="text-pc" class="progress-text">0%</div></div>
-                <div class="mb-3 text-xs"><span class="font-bold text-lilypad">Estado HDL:</span><span id="text-hdl" class="ml-1 text-slate-600 font-medium">Pendiente</span></div>
-                <div class="mb-3 text-xs"><span class="font-bold text-lilypad">Recepción:</span><span id="text-recepcion" class="ml-1 text-slate-600 font-medium">Pendiente</span></div>
-                <div class="progress-bar-container"><div class="progress-label">Implementación</div><div class="progress-track"><div id="bar-implem" class="progress-fill" style="background-color: #E0927B; width: 0%;"></div></div><div id="text-implem" class="progress-text">0%</div></div>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-label">AVANCE OBRA P&C</div>
+                    <div class="progress-track"><div id="bar-pc" class="progress-fill" style="background-color: #E3004F; width: 0%;"></div></div>
+                    <div id="text-pc" class="progress-text text-mallplaza">0%</div>
+                </div>
+                
+                <div class="mb-3 text-[11px]">
+                    <span class="font-bold text-plum">HDL - ESTATUS PROYECTO:</span>
+                    <span id="text-hdl" class="ml-1 text-slate-700 font-medium">Pendiente</span>
+                </div>
+                
+                <div class="mb-3 text-[11px]">
+                    <span class="font-bold text-plum">FECHA PACTADA ENTREGA LOCAL:</span>
+                    <span id="text-fecha-pactada" class="ml-1 text-slate-700 font-medium">-</span>
+                </div>
+                
+                <div class="mb-4 text-[11px] pb-3 border-b border-slate-100">
+                    <span class="font-bold text-plum">RECEPCIONADO (SI/NO):</span>
+                    <span id="text-recepcionado" class="ml-1 font-bold text-mallplaza">-</span>
+                </div>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-label">IMPLEMENTACIÓN</div>
+                    <div class="progress-track"><div id="bar-implem" class="progress-fill" style="background-color: #4A154B; width: 0%;"></div></div>
+                    <div id="text-implem" class="progress-text text-plum">0%</div>
+                </div>
             </div>
         </div>
     </section>
@@ -187,14 +220,14 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
             <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Coordinados</p>
-                <p class="text-2xl font-black text-lilypad" id="kpi-sec2-coord">0</p>
+                <p class="text-2xl font-black text-plum" id="kpi-sec2-coord">0</p>
             </div>
             <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Entregados</p>
                 <p class="text-2xl font-black text-emerald-600" id="kpi-sec2-ent">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 table-wrapper">
+        <div class="bg-white rounded-xl shadow-sm table-wrapper">
             <table id="table-sec2">
                 <thead>
                     <tr>
@@ -233,11 +266,11 @@
         <div class="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-4 mb-4">
             <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Rev. Arq</p>
-                <p class="text-xl font-black text-canyonsunset" id="kpi-rev-arq">0</p>
+                <p class="text-xl font-black text-plum" id="kpi-rev-arq">0</p>
             </div>
             <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Rev. Esp</p>
-                <p class="text-xl font-black text-canyonsunset" id="kpi-rev-esp">0</p>
+                <p class="text-xl font-black text-plum" id="kpi-rev-esp">0</p>
             </div>
             <div class="p-3 bg-teal-50 border border-teal-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-teal-700 uppercase">Aprobados</p>
@@ -247,16 +280,16 @@
                 <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Con Permiso<br>(Sin Ingreso)</p>
                 <p class="text-xl font-black text-emerald-800" id="kpi-permiso">0</p>
             </div>
-            <div class="p-3 bg-emerald-500 rounded-lg shadow-sm text-center transform hover:scale-105 transition">
-                <p class="text-[9px] font-bold text-emerald-100 uppercase">En Obra</p>
+            <div class="p-3 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition">
+                <p class="text-[9px] font-bold text-lightpink uppercase">En Obra</p>
                 <p class="text-xl font-black text-white" id="kpi-enobra-hdl">0</p>
             </div>
             <div class="p-3 bg-red-50 border border-red-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-red-400 uppercase">Sin Proyecto</p>
-                <p class="text-xl font-black text-red-500" id="kpi-sin-proy">0</p>
+                <p class="text-xl font-black text-crimson" id="kpi-sin-proy">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 table-wrapper">
+        <div class="bg-white rounded-xl shadow-sm table-wrapper">
             <table id="table-sec3">
                 <thead>
                     <tr>
@@ -297,16 +330,16 @@
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Solicitudes Totales</p>
                 <p class="text-2xl font-black text-slate-800" id="kpi-sec4-tot">0</p>
             </div>
-            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center border-b-4 border-canyonsunset">
+            <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center border-b-4 border-plum">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Pendientes</p>
-                <p class="text-2xl font-black text-canyonsunset" id="kpi-sec4-pend">0</p>
+                <p class="text-2xl font-black text-plum" id="kpi-sec4-pend">0</p>
             </div>
             <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center border-b-4 border-emerald-500">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Atendidas</p>
                 <p class="text-2xl font-black text-emerald-600" id="kpi-sec4-aten">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 table-wrapper">
+        <div class="bg-white rounded-xl shadow-sm table-wrapper">
             <table id="table-sec4">
                 <thead>
                     <tr>
@@ -351,11 +384,11 @@
             </div>
             <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes<br>de Revisión</p>
-                <p class="text-xl font-black text-canyonsunset" id="kpi-sec5-pend">0</p>
+                <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
             </div>
             <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En<br>Revisión</p>
-                <p class="text-xl font-black text-brass" id="kpi-sec5-rev">0</p>
+                <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
             </div>
             <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Estatus<br>Aprobado</p>
@@ -363,10 +396,10 @@
             </div>
             <div class="p-3 bg-red-50 border border-red-200 rounded-lg shadow-sm text-center">
                 <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Estatus<br>Observado</p>
-                <p class="text-xl font-black text-red-700" id="kpi-sec5-obs">0</p>
+                <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
             </div>
         </div>
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 table-wrapper">
+        <div class="bg-white rounded-xl shadow-sm table-wrapper">
             <table id="table-sec5">
                 <thead>
                     <tr>
@@ -396,7 +429,7 @@
     <!-- SECCIÓN 6: DIRECTORIO DE CONTACTOS -->
     <section id="sec-6">
         <h2 class="section-title">6. Directorio de Contactos Clave</h2>
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 table-wrapper">
+        <div class="bg-white rounded-xl shadow-sm table-wrapper">
             <table id="table-sec6">
                 <thead>
                     <tr>
@@ -445,18 +478,46 @@
         }
 
         window.onload = function() {
+            // Algoritmo para poner nombres encima de los polígonos automáticamente
+            const svgOverlay = document.getElementById('svg-map');
+            const polygons = document.querySelectorAll('.store-polygon');
+            polygons.forEach(polygon => {
+                const points = polygon.getAttribute('points').split(' ').filter(p => p.trim() !== '').map(p => p.split(',').map(Number));
+                if(points.length > 0) {
+                    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+                    points.forEach(([x, y]) => {
+                        if(x < minX) minX = x; if(x > maxX) maxX = x;
+                        if(y < minY) minY = y; if(y > maxY) maxY = y;
+                    });
+                    const cx = (minX + maxX) / 2;
+                    const cy = (minY + maxY) / 2;
+                    
+                    const textNode = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    textNode.setAttribute("x", cx);
+                    textNode.setAttribute("y", cy);
+                    textNode.setAttribute("text-anchor", "middle");
+                    textNode.setAttribute("dominant-baseline", "middle");
+                    textNode.setAttribute("class", "svg-text-label");
+                    
+                    let rawName = polygon.getAttribute('data-store');
+                    if(!rawName.toLowerCase().includes('vacancy')) {
+                        textNode.textContent = rawName.replace(/-/g, ' ');
+                        svgOverlay.appendChild(textNode);
+                    }
+                }
+            });
+
+            // Descarga de datos
             Promise.all([
                 fetchCSV(LINK_BASE),
                 fetchCSV(LINK_DOC),
                 fetchCSV(LINK_ACO),
                 fetchCSV(LINK_CONT)
             ]).then(([dataBase, dataDoc, dataAco, dataCont]) => {
-                
                 let mergedMain = dataBase.map(baseRow => {
                     let docRow = dataDoc.find(d => d['id_poligono'] && baseRow['id_poligono'] && d['id_poligono'].trim().toLowerCase() === baseRow['id_poligono'].trim().toLowerCase()) || {};
                     return { ...baseRow, ...docRow };
                 });
-
                 procesarDataMain(mergedMain);
                 procesarDataAcometidas(dataAco);
                 procesarDataContactos(dataCont);
@@ -467,7 +528,7 @@
 
             }).catch(error => {
                 console.error("Error al descargar datos:", error);
-                document.getElementById('loading-screen').innerHTML = `<h2 class="text-xl font-bold text-red-600">Error de Conexión</h2><p class="text-sm mt-2">Por favor actualiza la página e inténtalo de nuevo.</p>`;
+                document.getElementById('loading-screen').innerHTML = `<h2 class="text-xl font-bold text-crimson">Error de Conexión</h2><p class="text-sm mt-2">Por favor actualiza la página e inténtalo de nuevo.</p>`;
             });
         };
 
@@ -476,7 +537,7 @@
 
         const printDate = (val) => {
             if(!val || val === '-' || val === '') return '-';
-            return String(val); // Google Sheets ya manda la fecha en texto bonito desde el CSV
+            return String(val);
         }
 
         const parseDate = (str) => { 
@@ -506,7 +567,7 @@
         };
 
         window.enviarCorreoCoord = function(marca, tipoCoord) {
-            window.location.href = `mailto:?subject=${encodeURIComponent(`Coordinación de ${tipoCoord} - ${marca} - Mallplaza Trujillo`)}&body=${encodeURIComponent(`Estimado equipo de ${marca},\n\nNos ponemos en contacto para gestionar la ${tipoCoord}.\nPor favor indicarnos disponibilidad.\n\nSaludos.`)}`;
+            window.location.href = `mailto:?subject=${encodeURIComponent(`Coordinación de ${tipoCoord} -${marca} - Mallplaza Trujillo`)}&body=${encodeURIComponent(`Estimado equipo de ${marca},\n\nNos ponemos en contacto para gestionar la${tipoCoord}.\nPor favor indicarnos disponibilidad.\n\nSaludos.`)}`;
         };
 
         window.filtrarTabla = function(tableId) {
@@ -543,6 +604,7 @@
             let pcEjec = 0, pcTerm = 0, pcObs = 0, pcEnt = 0, hdlRev = 0, hdlApr = 0, hdlEnt = 0;
             let obraLoc = 0, obraMod = 0, aperturas = 0, revArq = 0, revEsp = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0, totSinProy = 0;
             let s2_coord = 0, s2_ent = 0, s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
+            let entregasCoordinadas = 0, localesEntregados = 0;
 
             const t2 = document.querySelector('#table-sec2 tbody'), t3 = document.querySelector('#table-sec3 tbody'), t5 = document.querySelector('#table-sec5 tbody');
 
@@ -557,30 +619,46 @@
                 let estHdl = safeString(row['Estatus general']) || '-'; 
                 let estPc = safeString(row['Estatus']) || '-';
                 
+                // Variable que busca si está recepcionado
+                let recepcionadoStatus = safeString(row['Entregado']) || safeString(row['Recepcionado']) || safeString(row['Recepción Final']) || '-';
+                if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
+                else if(recepcionadoStatus !== '-') recepcionadoStatus = 'NO';
+                
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
-                storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, recepcion: printDate(row['Recepción Final']), implem: avanceImplem };
+                storeData[id] = { 
+                    name: marca, 
+                    pc: avancePc, 
+                    hdl: estHdl, 
+                    fechaPactada: printDate(row['Fecha compromiso']),
+                    recepcionado: recepcionadoStatus, 
+                    implem: avanceImplem 
+                };
 
                 if(tipo.toLowerCase() === 'local') { locTot++; if(isVacancy) locVacancy++; else locContrato++; } 
                 else { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
 
+                // NUEVA LÓGICA OBRA P&C (Si tiene % mayor a 0, está en ejecución)
                 let estPcLower = estPc.toLowerCase();
-                if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
-                if(estPcLower.includes('terminado')) pcTerm++; 
+                if(avancePc > 0 && avancePc < 100) pcEjec++;
+                else if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
+                if(estPcLower.includes('terminado') || avancePc === 100) pcTerm++; 
                 if(estPcLower.includes('observado')) pcObs++; 
                 if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) pcEnt++;
 
+                // NUEVA LÓGICA ESTATUS HDL
                 let estHdlLower = estHdl.toLowerCase();
                 if(estHdlLower.includes('revisión') || estHdlLower.includes('revision')) hdlRev++; 
                 if(estHdlLower.includes('aprobado')) { hdlApr++; totAprobHdl++; }
-                if(estHdlLower.includes('entregado') || estHdlLower.includes('aperturado')) hdlEnt++; 
+                if(estHdlLower.includes('entregado') || estHdlLower.includes('aperturado')) entregasCoordinadas++; 
                 if(estHdlLower.includes('aperturado')) aperturas++; 
                 if(estHdlLower.includes('permiso sin ingreso')) totPermiso++; 
-                if(estHdlLower.includes('en obra')) { 
-                    totEnObraHdl++; if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; 
-                }
+                if(estHdlLower.includes('en obra')) { totEnObraHdl++; if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; }
                 if(estHdlLower.includes('sin proyecto')) totSinProy++;
                 
+                // Conteo locales entregados reales
+                if(recepcionadoStatus === 'SÍ') localesEntregados++;
+
                 let alertaArq = safeString(row['Estatus Arquitectura']);
                 let alertaEsp = safeString(row['Estatus Especialidades']);
                 
@@ -606,7 +684,7 @@
                     let tr2 = document.createElement('tr');
                     let btnUpload = `<span class="cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[10px] rounded border border-slate-300">📎 Subir</span>`;
                     let badgeEstatusPc = estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (estPcLower.includes('entregado') || estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${estPc}</span>`);
-                    tr2.innerHTML = `<td class="font-bold text-lilypad">${marca}</td><td><div class="flex items-center gap-2"><div class="w-20 h-2 bg-slate-200 rounded"><div class="h-full bg-brass" style="width: ${avancePc}%"></div></div><span class="text-xs font-bold">${avancePc}%</span></div></td><td class="text-xs">${printDate(fecComp)}</td><td class="text-xs font-bold">${printDate(fecReal)}</td><td>${calcDelay(fecComp, fecReal)}</td><td>${btnUpload}</td><td>${badgeEstatusPc}</td><td class="text-xs">${printDate(row['Fecha compromiso de Lev. Observ.'])}</td><td class="text-xs font-bold">${printDate(row['Recepción Final'])}</td><td>${btnUpload}</td>`;
+                    tr2.innerHTML = `<td class="font-bold text-plum">${marca}</td><td><div class="flex items-center gap-2"><div class="w-20 h-2 bg-slate-200 rounded"><div class="h-full bg-mallplaza" style="width: ${avancePc}%"></div></div><span class="text-xs font-bold">${avancePc}%</span></div></td><td class="text-xs">${printDate(fecComp)}</td><td class="text-xs font-bold">${printDate(fecReal)}</td><td>${calcDelay(fecComp, fecReal)}</td><td>${btnUpload}</td><td>${badgeEstatusPc}</td><td class="text-xs">${printDate(row['Fecha compromiso de Lev. Observ.'])}</td><td class="text-xs font-bold">${printDate(row['Recepción Final'])}</td><td>${btnUpload}</td>`;
                     t2.appendChild(tr2);
 
                     let tr3 = document.createElement('tr');
@@ -617,7 +695,7 @@
                     let btnObra = `<button onclick="enviarCorreoCoord('${marca}', 'Inicio de Obra')" class="btn-mail">Enviar Correo</button>`;
                     let uploadCrono = `<div class="flex items-center gap-2"><span class="text-xs font-medium text-slate-700">-</span><label class="cursor-pointer bg-slate-100 px-2 py-1 rounded text-[10px] font-bold border border-slate-300 flex items-center gap-1"><input type="file" class="hidden" onchange="this.parentElement.querySelector('.check-icon').classList.remove('hidden')">Subir <span class="hidden check-icon text-emerald-600 font-black">✓</span></label></div>`;
                     
-                    tr3.innerHTML = `<td class="font-bold text-lilypad">${marca}</td><td class="text-xs">${safeString(row['Arquitecta']) || '-'}</td><td class="text-xs">${safeString(row['Ingeniero']) || '-'}</td><td class="text-xs font-bold text-canyonsunset">${estHdl}</td><td><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td><td><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td><td class="text-xs font-bold">-</td><td>${btnEntrega}</td><td>${btnObra}</td><td>${uploadCrono}</td>`;
+                    tr3.innerHTML = `<td class="font-bold text-plum">${marca}</td><td class="text-xs">${safeString(row['Arquitecta']) || '-'}</td><td class="text-xs">${safeString(row['Ingeniero']) || '-'}</td><td class="text-xs font-bold text-mallplaza">${estHdl}</td><td><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td><td><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td><td class="text-xs font-bold">-</td><td>${btnEntrega}</td><td>${btnObra}</td><td>${uploadCrono}</td>`;
                     t3.appendChild(tr3);
 
                     let tr5 = document.createElement('tr');
@@ -628,7 +706,7 @@
                     let badgeRes = dRes.includes('aprobado') ? `<span class="badge badge-ok">${docResultRaw}</span>` : (dRes.includes('observado') || dRes.includes('incompleto') || dRes.includes('evaluación') || dRes.includes('evaluacion') ? `<span class="badge badge-warn">${docResultRaw}</span>` : `<span class="badge badge-neutral">${docResultRaw}</span>`);
                     let badgeFinal = dFin.includes('aprobado') ? `<span class="badge badge-ok">${docEstFinalRaw}</span>` : (dFin.includes('observado') ? `<span class="badge badge-warn">${docEstFinalRaw}</span>` : `<span class="badge badge-neutral">${docEstFinalRaw}</span>`);
                     
-                    tr5.innerHTML = `<td class="font-bold text-lilypad">${marca}</td><td>${badgeDocEst}</td><td class="text-xs font-medium text-slate-700">${printDate(row['Fecha de envío'])}</td><td>${badgeRes}</td><td>${calcSLA_HV(row['Fecha de envío'], row['Fecha de Respuesta (HV)'])}</td><td class="text-xs text-slate-600">${printDate(row['Fecha de Lev. de Observaciones'])}</td><td>${badgeFinal}</td>`;
+                    tr5.innerHTML = `<td class="font-bold text-plum">${marca}</td><td>${badgeDocEst}</td><td class="text-xs font-medium text-slate-700">${printDate(row['Fecha de envío'])}</td><td>${badgeRes}</td><td>${calcSLA_HV(row['Fecha de envío'], row['Fecha de Respuesta (HV)'])}</td><td class="text-xs text-slate-600">${printDate(row['Fecha de Lev. de Observaciones'])}</td><td>${badgeFinal}</td>`;
                     t5.appendChild(tr5);
                 }
             });
@@ -636,13 +714,15 @@
             document.getElementById('kpi-loc-tot').innerText = locTot; document.getElementById('kpi-loc-contrato').innerText = locContrato; document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
             document.getElementById('kpi-mod-tot').innerText = modTot; document.getElementById('kpi-mod-nombre').innerText = modNombre; document.getElementById('kpi-mod-vacancy').innerText = modVacancy;
             document.getElementById('kpi-pc-tot').innerText = pcEjec + pcTerm + pcObs + pcEnt; document.getElementById('kpi-pc-ejec').innerText = pcEjec; document.getElementById('kpi-pc-term').innerText = pcTerm; document.getElementById('kpi-pc-obs').innerText = pcObs; document.getElementById('kpi-pc-ent').innerText = pcEnt;
-            document.getElementById('kpi-hdl-tot').innerText = hdlRev + hdlApr + hdlEnt; document.getElementById('kpi-hdl-rev').innerText = hdlRev; document.getElementById('kpi-hdl-apr').innerText = hdlApr; document.getElementById('kpi-hdl-ent').innerText = hdlEnt;
             document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
             document.getElementById('kpi-aperturas').innerText = aperturas;
             document.getElementById('kpi-rev-arq').innerText = revArq; document.getElementById('kpi-rev-esp').innerText = revEsp; document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl; document.getElementById('kpi-permiso').innerText = totPermiso; document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl; document.getElementById('kpi-sin-proy').innerText = totSinProy;
-            
             document.getElementById('kpi-sec2-coord').innerText = s2_coord; document.getElementById('kpi-sec2-ent').innerText = s2_ent;
             document.getElementById('kpi-sec5-ing').innerText = s5_ing; document.getElementById('kpi-sec5-pend').innerText = s5_pend; document.getElementById('kpi-sec5-rev').innerText = s5_rev; document.getElementById('kpi-sec5-apr').innerText = s5_apr; document.getElementById('kpi-sec5-obs').innerText = s5_obs;
+            
+            // Nuevos de HDL
+            document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
+            document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
         }
 
         function procesarDataAcometidas(data) {
@@ -672,7 +752,7 @@
                 let f2 = fechas.length > 1 ? printDate(row[fechas[1]]) : '-';
 
                 let tr4 = document.createElement('tr');
-                tr4.innerHTML = `<td class="text-xs">${sector}</td><td class="text-xs text-center">${safeString(row['Bloque']) || '-'}</td><td class="text-xs font-bold">${safeString(row['Local']) || '-'}</td><td class="font-bold text-lilypad">${safeString(row['Socio Comercial']) || '-'}</td><td class="text-xs text-center">${safeString(row['Area (m2)']) || '-'}</td><td class="text-xs text-slate-700">${safeString(row['Requerimiento 1']) || '-'}</td><td class="text-xs">${f1}</td><td class="text-xs">${respuesta}</td><td class="text-xs font-bold">${f2}</td><td class="text-xs font-medium">${safeString(row['Costo (Subtotal sin IGV)']) || '-'}</td><td>${badgeAco}</td>`;
+                tr4.innerHTML = `<td class="text-xs">${sector}</td><td class="text-xs text-center">${safeString(row['Bloque']) || '-'}</td><td class="text-xs font-bold text-plum">${safeString(row['Local']) || '-'}</td><td class="font-bold text-plum">${safeString(row['Socio Comercial']) || '-'}</td><td class="text-xs text-center">${safeString(row['Area (m2)']) || '-'}</td><td class="text-xs text-slate-700">${safeString(row['Requerimiento 1']) || '-'}</td><td class="text-xs">${f1}</td><td class="text-xs">${respuesta}</td><td class="text-xs font-bold">${f2}</td><td class="text-xs font-medium">${safeString(row['Costo (Subtotal sin IGV)']) || '-'}</td><td>${badgeAco}</td>`;
                 tbodySec4.appendChild(tr4);
             });
             document.getElementById('kpi-sec4-tot').innerText = s4_tot; document.getElementById('kpi-sec4-pend').innerText = s4_pend; document.getElementById('kpi-sec4-aten').innerText = s4_aten;
@@ -684,12 +764,12 @@
                 let nombre = safeString(row['Nombre']); if(!nombre) return;
                 let correo = safeString(row['Correo']); 
                 let tr6 = document.createElement('tr');
-                tr6.innerHTML = `<td class="font-bold text-slate-800">${nombre}</td><td class="text-xs font-bold text-lilypad">${safeString(row['Empresa']) || '-'}</td><td class="text-xs text-slate-600">${safeString(row['Cargo']) || '-'}</td><td class="text-xs font-medium">${safeString(row['Teléfono']) || '-'}</td><td class="text-xs text-slate-500">${correo || '-'}</td><td>${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
+                tr6.innerHTML = `<td class="font-bold text-slate-800">${nombre}</td><td class="text-xs font-bold text-mallplaza">${safeString(row['Empresa']) || '-'}</td><td class="text-xs text-slate-600">${safeString(row['Cargo']) || '-'}</td><td class="text-xs font-medium">${safeString(row['Teléfono']) || '-'}</td><td class="text-xs text-slate-500">${correo || '-'}</td><td>${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
                 tbodySec6.appendChild(tr6);
             });
         }
 
-        // INTERACCIÓN MAPA
+        // INTERACCIÓN MAPA CON POPUP NUEVO
         const polygons = document.querySelectorAll('.store-polygon');
         const infoPanel = document.getElementById('info-panel');
         polygons.forEach(polygon => {
@@ -697,9 +777,12 @@
                 polygons.forEach(p => p.classList.remove('selected')); this.classList.add('selected');
                 const data = storeData[this.getAttribute('data-store')];
                 if (data) {
-                    infoPanel.style.display = 'block'; document.getElementById('store-name').innerText = data.name;
+                    infoPanel.style.display = 'block'; 
+                    document.getElementById('store-name').innerText = data.name;
                     document.getElementById('bar-pc').style.width = data.pc + '%'; document.getElementById('text-pc').innerText = data.pc + '%';
-                    document.getElementById('text-hdl').innerText = data.hdl; document.getElementById('text-recepcion').innerText = data.recepcion || '-';
+                    document.getElementById('text-hdl').innerText = data.hdl; 
+                    document.getElementById('text-fecha-pactada').innerText = data.fechaPactada;
+                    document.getElementById('text-recepcionado').innerText = data.recepcionado;
                     document.getElementById('bar-implem').style.width = data.implem + '%'; document.getElementById('text-implem').innerText = data.implem + '%';
                 }
             });
