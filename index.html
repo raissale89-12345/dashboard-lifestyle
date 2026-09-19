@@ -13,10 +13,10 @@
             theme: {
                 extend: {
                     colors: {
-                        mallplaza: '#E3004F', // Magenta principal
-                        plum: '#4A154B',      // Morado/Ciruela oscuro
-                        crimson: '#D32F4C',   // Rojo carmesí
-                        lightpink: '#F0B3F0', // Rosa claro
+                        mallplaza: '#E3004F', 
+                        plum: '#4A154B',      
+                        crimson: '#D32F4C',   
+                        lightpink: '#F0B3F0', 
                     }
                 }
             }
@@ -24,14 +24,12 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        /* Fondo de la página entero un poco gris para que resalten las burbujas blancas */
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         
         #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: opacity 0.5s ease; }
         .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #E3004F; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Estilo Burbuja para cada sección */
         .burbuja-seccion { background-color: #ffffff; padding: 24px; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 32px; }
         @media (min-width: 768px) { .burbuja-seccion { padding: 32px; } }
 
@@ -42,22 +40,15 @@
         .store-polygon:hover { fill: rgba(240, 179, 240, 0.5); stroke: #F0B3F0; }
         .store-polygon.selected { fill: rgba(227, 0, 79, 0.2); stroke: #E3004F; stroke-width: 4px; }
 
-        /* Popup Rediseñado: Más fino y sutil */
         .info-panel { position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.97); padding: 16px; border: 1px solid #F0B3F0; border-radius: 12px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); width: calc(100% - 30px); max-width: 300px; z-index: 20; display: none; backdrop-filter: blur(8px); }
         .progress-bar-container { display: flex; align-items: center; margin-bottom: 10px; }
         .progress-label { width: 130px; font-size: 9px; font-weight: 700; color: #4A154B; letter-spacing: 0.5px; }
-        .progress-track { flex-grow: 1; height: 6px; background: #f1f5f9; border-radius: 4px; overflow: hidden; margin: 0 8px; }
-        /* Efecto Degradé en Barras */
-        .progress-fill { height: 100%; transition: width 0.6s ease; }
-        #bar-pc { background: linear-gradient(90deg, #E3004F 0%, rgba(227,0,79,0.3) 100%); }
-        #bar-implem { background: linear-gradient(90deg, #4A154B 0%, rgba(74,21,75,0.3) 100%); }
-        
-        .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; color: #E3004F; }
+        .progress-track { flex-grow: 1; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 0 8px; }
+        .progress-fill { height: 100%; transition: width 0.6s ease, background-color 0.3s ease; border-radius: 4px;}
+        .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; }
 
-        /* Configuración de Tablas con Scroll para mostrar ~9 filas */
         .table-wrapper { width: 100%; max-height: 480px; overflow-y: auto; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 0.75rem; }
-        /* Congelar los títulos arriba al hacer scroll */
         thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
         thead tr:first-child th:hover { background-color: #6a1e6b; }
         thead tr.filter-row th { position: sticky; top: 43px; z-index: 19; background-color: #f8fafc; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; }
@@ -68,7 +59,7 @@
         tr:hover { background-color: #fff1f2; }
         
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; }
-        .badge-ok { background-color: #d1fae5; color: #047857; }
+        .badge-ok { background-color: #dcfce7; color: #166534; }
         .badge-alert { background-color: #fee2e2; color: #b91c1c; }
         .badge-warn { background-color: #fef3c7; color: #b45309; }
         .badge-neutral { background-color: #e2e8f0; color: #475569; }
@@ -88,7 +79,7 @@
         <p class="text-sm text-slate-500 mt-2">Conectando en vivo con Google Sheets</p>
     </div>
 
-    <!-- CABECERA DE LA PÁGINA -->
+    <!-- CABECERA -->
     <header class="flex flex-col md:flex-row md:justify-between md:items-end pb-6 mb-6 gap-3">
         <div>
             <h1 class="text-3xl md:text-4xl font-black text-mallplaza tracking-tight">Lifestyle Mallplaza Trujillo</h1>
@@ -210,7 +201,7 @@
                 </div>
                 
                 <div class="mb-3 text-[9px] pb-2 border-b border-pink-100">
-                    <span class="font-bold text-plum">LOCAL RECEPCIONADO (SI/NO):</span>
+                    <span class="font-bold text-plum">LOCAL RECEPCIONADO:</span>
                     <span id="text-recepcionado" class="ml-1 font-bold text-mallplaza">-</span>
                 </div>
                 
@@ -242,13 +233,13 @@
                     <tr>
                         <th onclick="sortTable('table-sec2', 0)">Local / Marca ⇕</th>
                         <th onclick="sortTable('table-sec2', 1)">Avance P&C ⇕</th>
-                        <th onclick="sortTable('table-sec2', 2)">Fech. Compromiso ⇕</th>
-                        <th onclick="sortTable('table-sec2', 3)">Fech. Real (Ops) ⇕</th>
-                        <th onclick="sortTable('table-sec2', 4)">Alerta (Retraso) ⇕</th>
-                        <th>Acta 1</th>
-                        <th onclick="sortTable('table-sec2', 6)">Estatus P&C ⇕</th>
-                        <th onclick="sortTable('table-sec2', 7)">Comp. (Lev. Obs) ⇕</th>
-                        <th onclick="sortTable('table-sec2', 8)">Recepción Final ⇕</th>
+                        <th onclick="sortTable('table-sec2', 2)">Fecha compromiso de entrega de local ⇕</th>
+                        <th onclick="sortTable('table-sec2', 3)">Fecha de entrega Real a Operaciones ⇕</th>
+                        <th onclick="sortTable('table-sec2', 4)">Alerta ⇕</th>
+                        <th>Evidencia Fotográfica</th>
+                        <th onclick="sortTable('table-sec2', 6)">Estatus ⇕</th>
+                        <th onclick="sortTable('table-sec2', 7)">Fecha compromiso de Lev. Observ. ⇕</th>
+                        <th onclick="sortTable('table-sec2', 8)">Fecha Real de levantamiento de obs. ⇕</th>
                         <th>Acta Final</th>
                     </tr>
                     <tr class="filter-row">
@@ -491,7 +482,12 @@
                 fetchCSV(LINK_CONT)
             ]).then(([dataBase, dataDoc, dataAco, dataCont]) => {
                 let mergedMain = dataBase.map(baseRow => {
-                    let docRow = dataDoc.find(d => d['id_poligono'] && baseRow['id_poligono'] && d['id_poligono'].trim().toLowerCase() === baseRow['id_poligono'].trim().toLowerCase()) || {};
+                    // Usamos una búsqueda segura por id_poligono
+                    const baseId = getCol(baseRow, 'id_poligono');
+                    let docRow = dataDoc.find(d => {
+                        const docId = getCol(d, 'id_poligono');
+                        return docId && baseId && docId.trim().toLowerCase() === baseId.trim().toLowerCase();
+                    }) || {};
                     return { ...baseRow, ...docRow };
                 });
                 procesarDataMain(mergedMain);
@@ -508,8 +504,26 @@
             });
         };
 
+        // Utilidades de Datos
         const safeString = (val) => (val === undefined || val === null) ? '' : String(val).trim();
         const currentDate = new Date(); 
+
+        // BUSCADOR INTELIGENTE DE COLUMNAS (A prueba de espacios extra en Excel)
+        const getCol = (row, colName) => {
+            const keys = Object.keys(row);
+            const foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
+            return foundKey ? safeString(row[foundKey]) : '';
+        };
+
+        // Algoritmo de color "Termómetro Semáforo" para barras
+        const getProgressColor = (percent) => {
+            if (percent < 20) return '#ef4444'; // Rojo (Lowest)
+            if (percent < 45) return '#f97316'; // Naranja (Low)
+            if (percent < 65) return '#eab308'; // Amarillo (Medium)
+            if (percent < 90) return '#84cc16'; // Verde claro (Normal)
+            if (percent < 100) return '#22c55e'; // Verde (High)
+            return '#16a34a'; // Verde oscuro (Highest)
+        };
 
         const printDate = (val) => {
             if(!val || val === '-' || val === '') return '-';
@@ -585,19 +599,22 @@
             const t2 = document.querySelector('#table-sec2 tbody'), t3 = document.querySelector('#table-sec3 tbody'), t5 = document.querySelector('#table-sec5 tbody');
 
             data.forEach(row => {
-                let id = safeString(row['id_poligono']); 
+                let id = getCol(row, 'id_poligono'); 
                 if(!id) return; 
                 
-                let marca = safeString(row['Operador']) || '-'; 
-                let tipo = safeString(row['Tipo']) || 'Local';
-                let avancePc = parseFloat(row['Avance P&C']) || 0; 
+                let marca = getCol(row, 'Operador') || '-'; 
+                let tipo = getCol(row, 'Tipo') || 'Local';
+                let avancePc = parseFloat(getCol(row, 'Avance P&C')) || 0; 
                 let avanceImplem = 0; 
-                let estHdl = safeString(row['Estatus general']) || '-'; 
-                let estPc = safeString(row['Estatus']) || '-';
+                let estHdl = getCol(row, 'Estatus general') || '-'; 
+                let estPc = getCol(row, 'Estatus') || '-';
                 
-                let recepcionadoStatus = safeString(row['Entregado']) || safeString(row['Recepcionado']) || safeString(row['Recepción Final']) || '-';
+                // Conexión exacta para Recepcionado y Fecha Pactada (Popup)
+                let recepcionadoStatus = getCol(row, 'Entregado') || '-';
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
                 else if(recepcionadoStatus !== '-') recepcionadoStatus = 'NO';
+                
+                let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC');
                 
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
@@ -605,7 +622,7 @@
                     name: marca, 
                     pc: avancePc, 
                     hdl: estHdl, 
-                    fechaPactada: printDate(row['Fecha compromiso']),
+                    fechaPactada: printDate(fechaPactadaPopup),
                     recepcionado: recepcionadoStatus, 
                     implem: avanceImplem 
                 };
@@ -613,7 +630,7 @@
                 if(tipo.toLowerCase() === 'local') { locTot++; if(isVacancy) locVacancy++; else locContrato++; } 
                 else { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
 
-                // Lógica de P&C con el %
+                // Lógica de P&C
                 let estPcLower = estPc.toLowerCase();
                 if(avancePc > 0 && avancePc < 100) pcEjec++;
                 else if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
@@ -632,21 +649,26 @@
                 
                 if(recepcionadoStatus === 'SÍ') localesEntregados++;
 
-                let alertaArq = safeString(row['Estatus Arquitectura']);
-                let alertaEsp = safeString(row['Estatus Especialidades']);
+                let alertaArq = getCol(row, 'Estatus Arquitectura');
+                let alertaEsp = getCol(row, 'Estatus Especialidades');
                 
                 if(alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision')) revArq++; 
                 if(alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision')) revEsp++;
 
                 if(!isVacancy) {
-                    let fecComp = row['Fecha compromiso']; 
-                    let fecReal = row['Fecha Real a OP'] || row['Fecha Real'];
-                    if(safeString(fecComp) !== '-' && safeString(fecComp).toLowerCase() !== 'pendiente') s2_coord++;
-                    if(safeString(fecReal) !== '-' && safeString(fecReal).toLowerCase() !== 'pendiente') s2_ent++;
+                    // Datos para la SECCIÓN 2
+                    let fecComp = getCol(row, 'Fecha compromiso de entrega de local'); 
+                    let fecReal = getCol(row, 'Fecha de entrega Real a Operaciones');
+                    let fecCompLevObs = getCol(row, 'Fecha compromiso de Lev. Observ.');
+                    let fecRealLevObs = getCol(row, 'Fecha Real de levantamiento de obs.');
 
-                    let dEst = safeString(row['Estatus Documentacion']).toLowerCase() || '-'; 
-                    let dRes = safeString(row['Resultado de Revisión']).toLowerCase() || '-'; 
-                    let dFin = safeString(row['Estatus Final']).toLowerCase() || '-';
+                    if(fecComp !== '-' && fecComp.toLowerCase() !== 'pendiente') s2_coord++;
+                    if(fecReal !== '-' && fecReal.toLowerCase() !== 'pendiente') s2_ent++;
+
+                    // Datos para la SECCIÓN 5
+                    let dEst = getCol(row, 'Estatus Documentacion').toLowerCase() || '-'; 
+                    let dRes = getCol(row, 'Resultado de Revisión').toLowerCase() || '-'; 
+                    let dFin = getCol(row, 'Estatus Final').toLowerCase() || '-';
                     
                     if(dEst.includes('enviado') || dEst.includes('ingresado')) s5_ing++;
                     if(dRes === 'pendiente' || dRes === '-') s5_pend++;
@@ -654,32 +676,57 @@
                     if(dFin.includes('aprobado') || dRes.includes('aprobado')) s5_apr++;
                     if(dFin.includes('observado') || dRes.includes('observado') || dRes.includes('incompleto')) s5_obs++;
 
+                    // Render Tabla 2
                     let tr2 = document.createElement('tr');
-                    let btnUpload = `<span class="cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[10px] rounded border border-slate-300">📎 Subir</span>`;
+                    let btnUpload = `<span class="cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[10px] rounded border border-slate-300">📎 Evidencia</span>`;
                     let badgeEstatusPc = estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (estPcLower.includes('entregado') || estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${estPc}</span>`);
-                    tr2.innerHTML = `<td class="font-bold text-plum">${marca}</td><td><div class="flex items-center gap-2"><div class="w-20 h-2 bg-slate-200 rounded"><div class="h-full" style="background: linear-gradient(90deg, #E3004F 0%, rgba(227,0,79,0.3) 100%); width: ${avancePc}%"></div></div><span class="text-xs font-bold">${avancePc}%</span></div></td><td class="text-xs">${printDate(fecComp)}</td><td class="text-xs font-bold">${printDate(fecReal)}</td><td>${calcDelay(fecComp, fecReal)}</td><td>${btnUpload}</td><td>${badgeEstatusPc}</td><td class="text-xs">${printDate(row['Fecha compromiso de Lev. Observ.'])}</td><td class="text-xs font-bold">${printDate(row['Recepción Final'])}</td><td>${btnUpload}</td>`;
+                    
+                    let barraColor = getProgressColor(avancePc);
+                    
+                    tr2.innerHTML = `<td class="font-bold text-plum">${marca}</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <div class="w-20 h-2 bg-slate-200 rounded">
+                                <div class="h-full rounded" style="background-color: ${barraColor}; width: ${avancePc}%"></div>
+                            </div>
+                            <span class="text-xs font-bold" style="color: ${barraColor}">${avancePc}%</span>
+                        </div>
+                    </td>
+                    <td class="text-xs">${printDate(fecComp)}</td>
+                    <td class="text-xs font-bold">${printDate(fecReal)}</td>
+                    <td>${calcDelay(fecComp, fecReal)}</td>
+                    <td>${btnUpload}</td>
+                    <td>${badgeEstatusPc}</td>
+                    <td class="text-xs">${printDate(fecCompLevObs)}</td>
+                    <td class="text-xs font-bold">${printDate(fecRealLevObs)}</td>
+                    <td>${btnUpload}</td>`;
                     t2.appendChild(tr2);
 
+                    // Render Tabla 3
                     let tr3 = document.createElement('tr');
                     let badgeArq = alertaArq.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
                     let badgeEsp = alertaEsp.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
-                    
                     let btnEntrega = `<button onclick="enviarCorreoCoord('${marca}', 'Entrega de Local')" class="btn-mail">Enviar Correo</button>`;
                     let btnObra = `<button onclick="enviarCorreoCoord('${marca}', 'Inicio de Obra')" class="btn-mail">Enviar Correo</button>`;
                     let uploadCrono = `<div class="flex items-center gap-2"><span class="text-xs font-medium text-slate-700">-</span><label class="cursor-pointer bg-slate-100 px-2 py-1 rounded text-[10px] font-bold border border-slate-300 flex items-center gap-1"><input type="file" class="hidden" onchange="this.parentElement.querySelector('.check-icon').classList.remove('hidden')">Subir <span class="hidden check-icon text-emerald-600 font-black">✓</span></label></div>`;
                     
-                    tr3.innerHTML = `<td class="font-bold text-plum">${marca}</td><td class="text-xs">${safeString(row['Arquitecta']) || '-'}</td><td class="text-xs">${safeString(row['Ingeniero']) || '-'}</td><td class="text-xs font-bold text-mallplaza">${estHdl}</td><td><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td><td><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td><td class="text-xs font-bold">-</td><td>${btnEntrega}</td><td>${btnObra}</td><td>${uploadCrono}</td>`;
+                    tr3.innerHTML = `<td class="font-bold text-plum">${marca}</td><td class="text-xs">${getCol(row, 'Arquitecta') || '-'}</td><td class="text-xs">${getCol(row, 'Ingeniero') || '-'}</td><td class="text-xs font-bold text-mallplaza">${estHdl}</td><td><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td><td><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td><td class="text-xs font-bold">-</td><td>${btnEntrega}</td><td>${btnObra}</td><td>${uploadCrono}</td>`;
                     t3.appendChild(tr3);
 
+                    // Render Tabla 5
                     let tr5 = document.createElement('tr');
-                    let docResultRaw = safeString(row['Resultado de Revisión']) || '-'; 
-                    let docEstFinalRaw = safeString(row['Estatus Final']) || '-';
+                    let docResultRaw = getCol(row, 'Resultado de Revisión') || '-'; 
+                    let docEstFinalRaw = getCol(row, 'Estatus Final') || '-';
                     
-                    let badgeDocEst = dEst === 'pendiente' || dEst === '-' ? `<span class="badge badge-warn">${safeString(row['Estatus Documentacion']) || '-'}</span>` : `<span class="badge bg-slate-100 text-slate-700">${safeString(row['Estatus Documentacion'])}</span>`;
+                    let badgeDocEst = dEst === 'pendiente' || dEst === '-' ? `<span class="badge badge-warn">${getCol(row, 'Estatus Documentacion') || '-'}</span>` : `<span class="badge bg-slate-100 text-slate-700">${getCol(row, 'Estatus Documentacion')}</span>`;
                     let badgeRes = dRes.includes('aprobado') ? `<span class="badge badge-ok">${docResultRaw}</span>` : (dRes.includes('observado') || dRes.includes('incompleto') || dRes.includes('evaluación') || dRes.includes('evaluacion') ? `<span class="badge badge-warn">${docResultRaw}</span>` : `<span class="badge badge-neutral">${docResultRaw}</span>`);
                     let badgeFinal = dFin.includes('aprobado') ? `<span class="badge badge-ok">${docEstFinalRaw}</span>` : (dFin.includes('observado') ? `<span class="badge badge-warn">${docEstFinalRaw}</span>` : `<span class="badge badge-neutral">${docEstFinalRaw}</span>`);
                     
-                    tr5.innerHTML = `<td class="font-bold text-plum">${marca}</td><td>${badgeDocEst}</td><td class="text-xs font-medium text-slate-700">${printDate(row['Fecha de envío'])}</td><td>${badgeRes}</td><td>${calcSLA_HV(row['Fecha de envío'], row['Fecha de Respuesta (HV)'])}</td><td class="text-xs text-slate-600">${printDate(row['Fecha de Lev. de Observaciones'])}</td><td>${badgeFinal}</td>`;
+                    let fecEnvioDoc = getCol(row, 'Fecha de envío');
+                    let fecRespHV = getCol(row, 'Fecha de Respuesta (HV)');
+                    let fecLevObs = getCol(row, 'Fecha de Lev. de Observaciones');
+
+                    tr5.innerHTML = `<td class="font-bold text-plum">${marca}</td><td>${badgeDocEst}</td><td class="text-xs font-medium text-slate-700">${printDate(fecEnvioDoc)}</td><td>${badgeRes}</td><td>${calcSLA_HV(fecEnvioDoc, fecRespHV)}</td><td class="text-xs text-slate-600">${printDate(fecLevObs)}</td><td>${badgeFinal}</td>`;
                     t5.appendChild(tr5);
                 }
             });
@@ -701,13 +748,13 @@
             let s4_tot = 0, s4_pend = 0, s4_aten = 0;
             const tbodySec4 = document.querySelector('#table-sec4 tbody');
             data.forEach(row => {
-                let sector = safeString(row['Sector']); if(!sector) return;
+                let sector = getCol(row, 'Sector'); if(!sector) return;
                 
                 let keys = Object.keys(row);
                 let fechas = keys.filter(k => k.toLowerCase().includes('fecha') || k.toLowerCase().trim() === 'fecha');
 
                 s4_tot++;
-                let respuesta = safeString(row['Respuesta 1']) || '-';
+                let respuesta = getCol(row, 'Respuesta 1') || '-';
                 
                 let estRaw = '-';
                 if(respuesta.toLowerCase().includes('aprob')) estRaw = 'Aprobado';
@@ -724,7 +771,7 @@
                 let f2 = fechas.length > 1 ? printDate(row[fechas[1]]) : '-';
 
                 let tr4 = document.createElement('tr');
-                tr4.innerHTML = `<td class="text-xs">${sector}</td><td class="text-xs text-center">${safeString(row['Bloque']) || '-'}</td><td class="text-xs font-bold text-plum">${safeString(row['Local']) || '-'}</td><td class="font-bold text-plum">${safeString(row['Socio Comercial']) || '-'}</td><td class="text-xs text-center">${safeString(row['Area (m2)']) || '-'}</td><td class="text-xs text-slate-700">${safeString(row['Requerimiento 1']) || '-'}</td><td class="text-xs">${f1}</td><td class="text-xs">${respuesta}</td><td class="text-xs font-bold">${f2}</td><td class="text-xs font-medium">${safeString(row['Costo (Subtotal sin IGV)']) || '-'}</td><td>${badgeAco}</td>`;
+                tr4.innerHTML = `<td class="text-xs">${sector}</td><td class="text-xs text-center">${getCol(row, 'Bloque') || '-'}</td><td class="text-xs font-bold text-plum">${getCol(row, 'Local') || '-'}</td><td class="font-bold text-plum">${getCol(row, 'Socio Comercial') || '-'}</td><td class="text-xs text-center">${getCol(row, 'Area (m2)') || '-'}</td><td class="text-xs text-slate-700">${getCol(row, 'Requerimiento 1') || '-'}</td><td class="text-xs">${f1}</td><td class="text-xs">${respuesta}</td><td class="text-xs font-bold">${f2}</td><td class="text-xs font-medium">${getCol(row, 'Costo (Subtotal sin IGV)') || '-'}</td><td>${badgeAco}</td>`;
                 tbodySec4.appendChild(tr4);
             });
             document.getElementById('kpi-sec4-tot').innerText = s4_tot; document.getElementById('kpi-sec4-pend').innerText = s4_pend; document.getElementById('kpi-sec4-aten').innerText = s4_aten;
@@ -733,10 +780,10 @@
         function procesarDataContactos(data) {
             const tbodySec6 = document.querySelector('#table-sec6 tbody');
             data.forEach(row => {
-                let nombre = safeString(row['Nombre']); if(!nombre) return;
-                let correo = safeString(row['Correo']); 
+                let nombre = getCol(row, 'Nombre'); if(!nombre) return;
+                let correo = getCol(row, 'Correo'); 
                 let tr6 = document.createElement('tr');
-                tr6.innerHTML = `<td class="font-bold text-slate-800">${nombre}</td><td class="text-xs font-bold text-mallplaza">${safeString(row['Empresa']) || '-'}</td><td class="text-xs text-slate-600">${safeString(row['Cargo']) || '-'}</td><td class="text-xs font-medium">${safeString(row['Teléfono']) || '-'}</td><td class="text-xs text-slate-500">${correo || '-'}</td><td>${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
+                tr6.innerHTML = `<td class="font-bold text-slate-800">${nombre}</td><td class="text-xs font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-xs text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-xs font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-xs text-slate-500">${correo || '-'}</td><td>${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
                 tbodySec6.appendChild(tr6);
             });
         }
@@ -751,7 +798,14 @@
                 if (data) {
                     infoPanel.style.display = 'block'; 
                     document.getElementById('store-name').innerText = data.name;
-                    document.getElementById('bar-pc').style.width = data.pc + '%'; document.getElementById('text-pc').innerText = data.pc + '%';
+                    
+                    // Aplicar color termómetro a la barra y al texto
+                    let colorTermometro = getProgressColor(data.pc);
+                    document.getElementById('bar-pc').style.width = data.pc + '%'; 
+                    document.getElementById('bar-pc').style.backgroundColor = colorTermometro; 
+                    document.getElementById('text-pc').innerText = data.pc + '%';
+                    document.getElementById('text-pc').style.color = colorTermometro;
+                    
                     document.getElementById('text-hdl').innerText = data.hdl; 
                     document.getElementById('text-fecha-pactada').innerText = data.fechaPactada;
                     document.getElementById('text-recepcionado').innerText = data.recepcionado;
