@@ -11,10 +11,7 @@
             theme: {
                 extend: {
                     colors: {
-                        mallplaza: '#E3004F', 
-                        plum: '#4A154B',      
-                        crimson: '#D32F4C',   
-                        lightpink: '#F0B3F0', 
+                        mallplaza: '#E3004F', plum: '#4A154B', crimson: '#D32F4C', lightpink: '#F0B3F0', 
                     }
                 }
             }
@@ -303,19 +300,17 @@
                         <th class="nowrap" onclick="sortTable('table-sec3', 1)">Arq. ⇕</th>
                         <th class="nowrap" onclick="sortTable('table-sec3', 2)">Ing. ⇕</th>
                         <th class="nowrap" onclick="sortTable('table-sec3', 3)">Est. HDL ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 4)">Est. Arq. ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 5)">Est. Esp. ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 6)">F. Ent. Local P&C ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 7)">Coord. Ent. Local ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 8)">Fecha Pactada ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 9)">Hora Pactada ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 10)">Entregado ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 11)">Coord. Ini. Obra ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 12)">F. Inicio Obra ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 4)">% Rev. Arq. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 5)">% Rev. Esp. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 6)">Coord. Ent. Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 7)">Fecha Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 8)">Hora Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 9)">Entregado ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 10)">Coord. Ini. Obra ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 11)">F. Inicio Obra ⇕</th>
                         <th class="nowrap">Cronograma</th>
                     </tr>
                     <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
@@ -592,7 +587,7 @@
             return diffDays <= 5 ? `<span class="badge badge-warn">Día ${diffDays} de 5</span>` : `<span class="badge badge-alert">Vencido (${diffDays}d)</span>`;
         };
 
-        // Escala de Colores para Estatus HDL
+        // Escala de Colores para Estatus HDL (Sec 3)
         const getHdlBadge = (estHdl) => {
             let s = estHdl.toLowerCase();
             if(s.includes('sin proy')) return `<span class="badge bg-red-100 text-red-700 uppercase">${estHdl}</span>`;
@@ -627,7 +622,6 @@
                 });
                 row.style.display = showRow ? '' : 'none';
             });
-            // Actualizar contadores
             if(tableId === 'table-sec2') actContadorSec('table-sec2', 'count-sec2');
             if(tableId === 'table-sec3') actContadorSec('table-sec3', 'count-sec3');
         };
@@ -710,6 +704,17 @@
                 let alertaArq = getCol(row, 'Estatus Arquitectura');
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
 
+                // Lógica Barras de Progreso Revisiones
+                let numRevArq = parseInt(getCol(row, '# de revision de arq')) || 0;
+                let numRevEsp = parseInt(getCol(row, '# de revision de esp')) || parseInt(getCol(row, '# de revision de especialidades')) || parseInt(getCol(row, '# de revision de arq de especialidades')) || 0;
+
+                let pctArq = 0, pctEsp = 0;
+                if (alertaArq.toLowerCase().includes('aprobado')) { pctArq = 100; }
+                else if (numRevArq >= 4) { pctArq = 90; } else { pctArq = numRevArq * 25; }
+
+                if (alertaEsp.toLowerCase().includes('aprobado')) { pctEsp = 100; }
+                else if (numRevEsp >= 4) { pctEsp = 90; } else { pctEsp = numRevEsp * 25; }
+
                 if(!isVacancy) {
                     let fecComp = getCol(row, 'Fecha compromiso de entrega de local'); 
                     let fecReal = getCol(row, 'Fecha de entrega Real a Operaciones');
@@ -757,15 +762,20 @@
                     let isCronoReady = cronoStatus.toLowerCase().includes('si') || cronoStatus.toLowerCase().includes('sí');
                     let btnCronograma = `<a href="https://drive.google.com/drive/folders/1hAE0NK7Ov4K-M78qpkgY8XF5Hz5x2gTB?usp=drive_link" target="_blank" class="btn-mail ${isCronoReady ? 'btn-success' : ''}">${isCronoReady ? '✅ Listo' : '📁 Carpeta'}</a>`;
 
+                    let colorBarArq = getProgressColor(pctArq);
+                    let colorBarEsp = getProgressColor(pctEsp);
+
+                    let barArqHtml = `<div class="flex items-center gap-1 w-16"><div class="w-full h-1.5 bg-slate-200 rounded"><div class="h-full rounded" style="background-color: ${colorBarArq}; width: ${pctArq}%"></div></div><span class="text-[8px] font-bold" style="color: ${colorBarArq}">${pctArq}%</span></div>`;
+                    let barEspHtml = `<div class="flex items-center gap-1 w-16"><div class="w-full h-1.5 bg-slate-200 rounded"><div class="h-full rounded" style="background-color: ${colorBarEsp}; width: ${pctEsp}%"></div></div><span class="text-[8px] font-bold" style="color: ${colorBarEsp}">${pctEsp}%</span></div>`;
+
                     let tr3 = document.createElement('tr');
                     tr3.innerHTML = `
                     <td class="font-bold text-plum nowrap">${marca}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
                     <td class="nowrap">${getHdlBadge(estHdl)}</td>
-                    <td class="text-[9px] text-slate-800 nowrap">${alertaArq || '-'}</td>
-                    <td class="text-[9px] text-slate-800 nowrap">${alertaEsp || '-'}</td>
-                    <td class="text-[9px] nowrap">${printDate(fecComp)}</td>
+                    <td class="text-[9px] nowrap">${barArqHtml}</td>
+                    <td class="text-[9px] nowrap">${barEspHtml}</td>
                     <td class="nowrap">${btnCorreoEnt}</td>
                     <td class="text-[9px] nowrap">${printDate(fechaPactadaPopup)}</td>
                     <td class="text-[9px] nowrap">${horaPactada}</td>
@@ -935,12 +945,11 @@
                 let nombre = getCol(row, 'Nombre'); if(!nombre) return;
                 let correo = getCol(row, 'Correo'); 
                 let tr6 = document.createElement('tr');
-                tr6.innerHTML = `<td class="font-bold text-slate-800 nowrap">${nombre}</td><td class="text-[10px] font-bold text-mallplaza nowrap">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600 nowrap">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium nowrap">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500 nowrap">${correo || '-'}</td><td class="nowrap">${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
+                tr6.innerHTML = `<td class="font-bold text-slate-800 nowrap">${nombre}</td><td class="text-[10px] font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500">${correo || '-'}</td><td class="nowrap">${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
                 tbodySec6.appendChild(tr6);
             });
         }
 
-        // BÚSQUEDA ELÁSTICA EN MAPA
         const polygons = document.querySelectorAll('.store-polygon');
         const infoPanel = document.getElementById('info-panel');
         polygons.forEach(polygon => {
