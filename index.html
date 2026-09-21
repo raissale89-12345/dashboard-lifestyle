@@ -11,10 +11,7 @@
             theme: {
                 extend: {
                     colors: {
-                        mallplaza: '#E3004F', 
-                        plum: '#4A154B',      
-                        crimson: '#D32F4C',   
-                        lightpink: '#F0B3F0', 
+                        mallplaza: '#E3004F', plum: '#4A154B', crimson: '#D32F4C', lightpink: '#F0B3F0', 
                     }
                 }
             }
@@ -44,7 +41,6 @@
         .progress-fill { height: 100%; transition: width 0.6s ease, background-color 0.3s ease; border-radius: 4px;}
         .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; }
 
-        /* Ajustes de Tabla Anti-Scroll Horizontal */
         .table-wrapper { width: 100%; max-height: 500px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
         thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 6px 8px; text-align: left; font-weight: 600; cursor: pointer; user-select: none; }
@@ -62,8 +58,9 @@
         .badge-warn { background-color: #fef3c7; color: #b45309; }
         .badge-neutral { background-color: #e2e8f0; color: #475569; }
         
-        .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 18px; font-weight: 800; font-size: 1.15rem; display: inline-block; position: relative;}
+        .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 4px; font-weight: 800; font-size: 1.15rem; display: inline-block; position: relative;}
         .section-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 3px; background-color: #E3004F; border-radius: 2px; }
+        .counter-pill { background-color: #F0B3F0; color: #4A154B; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; margin-left: 8px; vertical-align: middle; }
         
         .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 3px 6px; border-radius: 4px; font-weight: 600; font-size: 0.6rem; text-decoration: none; cursor: pointer; transition: all 0.2s;}
         .btn-mail:hover { background-color: #E3004F; color: #fff; }
@@ -93,10 +90,10 @@
 
     <!-- BURBUJA 1: AVANCE GENERAL Y MAPA -->
     <section id="sec-1" class="burbuja-seccion">
-        <h2 class="section-title">1. Avance General</h2>
+        <h2 class="section-title mb-6">1. Avance General</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-3xl font-black text-plum mt-1" id="kpi-loc-tot">0</p></div>
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-3xl font-black text-plum mt-1" id="kpi-loc-tot">77</p></div>
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Contrato: <strong class="text-slate-800" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza" id="kpi-loc-vacancy">0</strong></span></div>
             </div>
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
@@ -105,12 +102,14 @@
             </div>
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
                 <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-2xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
-                <div class="grid grid-cols-2 gap-x-1 gap-y-1 pt-2 mt-1 border-t border-slate-200 text-[8px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span>Terminados: <strong class="text-slate-800" id="kpi-pc-term">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
+                <div class="grid grid-cols-2 gap-x-1 gap-y-1 pt-2 mt-1 border-t border-slate-200 text-[8px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span class="text-plum font-bold">Terminados: <strong id="kpi-pc-term" class="text-plum">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
             </div>
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">HDL - ENTREGAS</p><p class="text-2xl font-black text-plum leading-none mt-1" id="kpi-hdl-tot">0</p></div>
-                <div class="grid grid-cols-1 gap-y-1 pt-2 mt-1 border-t border-slate-200 text-[9px] font-bold text-slate-500">
-                    <div class="flex justify-between"><span>Entregas Coord:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">HDL - ENTREGAS</p>
+                    <div class="flex justify-between mt-1 text-[9px] font-bold text-slate-500"><span>Informadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-inf">0</strong></div>
+                </div>
+                <div class="grid grid-cols-1 gap-y-1 pt-1 mt-1 border-t border-slate-200 text-[9px] font-bold text-slate-500">
+                    <div class="flex justify-between"><span>Coordinadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
                     <div class="flex justify-between text-mallplaza"><span>Loc. Entregados:</span> <strong class="text-mallplaza" id="kpi-hdl-ent-reales">0</strong></div>
                 </div>
             </div>
@@ -127,7 +126,6 @@
         <div class="map-container">
             <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
             <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none" id="svg-map">
-                <!-- Polígonos de locales -->
                 <polygon class="store-polygon" data-store="capriccio" points="3459,660 3455,844 3295,812 3295,664" />
                 <polygon class="store-polygon" data-store="fridays" points="3451,840 3475,848 3690,788 3714,652 3499,652 3463,660" />
                 <polygon class="store-polygon" data-store="pardos" points="3088,1083 3092,928 3299,876 3299,1095" />
@@ -210,15 +208,26 @@
 
     <!-- BURBUJA 2: ENTREGAS P&C -->
     <section id="sec-2" class="burbuja-seccion">
-        <h2 class="section-title">2. Seguimiento de Entregas (P&C a Operaciones)</h2>
+        <div class="flex items-center mb-4">
+            <h2 class="section-title m-0">2. Seguimiento de Entregas (P&C a Operaciones)</h2>
+            <span id="count-sec2" class="counter-pill">0</span>
+        </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Coordinados</p>
-                <p class="text-xl font-black text-plum" id="kpi-sec2-coord">0</p>
+                <p class="text-[9px] font-bold text-slate-400 uppercase">% Avance de Obra</p>
+                <p class="text-xl font-black text-mallplaza" id="kpi-sec2-promedio">0%</p>
             </div>
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Entregados</p>
-                <p class="text-xl font-black text-emerald-600" id="kpi-sec2-ent">0</p>
+                <p class="text-xl font-black text-plum" id="kpi-sec2-entregados">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Con Lev. Observ.</p>
+                <p class="text-xl font-black text-orange-500" id="kpi-sec2-levobs">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Recepcionados OP</p>
+                <p class="text-xl font-black text-emerald-600" id="kpi-sec2-recepcionados">0</p>
             </div>
         </div>
         <div class="table-wrapper">
@@ -256,7 +265,10 @@
 
     <!-- BURBUJA 3: HABILITACIONES -->
     <section id="sec-3" class="burbuja-seccion">
-        <h2 class="section-title">3. Detalle Habilitaciones y Revisiones</h2>
+        <div class="flex items-center mb-4">
+            <h2 class="section-title m-0">3. Detalle Habilitaciones y Revisiones</h2>
+            <span id="count-sec3" class="counter-pill">0</span>
+        </div>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Sin Proyecto</p>
@@ -264,15 +276,15 @@
             </div>
             <div class="p-2 bg-orange-50 border border-orange-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Observado</p>
-                <p class="text-xl font-black text-orange-800" id="kpi-rev-obs">0</p>
+                <p class="text-xl font-black text-orange-600" id="kpi-rev-obs">0</p>
             </div>
             <div class="p-2 bg-blue-50 border border-blue-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobados</p>
-                <p class="text-xl font-black text-blue-800" id="kpi-aprob-hdl">0</p>
+                <p class="text-xl font-black text-blue-600" id="kpi-aprob-hdl">0</p>
             </div>
             <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-emerald-700 uppercase">Con Permiso</p>
-                <p class="text-xl font-black text-emerald-800" id="kpi-permiso">0</p>
+                <p class="text-xl font-black text-emerald-600" id="kpi-permiso">0</p>
             </div>
             <div class="p-2 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition">
                 <p class="text-[9px] font-bold text-lightpink uppercase">En Obra</p>
@@ -321,10 +333,14 @@
     <!-- BURBUJA 4: ACOMETIDAS -->
     <section id="sec-4" class="burbuja-seccion">
         <h2 class="section-title">4. Solicitudes de Cambios de Acometidas</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase">Total de Locales</p>
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Total Locales</p>
                 <p class="text-xl font-black text-slate-800" id="kpi-sec4-locales">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Total Módulos</p>
+                <p class="text-xl font-black text-slate-800" id="kpi-sec4-modulos">0</p>
             </div>
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Nº Solicitudes</p>
@@ -374,55 +390,60 @@
         </div>
     </section>
 
-    <!-- BURBUJA 5: DOCUMENTACIÓN -->
-    <section id="sec-5" class="burbuja-seccion">
-        <h2 class="section-title">5. Documentación de Ingreso a Obra</h2>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
-            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales Ingresaron</p>
-                <p class="text-xl font-black text-slate-800" id="kpi-sec5-ing">0</p>
-            </div>
-            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes de Rev.</p>
-                <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
-            </div>
-            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En Revisión</p>
-                <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
-            </div>
-            <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Aprobados</p>
-                <p class="text-xl font-black text-emerald-800" id="kpi-sec5-apr">0</p>
-            </div>
-            <div class="p-2 bg-red-50 border border-red-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Observados</p>
-                <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
-            </div>
+    <!-- BURBUJA 5: DOCUMENTACIÓN (OCULTA POR DEFECTO) -->
+    <section id="sec-5" class="burbuja-seccion transition-all duration-300">
+        <div class="flex justify-between items-center cursor-pointer" onclick="document.getElementById('sec5-content').classList.toggle('hidden'); document.getElementById('arrow-5').classList.toggle('rotate-180')">
+            <h2 class="section-title m-0">5. Documentación de Ingreso a Obra</h2>
+            <span id="arrow-5" class="text-xl font-bold text-plum transition-transform duration-300">▼</span>
         </div>
-        <div class="table-wrapper">
-            <table id="table-sec5">
-                <thead>
-                    <tr>
-                        <th class="nowrap" onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
-                    </tr>
-                    <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+        <div id="sec5-content" class="hidden mt-6">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales Ingresaron</p>
+                    <p class="text-xl font-black text-slate-800" id="kpi-sec5-ing">0</p>
+                </div>
+                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes de Rev.</p>
+                    <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
+                </div>
+                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En Revisión</p>
+                    <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
+                </div>
+                <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                    <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Aprobados</p>
+                    <p class="text-xl font-black text-emerald-800" id="kpi-sec5-apr">0</p>
+                </div>
+                <div class="p-2 bg-red-50 border border-red-200 rounded-lg text-center">
+                    <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Observados</p>
+                    <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="table-sec5">
+                    <thead>
+                        <tr>
+                            <th class="nowrap" onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </section>
 
@@ -474,7 +495,6 @@
             });
         }
 
-        // BUSCADOR INTELIGENTE
         const getCol = (row, colName) => {
             const keys = Object.keys(row);
             const foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
@@ -512,18 +532,17 @@
         const safeString = (val) => (val === undefined || val === null) ? '' : String(val).trim();
         const printDate = (val) => { return (!val || val === '-' || val === '') ? '-' : String(val); }
 
-        // LECTOR DE FECHAS REPARADO (DD/MM/YYYY asegurado)
         const parseDate = (str) => { 
             if(!str || str === '-' || String(str).trim() === '') return null;
             let s = String(str).trim();
-            if (s.includes(' ')) s = s.split(' ')[0]; // Borrar la hora si existe
+            if (s.includes(' ')) s = s.split(' ')[0]; 
             const parts = s.split(/[\/\-]/); 
             if(parts.length < 3) return null;
             
             let day = parseInt(parts[0], 10);
             let month = parseInt(parts[1], 10) - 1; 
             let year = parseInt(parts[2], 10);
-            if (year < 100) year += 2000; // Si Excel manda el año como "24" lo hace "2024"
+            if (year < 100) year += 2000; 
             
             return new Date(year, month, day); 
         };
@@ -537,7 +556,6 @@
             return '#16a34a'; 
         };
 
-        // ALERTA DE DÍAS RESTANTES/ATRASADOS (Desde HOY)
         const calcAlerta = (fecComp) => {
             if(!fecComp || fecComp === '-') return '<span class="badge badge-neutral">-</span>';
             const dComp = parseDate(fecComp);
@@ -582,6 +600,13 @@
             window.location.href = `mailto:?subject=${encodeURIComponent(asunto + ' - ' + marca + ' - Mallplaza Trujillo')}&body=${bodyEncoded}`;
         };
 
+        function actContadorSec(tableId, spanId) {
+            const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+            let count = 0;
+            rows.forEach(r => { if(r.style.display !== 'none') count++; });
+            document.getElementById(spanId).innerText = count;
+        }
+
         window.filtrarTabla = function(tableId) {
             const table = document.getElementById(tableId);
             const inputs = table.querySelector('.filter-row').querySelectorAll('input');
@@ -595,6 +620,9 @@
                 });
                 row.style.display = showRow ? '' : 'none';
             });
+            // Actualizar contadores
+            if(tableId === 'table-sec2') actContadorSec('table-sec2', 'count-sec2');
+            if(tableId === 'table-sec3') actContadorSec('table-sec3', 'count-sec3');
         };
 
         let sortDirections = {};
@@ -612,14 +640,23 @@
         };
 
         function procesarDataMain(data) {
-            let locTot = 0, locContrato = 0, locVacancy = 0, modTot = 0, modNombre = 0, modVacancy = 0;
-            let pcEjec = 0, pcTerm = 0, pcObs = 0, pcEnt = 0;
-            let totSinProy = 0, totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0;
-            let obraLoc = 0, obraMod = 0, aperturas = 0, revArq = 0, revEsp = 0;
-            let s2_coord = 0, s2_ent = 0, s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
-            let entregasCoordinadas = 0, localesEntregados = 0;
-            
+            // Sec 1 Variables
+            let locTot = 77; // FIJO SEGUN REQUERIMIENTO
+            let locContrato = 0, locVacancy = 0, modTot = 0, modNombre = 0, modVacancy = 0;
+            let pcTerm = 0; // Terminado será el contador central
+            let pcEjec = 0, pcObs = 0, pcEnt = 0;
+            let entregasInformadas = 0, entregasCoordinadas = 0, localesEntregados = 0;
+            let obraLoc = 0, obraMod = 0, aperturas = 0;
+
+            // Sec 2 Variables
+            let sumaPc = 0, validPcCount = 0;
+            let s2_entregados = 0, s2_levObs = 0, s2_recepcionados = 0;
             let dataSec2 = [];
+
+            // Sec 3 & 5 Variables
+            let totSinProy = 0, totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0;
+            let s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
+
             const t3 = document.querySelector('#table-sec3 tbody'), t5 = document.querySelector('#table-sec5 tbody');
 
             data.forEach(row => {
@@ -640,11 +677,14 @@
                 let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC') || getCol(row, 'Fecha pactada');
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
+                // DATA MAPA
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, implem: 0 };
+                storeData[marca.toLowerCase()] = storeData[id]; // Alias para busquedas raras
+                
+                if(tipo.toLowerCase() === 'local' && !isVacancy) locContrato++; 
+                else if (tipo.toLowerCase() !== 'local') { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
 
-                if(tipo.toLowerCase() === 'local') { locTot++; if(isVacancy) locVacancy++; else locContrato++; } 
-                else { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
-
+                // P&C (Sec 1)
                 let estPcLower = estPc.toLowerCase();
                 if(avancePc > 0 && avancePc < 100) pcEjec++;
                 else if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
@@ -652,50 +692,52 @@
                 if(estPcLower.includes('observado')) pcObs++; 
                 if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) pcEnt++;
 
+                // HDL ENTREGAS (Sec 1)
+                let correoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC');
+                if(correoEnt.toLowerCase().includes('si') || correoEnt.toLowerCase().includes('sí')) entregasInformadas++;
+                if(fechaPactadaPopup !== '-' && parseDate(fechaPactadaPopup)) entregasCoordinadas++;
+                if(recepcionadoStatus === 'SÍ') localesEntregados++;
+
                 let estHdlLower = estHdl.toLowerCase();
                 if(estHdlLower.includes('sin proy')) totSinProy++;
                 else if(estHdlLower.includes('revis') || estHdlLower.includes('observ')) totRevObs++;
                 else if(estHdlLower.includes('aprobado')) totAprobHdl++;
                 else if(estHdlLower.includes('permiso')) totPermiso++;
                 else if(estHdlLower.includes('obra')) { totEnObraHdl++; if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; }
-                
-                if(estHdlLower.includes('entregado') || estHdlLower.includes('aperturado')) entregasCoordinadas++; 
                 if(estHdlLower.includes('aperturado')) aperturas++; 
-                
-                if(recepcionadoStatus === 'SÍ') localesEntregados++;
 
                 let alertaArq = getCol(row, 'Estatus Arquitectura');
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
-                if(alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision')) revArq++; 
-                if(alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision')) revEsp++;
 
                 if(!isVacancy) {
+                    // SEC 2 - Recopilación KPIs
                     let fecComp = getCol(row, 'Fecha compromiso de entrega de local'); 
                     let fecReal = getCol(row, 'Fecha de entrega Real a Operaciones');
                     let fecCompLevObs = getCol(row, 'Fecha compromiso de Lev. Observ.');
                     let fecRealLevObs = getCol(row, 'Fecha Real de levantamiento de obs.');
 
-                    if(fecComp !== '-' && fecComp.toLowerCase() !== 'pendiente') s2_coord++;
-                    if(fecReal !== '-' && fecReal.toLowerCase() !== 'pendiente') s2_ent++;
+                    sumaPc += avancePc; validPcCount++;
+                    if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) s2_entregados++;
+                    if(fecRealLevObs !== '-' && parseDate(fecRealLevObs)) s2_levObs++;
 
-                    // BOTONES GOOGLE DRIVE Y ENLACES (SECCIÓN 2)
                     let statusEvidencia1 = getCol(row, 'Evidencia Fotográfica') || '-';
-                    let isEvidenciaReady = statusEvidencia1.toLowerCase() === 'si' || statusEvidencia1.toLowerCase() === 'sí';
+                    let isEvidenciaReady = statusEvidencia1.toLowerCase().includes('si') || statusEvidencia1.toLowerCase().includes('sí');
                     let btnEvidencia = `<a href="https://drive.google.com/drive/folders/1YCgT5QQToCBy3w1b2QaRq1wjW-CiZnwI?usp=drive_link" target="_blank" class="btn-mail ${isEvidenciaReady ? 'btn-success' : ''}">${isEvidenciaReady ? '✅ Listo' : '📁 Evidencia'}</a>`;
                     
                     let statusActaFinal = getCol(row, 'Acta Final') || '-';
-                    let isActaFinalReady = statusActaFinal.toLowerCase() === 'si' || statusActaFinal.toLowerCase() === 'sí';
-                    let btnActaFinal = `<a href="https://drive.google.com/drive/folders/1-Klu9o3CM_Y7cl0px5kWHmxteBeOA85Y?usp=drive_link" target="_blank" class="btn-mail ${isActaFinalReady ? 'btn-success' : ''}">${isActaFinalReady ? '✅ Listo' : '📁 Acta'}</a>`;
+                    let isActaFinalReady = statusActaFinal.toLowerCase().includes('si') || statusActaFinal.toLowerCase().includes('sí');
+                    if(isActaFinalReady) s2_recepcionados++;
+                    let btnActaFinal = `<a href="https://drive.google.com/drive/folders/1-Klu9o3CM_Y7cl0px5kWHmxteBeOA85Y?usp=drive_link" target="_blank" class="btn-mail ${isActaFinalReady ? 'btn-success' : ''}">${isActaFinalReady ? '✅ Recepcionado' : '📁 Acta'}</a>`;
 
                     dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
 
-                    // BOTONES CORREOS AUTOMÁTICOS (SECCIÓN 3)
+                    // SEC 3 - Render y Correos
                     let horaPactada = getCol(row, 'Hora pactada') || '-';
                     let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
-                    let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || getCol(row, 'Correo de coordinación de entrega de local') || '-';
+                    let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || '-';
                     let btnCorreoEnt = '';
-                    if(statusCorreoEnt.toLowerCase() === 'si' || statusCorreoEnt.toLowerCase() === 'sí') {
+                    if(statusCorreoEnt.toLowerCase().includes('si') || statusCorreoEnt.toLowerCase().includes('sí')) {
                         btnCorreoEnt = `<span class="badge badge-ok">✅ Enviado</span>`;
                     } else {
                         let bodyEnt = `Estimado equipo ${marca},\n\nLes escribo para comentarles que su local estará listo para ser recepcionado el ${printDate(fecComp)}, la entrega tiene una duración aproximada de 1 hora y 30 minutos y para el ingreso deberán contar con SCTR, DNI y EPPs completos.\n\nNos confirman los siguientes datos:\n\nNombre de persona que recepcionará el local:\nDia y Horario tentativo: XXX\n\nQuedo atenta a su pronta respuesta.\n\nGracias.\nSaludos.`;
@@ -704,28 +746,29 @@
 
                     let statusCorreoObra = getCol(row, 'Correo de coordinación de inicio de obra HDL > SSCC') || '-';
                     let btnCorreoObra = '';
-                    if(statusCorreoObra.toLowerCase() === 'si' || statusCorreoObra.toLowerCase() === 'sí') {
+                    if(statusCorreoObra.toLowerCase().includes('si') || statusCorreoObra.toLowerCase().includes('sí')) {
                         btnCorreoObra = `<span class="badge badge-ok">✅ Enviado</span>`;
                     } else {
-                        let bodyObra = `Estimado equipo ${marca},\n\nNos comunicamos para realizar la coordinación de inicio de obra de su local.\nPor favor, confirmarnos la fecha exacta y enviarnos la documentación requerida por HDL.\n\nSaludos cordiales.`;
+                        let bodyObra = `Estimado equipo ${marca},\n\nLes comento que estamos próximos al inicio de obra de su local en Mallplaza Trujillo; por lo que les solicito nos envíen el cronograma de obra (considerar que se puede trabajar 24/7) y adicionalmente a ello les envío los siguientes documentos (requisitos de ingreso a obra) que deben presentar:\n\n1. Requisitos de ingreso a Obra por parte de HV (Constructora) los cuales debe presentar para su validación por parte de HV.\n2. Formato de Charla de Inducción (debe completar y adjuntar)\n3. Formato de Ingreso de Sub-Contratas (debe completar y adjuntar)\n4. Lineamientos SSOMA para Locatarios de PMS (Supervisión) los cuales debe cumplir para garantizar un ambiente de trabajo seguro bajo normativa legal vigente.\n\nAdicionalmente considerar:\nPDR / Supervisor SSOMA con 2 años de experiencia acreditada como mínimo en construcción en Retail. Enviar su CV documentado para validación a PMS.\n\nLes pido por favor puedan enviar estos documentos a la brevedad posible para que el equipo pueda revisarlos, considerar que se tiene un plazo de 7 días para la revisión de la documentación.\n\nSumo a Gaudy Arana (garana@pmsproyectos.com.pe) para que nos pueda ayudar con la revisión y/o con cualquier duda que puedan tener sobre el ingreso a obra.\n\nSaludos,`;
                         btnCorreoObra = `<button onclick="window.enviarCorreoCoordPers('${marca}', 'Coordinación de Inicio de Obra', \`${encodeURIComponent(bodyObra)}\`)" class="btn-mail">✉️ Correo</button>`;
                     }
 
                     let cronoStatus = getCol(row, 'Cronograma') || '-';
-                    let isCronoReady = cronoStatus.toLowerCase() === 'si' || cronoStatus.toLowerCase() === 'sí';
+                    let isCronoReady = cronoStatus.toLowerCase().includes('si') || cronoStatus.toLowerCase().includes('sí');
                     let btnCronograma = `<a href="https://drive.google.com/drive/folders/1hAE0NK7Ov4K-M78qpkgY8XF5Hz5x2gTB?usp=drive_link" target="_blank" class="btn-mail ${isCronoReady ? 'btn-success' : ''}">${isCronoReady ? '✅ Listo' : '📁 Carpeta'}</a>`;
 
-                    let tr3 = document.createElement('tr');
-                    let badgeArq = alertaArq.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
-                    let badgeEsp = alertaEsp.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
+                    // Colores de texto (sin fondo) para Arq y Esp
+                    let colorArq = alertaArq.toLowerCase().includes('atrasado') ? 'text-red-600 font-bold' : (alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision') ? 'text-orange-500 font-bold' : 'text-green-600 font-bold');
+                    let colorEsp = alertaEsp.toLowerCase().includes('atrasado') ? 'text-red-600 font-bold' : (alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision') ? 'text-orange-500 font-bold' : 'text-green-600 font-bold');
 
+                    let tr3 = document.createElement('tr');
                     tr3.innerHTML = `
                     <td class="font-bold text-plum nowrap">${marca}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
                     <td class="nowrap">${getHdlBadge(estHdl)}</td>
-                    <td class="text-[10px] nowrap"><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td>
-                    <td class="text-[10px] nowrap"><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td>
+                    <td class="text-[10px] nowrap ${colorArq}">${alertaArq || '-'}</td>
+                    <td class="text-[10px] nowrap ${colorEsp}">${alertaEsp || '-'}</td>
                     <td class="nowrap">${btnCorreoEnt}</td>
                     <td class="text-[9px] nowrap">${printDate(fechaPactadaPopup)}</td>
                     <td class="text-[9px] nowrap">${horaPactada}</td>
@@ -735,7 +778,7 @@
                     <td class="nowrap">${btnCronograma}</td>`;
                     t3.appendChild(tr3);
 
-                    // Render Tabla 5 (Doc)
+                    // SEC 5 - Doc
                     let dEst = getCol(row, 'Estatus Documentacion').toLowerCase() || '-'; 
                     let dRes = getCol(row, 'Resultado de Revisión').toLowerCase() || '-'; 
                     let dFin = getCol(row, 'Estatus Final').toLowerCase() || '-';
@@ -755,6 +798,32 @@
                 }
             });
 
+            // Lógica final Sec 1
+            locVacancy = locTot - locContrato; 
+            document.getElementById('kpi-loc-contrato').innerText = locContrato; 
+            document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
+            
+            document.getElementById('kpi-mod-tot').innerText = modTot; document.getElementById('kpi-mod-nombre').innerText = modNombre; document.getElementById('kpi-mod-vacancy').innerText = modVacancy;
+            document.getElementById('kpi-pc-tot').innerText = pcTerm; // Ahora es terminados
+            document.getElementById('kpi-pc-ejec').innerText = pcEjec; document.getElementById('kpi-pc-term').innerText = pcTerm; document.getElementById('kpi-pc-obs').innerText = pcObs; document.getElementById('kpi-pc-ent').innerText = pcEnt;
+            document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
+            document.getElementById('kpi-aperturas').innerText = aperturas;
+            
+            // Lógica final Sec 1 (HDL)
+            document.getElementById('kpi-hdl-ent-inf').innerText = entregasInformadas;
+            document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
+            document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
+            
+            // Lógica final Sec 3 KPIs
+            document.getElementById('kpi-sin-proy').innerText = totSinProy;
+            document.getElementById('kpi-rev-obs').innerText = totRevObs;
+            document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
+            document.getElementById('kpi-permiso').innerText = totPermiso;
+            document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl;
+            
+            // Lógica final Sec 5 KPIs
+            document.getElementById('kpi-sec5-ing').innerText = s5_ing; document.getElementById('kpi-sec5-pend').innerText = s5_pend; document.getElementById('kpi-sec5-rev').innerText = s5_rev; document.getElementById('kpi-sec5-apr').innerText = s5_apr; document.getElementById('kpi-sec5-obs').innerText = s5_obs;
+
             // Ordenamiento por defecto Sección 2 (Fechas Próximas primero)
             dataSec2.sort((a, b) => {
                 let dateA = parseDate(a.fecComp); let dateB = parseDate(b.fecComp);
@@ -762,8 +831,8 @@
                 return dateA - dateB;
             });
 
+            const tbodySec2 = document.querySelector('#table-sec2 tbody');
             dataSec2.forEach(item => {
-                const tbodySec2 = document.querySelector('#table-sec2 tbody');
                 let tr2 = document.createElement('tr');
                 let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
                 let barraColor = getProgressColor(item.avancePc);
@@ -788,30 +857,29 @@
                 tbodySec2.appendChild(tr2);
             });
 
-            document.getElementById('kpi-loc-tot').innerText = locTot; document.getElementById('kpi-loc-contrato').innerText = locContrato; document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
-            document.getElementById('kpi-mod-tot').innerText = modTot; document.getElementById('kpi-mod-nombre').innerText = modNombre; document.getElementById('kpi-mod-vacancy').innerText = modVacancy;
-            document.getElementById('kpi-pc-tot').innerText = pcEjec + pcTerm + pcObs + pcEnt; document.getElementById('kpi-pc-ejec').innerText = pcEjec; document.getElementById('kpi-pc-term').innerText = pcTerm; document.getElementById('kpi-pc-obs').innerText = pcObs; document.getElementById('kpi-pc-ent').innerText = pcEnt;
-            document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
-            document.getElementById('kpi-aperturas').innerText = aperturas;
-            document.getElementById('kpi-sin-proy').innerText = totSinProy;
-            document.getElementById('kpi-rev-obs').innerText = totRevObs;
-            document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
-            document.getElementById('kpi-permiso').innerText = totPermiso;
-            document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl;
-            document.getElementById('kpi-sec2-coord').innerText = s2_coord; document.getElementById('kpi-sec2-ent').innerText = s2_ent;
-            document.getElementById('kpi-sec5-ing').innerText = s5_ing; document.getElementById('kpi-sec5-pend').innerText = s5_pend; document.getElementById('kpi-sec5-rev').innerText = s5_rev; document.getElementById('kpi-sec5-apr').innerText = s5_apr; document.getElementById('kpi-sec5-obs').innerText = s5_obs;
-            document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
-            document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
+            // KPIs Sección 2 actualizados
+            document.getElementById('kpi-sec2-promedio').innerText = validPcCount > 0 ? (sumaPc / validPcCount).toFixed(1) + '%' : '0%';
+            document.getElementById('kpi-sec2-entregados').innerText = s2_entregados;
+            document.getElementById('kpi-sec2-levobs').innerText = s2_levObs;
+            document.getElementById('kpi-sec2-recepcionados').innerText = s2_recepcionados;
+
+            // Iniciar contadores
+            actContadorSec('table-sec2', 'count-sec2');
+            actContadorSec('table-sec3', 'count-sec3');
         }
 
         function procesarDataAcometidas(data) {
-            let s4_locales = 0, s4_tot = 0, s4_pend = 0, s4_aten = 0;
+            let s4_locales = 0, s4_modulos = 0, s4_tot = 0, s4_pend = 0, s4_aten = 0;
             const tbodySec4 = document.querySelector('#table-sec4 tbody');
             let dataSec4 = [];
 
             data.forEach(row => {
                 let sector = getCol(row, 'Sector'); if(!sector) return;
-                s4_locales++;
+                
+                // Determinar si es Local o Módulo (leyendo el Socio Comercial e infiriendo de storeData)
+                let socio = getCol(row, 'Socio Comercial') || '-';
+                let isMod = socio.toLowerCase().includes('modulo') || sector.toLowerCase().includes('modulo');
+                if(isMod) s4_modulos++; else s4_locales++;
                 
                 let requerimiento = getCol(row, 'Requerimiento 1') || '-';
                 let respuesta = getCol(row, 'Respuesta 1') || '-';
@@ -823,17 +891,12 @@
                 if(isReq) {
                     s4_tot++;
                     if(respuesta.toLowerCase().includes('aprob') || respuesta.toLowerCase().includes('atendid') || respuesta.toLowerCase().includes('rechaz') || (respuesta !== '-' && !respuesta.toLowerCase().includes('pend'))) {
-                        estRaw = 'Atendido';
-                        s4_aten++;
-                        sortOrder = 2; // Atendidos al medio
+                        estRaw = 'Atendido'; s4_aten++; sortOrder = 2; 
                     } else {
-                        estRaw = 'Pendiente';
-                        s4_pend++;
-                        sortOrder = 1; // Pendientes primero
+                        estRaw = 'Pendiente'; s4_pend++; sortOrder = 1; 
                     }
                 } else {
-                    estRaw = 'Sin Req.';
-                    sortOrder = 3; // Sin req al final
+                    estRaw = 'Sin Req.'; sortOrder = 3;
                 }
 
                 let keys = Object.keys(row);
@@ -844,13 +907,10 @@
                 dataSec4.push({row, sector, requerimiento, respuesta, estRaw, sortOrder, f1, f2});
             });
 
-            // Ordenamiento por defecto (Nuevos requerimientos > Atendidos > Sin Req)
             dataSec4.sort((a, b) => a.sortOrder - b.sortOrder);
 
-            // Evitar scroll lateral envolviendo los textos largos en múltiples líneas (whitespace-normal)
             dataSec4.forEach(item => {
                 let badgeAco = item.estRaw === 'Atendido' ? `<span class="badge badge-ok">Atendido</span>` : (item.estRaw === 'Pendiente' ? `<span class="badge badge-alert">Pendiente</span>` : `<span class="badge badge-neutral">-</span>`);
-
                 let tr4 = document.createElement('tr');
                 tr4.innerHTML = `
                 <td class="text-[9px] nowrap">${item.sector}</td>
@@ -868,6 +928,7 @@
             });
 
             document.getElementById('kpi-sec4-locales').innerText = s4_locales;
+            document.getElementById('kpi-sec4-modulos').innerText = s4_modulos;
             document.getElementById('kpi-sec4-tot').innerText = s4_tot;
             document.getElementById('kpi-sec4-pend').innerText = s4_pend;
             document.getElementById('kpi-sec4-aten').innerText = s4_aten;
@@ -884,13 +945,21 @@
             });
         }
 
+        // BÚSQUEDA ELÁSTICA EN MAPA
         const polygons = document.querySelectorAll('.store-polygon');
         const infoPanel = document.getElementById('info-panel');
         polygons.forEach(polygon => {
             polygon.addEventListener('click', function(e) {
                 polygons.forEach(p => p.classList.remove('selected')); this.classList.add('selected');
                 const searchId = normalizeId(this.getAttribute('data-store'));
-                const data = storeData[searchId];
+                
+                // Buscar por ID exacto, o si está incluido (Ej: pardoschicken y pardos)
+                let data = storeData[searchId];
+                if (!data) {
+                    const matchingKey = Object.keys(storeData).find(k => k.includes(searchId) || searchId.includes(k));
+                    if(matchingKey) data = storeData[matchingKey];
+                }
+
                 if (data) {
                     infoPanel.style.display = 'block'; 
                     document.getElementById('store-name').innerText = data.name;
