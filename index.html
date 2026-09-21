@@ -44,16 +44,16 @@
         .progress-fill { height: 100%; transition: width 0.6s ease, background-color 0.3s ease; border-radius: 4px;}
         .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; }
 
-        /* Ajustes para tablas ultra compactas */
-        .table-wrapper { width: 100%; max-height: 450px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
+        /* Ajustes de Tabla Anti-Scroll Horizontal */
+        .table-wrapper { width: 100%; max-height: 500px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
-        thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 6px 8px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
+        thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 6px 8px; text-align: left; font-weight: 600; cursor: pointer; user-select: none; }
         thead tr:first-child th:hover { background-color: #6a1e6b; }
         thead tr.filter-row th { position: sticky; top: 29px; z-index: 19; background-color: #f8fafc; padding: 4px 6px; border-bottom: 2px solid #e2e8f0; }
         
-        .filter-input { width: 100%; text-align: left; font-size: 0.65rem; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; outline: none; }
+        .filter-input { width: 100%; text-align: left; font-size: 0.6rem; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; outline: none; }
         .filter-input:focus { border-color: #E3004F; box-shadow: 0 0 0 1px #E3004F; }
-        td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; vertical-align: middle; }
+        td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
         tr:hover { background-color: #fff1f2; }
         
         .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; display: inline-block; text-align: center; }
@@ -64,11 +64,12 @@
         
         .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 18px; font-weight: 800; font-size: 1.15rem; display: inline-block; position: relative;}
         .section-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 3px; background-color: #E3004F; border-radius: 2px; }
+        
         .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 3px 6px; border-radius: 4px; font-weight: 600; font-size: 0.6rem; text-decoration: none; cursor: pointer; transition: all 0.2s;}
         .btn-mail:hover { background-color: #E3004F; color: #fff; }
-        
-        /* Botones verdes cuando la tarea está hecha */
         .btn-success { background-color: #dcfce7 !important; color: #166534 !important; border-color: #22c55e !important; pointer-events: none;}
+        
+        .nowrap { white-space: nowrap; }
     </style>
 </head>
 <body class="p-2 md:p-6 max-w-[1600px] mx-auto">
@@ -224,16 +225,16 @@
             <table id="table-sec2">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec2', 0)">Local ⇕</th>
-                        <th onclick="sortTable('table-sec2', 1)">% P&C ⇕</th>
-                        <th onclick="sortTable('table-sec2', 2)">F. Comp. Entrega ⇕</th>
-                        <th onclick="sortTable('table-sec2', 3)">F. Real a OP ⇕</th>
-                        <th onclick="sortTable('table-sec2', 4)">Alerta ⇕</th>
-                        <th>Evidencia Fotográfica</th>
-                        <th onclick="sortTable('table-sec2', 6)">Estatus ⇕</th>
-                        <th onclick="sortTable('table-sec2', 7)">Fecha compromiso de Lev. Observ. ⇕</th>
-                        <th onclick="sortTable('table-sec2', 8)">Fecha Real de levantamiento de obs. ⇕</th>
-                        <th>Acta Final</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 0)">Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 1)">% P&C ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 2)">F. Comp. Entrega ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 3)">F. Real a OP ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 4)">Alerta ⇕</th>
+                        <th class="nowrap">Evidencia Fotográfica</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 6)">Estatus ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 7)">Fecha comp. Lev. Obs. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 8)">Fecha Real Lev. Obs. ⇕</th>
+                        <th class="nowrap">Acta Final</th>
                     </tr>
                     <tr class="filter-row">
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
@@ -282,19 +283,19 @@
             <table id="table-sec3">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec3', 0)">Operador ⇕</th>
-                        <th onclick="sortTable('table-sec3', 1)">Arq. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 2)">Ing. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 3)">Estatus HDL ⇕</th>
-                        <th onclick="sortTable('table-sec3', 4)">Est. Arq. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 5)">Est. Esp. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 6)">Coord. Ent. Local ⇕</th>
-                        <th onclick="sortTable('table-sec3', 7)">Fecha Pactada ⇕</th>
-                        <th onclick="sortTable('table-sec3', 8)">Hora Pactada ⇕</th>
-                        <th onclick="sortTable('table-sec3', 9)">Entregado ⇕</th>
-                        <th onclick="sortTable('table-sec3', 10)">Coord. Ini. Obra ⇕</th>
-                        <th onclick="sortTable('table-sec3', 11)">F. Inicio Obra ⇕</th>
-                        <th>Cronograma</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 0)">Operador ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 1)">Arq. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 2)">Ing. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 3)">Est. HDL ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 4)">Est. Arq. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 5)">Est. Esp. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 6)">Coord. Ent. Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 7)">Fecha Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 8)">Hora Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 9)">Entregado ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 10)">Coord. Ini. Obra ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 11)">F. Inicio Obra ⇕</th>
+                        <th class="nowrap">Cronograma</th>
                     </tr>
                     <tr class="filter-row">
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
@@ -320,35 +321,39 @@
     <!-- BURBUJA 4: ACOMETIDAS -->
     <section id="sec-4" class="burbuja-seccion">
         <h2 class="section-title">4. Solicitudes de Cambios de Acometidas</h2>
-        <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase">Solicitudes Totales</p>
-                <p class="text-xl font-black text-slate-800" id="kpi-sec4-tot">0</p>
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Total de Locales</p>
+                <p class="text-xl font-black text-slate-800" id="kpi-sec4-locales">0</p>
             </div>
-            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-plum">
-                <p class="text-[9px] font-bold text-slate-400 uppercase">Pendientes</p>
-                <p class="text-xl font-black text-plum" id="kpi-sec4-pend">0</p>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Nº Solicitudes</p>
+                <p class="text-xl font-black text-blue-600" id="kpi-sec4-tot">0</p>
             </div>
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Atendidas</p>
                 <p class="text-xl font-black text-emerald-600" id="kpi-sec4-aten">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-red-500">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Pendientes</p>
+                <p class="text-xl font-black text-red-600" id="kpi-sec4-pend">0</p>
             </div>
         </div>
         <div class="table-wrapper">
             <table id="table-sec4">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec4', 0)">Sector ⇕</th>
-                        <th onclick="sortTable('table-sec4', 1)">Bloque ⇕</th>
-                        <th onclick="sortTable('table-sec4', 2)">Local ⇕</th>
-                        <th onclick="sortTable('table-sec4', 3)">Socio Comercial ⇕</th>
-                        <th onclick="sortTable('table-sec4', 4)">Área (m2) ⇕</th>
-                        <th onclick="sortTable('table-sec4', 5)">Requerimiento ⇕</th>
-                        <th onclick="sortTable('table-sec4', 6)">F. Solicitud ⇕</th>
-                        <th onclick="sortTable('table-sec4', 7)">Respuesta ⇕</th>
-                        <th onclick="sortTable('table-sec4', 8)">F. Respuesta ⇕</th>
-                        <th onclick="sortTable('table-sec4', 9)">Costo ⇕</th>
-                        <th onclick="sortTable('table-sec4', 10)">Estatus ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 0)">Sector ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 1)">Bloque ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 2)">Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 3)">Socio Comercial ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 4)">Área (m2) ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 5)">Requerimiento ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 6)">F. Solicitud ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 7)">Respuesta ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 8)">F. Respuesta ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 9)">Costo ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 10)">Estatus ⇕</th>
                     </tr>
                     <tr class="filter-row">
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
@@ -398,13 +403,13 @@
             <table id="table-sec5">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
-                        <th onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
-                        <th onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
-                        <th onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
-                        <th onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
-                        <th onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
-                        <th onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
                     </tr>
                     <tr class="filter-row">
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
@@ -428,12 +433,12 @@
             <table id="table-sec6">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec6', 0)">Nombre ⇕</th>
-                        <th onclick="sortTable('table-sec6', 1)">Empresa / Marca ⇕</th>
-                        <th onclick="sortTable('table-sec6', 2)">Cargo / Rol ⇕</th>
-                        <th onclick="sortTable('table-sec6', 3)">Teléfono ⇕</th>
-                        <th onclick="sortTable('table-sec6', 4)">Correo ⇕</th>
-                        <th>Acción</th>
+                        <th class="nowrap" onclick="sortTable('table-sec6', 0)">Nombre ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec6', 1)">Empresa / Marca ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec6', 2)">Cargo / Rol ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec6', 3)">Teléfono ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec6', 4)">Correo ⇕</th>
+                        <th class="nowrap">Acción</th>
                     </tr>
                     <tr class="filter-row">
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
@@ -469,14 +474,13 @@
             });
         }
 
-        // BUSCADOR INTELIGENTE DE COLUMNAS
+        // BUSCADOR INTELIGENTE
         const getCol = (row, colName) => {
             const keys = Object.keys(row);
             const foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
             return foundKey ? safeString(row[foundKey]) : '';
         };
 
-        // NORMALIZADOR DE MAPA 100% (Ignora espacios, tildes y símbolos raros como el &)
         const normalizeId = (id) => {
             if (!id) return '';
             return String(id).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
@@ -508,31 +512,32 @@
         const safeString = (val) => (val === undefined || val === null) ? '' : String(val).trim();
         const printDate = (val) => { return (!val || val === '-' || val === '') ? '-' : String(val); }
 
-        // MOTOR DE FECHAS ESTRICTO Y CORREGIDO
+        // LECTOR DE FECHAS REPARADO (DD/MM/YYYY asegurado)
         const parseDate = (str) => { 
-            if(!str || str === '-' || str.trim() === '') return null;
+            if(!str || str === '-' || String(str).trim() === '') return null;
             let s = String(str).trim();
-            if (s.includes(' ')) s = s.split(' ')[0]; // Quitar horas si las trae
+            if (s.includes(' ')) s = s.split(' ')[0]; // Borrar la hora si existe
             const parts = s.split(/[\/\-]/); 
             if(parts.length < 3) return null;
+            
             let day = parseInt(parts[0], 10);
-            let month = parseInt(parts[1], 10) - 1; // Meses en JS van de 0 a 11
+            let month = parseInt(parts[1], 10) - 1; 
             let year = parseInt(parts[2], 10);
-            if (year < 100) year += 2000; // Corrige si Excel manda el año como "24" en vez de "2024"
+            if (year < 100) year += 2000; // Si Excel manda el año como "24" lo hace "2024"
+            
             return new Date(year, month, day); 
         };
 
-        // SEMÁFORO DE PORCENTAJES
         const getProgressColor = (percent) => {
-            if (percent < 20) return '#ef4444'; // Rojo
-            if (percent < 45) return '#f97316'; // Naranja
-            if (percent < 65) return '#eab308'; // Amarillo
-            if (percent < 90) return '#84cc16'; // Verde claro
-            if (percent < 100) return '#22c55e'; // Verde
-            return '#16a34a'; // Verde oscuro
+            if (percent < 20) return '#ef4444'; 
+            if (percent < 45) return '#f97316'; 
+            if (percent < 65) return '#eab308'; 
+            if (percent < 90) return '#84cc16'; 
+            if (percent < 100) return '#22c55e'; 
+            return '#16a34a'; 
         };
 
-        // ALERTA FECHAS (Calcula días respecto a HOY)
+        // ALERTA DE DÍAS RESTANTES/ATRASADOS (Desde HOY)
         const calcAlerta = (fecComp) => {
             if(!fecComp || fecComp === '-') return '<span class="badge badge-neutral">-</span>';
             const dComp = parseDate(fecComp);
@@ -563,7 +568,6 @@
             return diffDays <= 5 ? `<span class="badge badge-warn">Día ${diffDays} de 5</span>` : `<span class="badge badge-alert">Vencido (${diffDays}d)</span>`;
         };
 
-        // Escala de Colores para HDL (Sección 3)
         const getHdlBadge = (estHdl) => {
             let s = estHdl.toLowerCase();
             if(s.includes('sin proy')) return `<span class="badge bg-slate-100 text-slate-500 uppercase">${estHdl}</span>`;
@@ -616,8 +620,7 @@
             let entregasCoordinadas = 0, localesEntregados = 0;
             
             let dataSec2 = [];
-
-            const t2 = document.querySelector('#table-sec2 tbody'), t3 = document.querySelector('#table-sec3 tbody'), t5 = document.querySelector('#table-sec5 tbody');
+            const t3 = document.querySelector('#table-sec3 tbody'), t5 = document.querySelector('#table-sec5 tbody');
 
             data.forEach(row => {
                 let rawId = getCol(row, 'id_poligono');
@@ -637,7 +640,6 @@
                 let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC') || getCol(row, 'Fecha pactada');
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
-                // Mapeo seguro para el popup interactivo
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, implem: 0 };
 
                 if(tipo.toLowerCase() === 'local') { locTot++; if(isVacancy) locVacancy++; else locContrato++; } 
@@ -676,42 +678,33 @@
                     if(fecComp !== '-' && fecComp.toLowerCase() !== 'pendiente') s2_coord++;
                     if(fecReal !== '-' && fecReal.toLowerCase() !== 'pendiente') s2_ent++;
 
-                    // BOTONES GOOGLE DRIVE (SECCION 2)
-                    let statusEvidencia1 = getCol(row, 'Evidencia Fotográfica') || getCol(row, 'Acta 1') || '-';
-                    let isEvidenciaReady = statusEvidencia1.toLowerCase().includes('si') || statusEvidencia1.toLowerCase().includes('sí');
-                    let btnEvidencia = `<a href="https://drive.google.com/drive/folders/1YCgT5QQToCBy3w1b2QaRq1wjW-CiZnwI?usp=drive_link" target="_blank" class="btn-mail ${isEvidenciaReady ? 'btn-success' : ''}">📁 ${isEvidenciaReady ? 'Subido' : 'Evidencia'}</a>`;
+                    // BOTONES GOOGLE DRIVE Y ENLACES (SECCIÓN 2)
+                    let statusEvidencia1 = getCol(row, 'Evidencia Fotográfica') || '-';
+                    let isEvidenciaReady = statusEvidencia1.toLowerCase() === 'si' || statusEvidencia1.toLowerCase() === 'sí';
+                    let btnEvidencia = `<a href="https://drive.google.com/drive/folders/1YCgT5QQToCBy3w1b2QaRq1wjW-CiZnwI?usp=drive_link" target="_blank" class="btn-mail ${isEvidenciaReady ? 'btn-success' : ''}">${isEvidenciaReady ? '✅ Listo' : '📁 Evidencia'}</a>`;
                     
                     let statusActaFinal = getCol(row, 'Acta Final') || '-';
-                    let isActaFinalReady = statusActaFinal.toLowerCase().includes('si') || statusActaFinal.toLowerCase().includes('sí');
-                    let btnActaFinal = `<a href="https://drive.google.com/drive/folders/1-Klu9o3CM_Y7cl0px5kWHmxteBeOA85Y?usp=drive_link" target="_blank" class="btn-mail ${isActaFinalReady ? 'btn-success' : ''}">📁 ${isActaFinalReady ? 'Subido' : 'Acta'}</a>`;
+                    let isActaFinalReady = statusActaFinal.toLowerCase() === 'si' || statusActaFinal.toLowerCase() === 'sí';
+                    let btnActaFinal = `<a href="https://drive.google.com/drive/folders/1-Klu9o3CM_Y7cl0px5kWHmxteBeOA85Y?usp=drive_link" target="_blank" class="btn-mail ${isActaFinalReady ? 'btn-success' : ''}">${isActaFinalReady ? '✅ Listo' : '📁 Acta'}</a>`;
 
-                    // Guardar para renderizar y ordenar Sección 2
-                    dataSec2.push({
-                        marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal
-                    });
+                    dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
 
-                    // Render Tabla 3 (Habilitaciones con Correos)
+                    // BOTONES CORREOS AUTOMÁTICOS (SECCIÓN 3)
                     let horaPactada = getCol(row, 'Hora pactada') || '-';
                     let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
-                    let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local') || '-';
+                    let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || getCol(row, 'Correo de coordinación de entrega de local') || '-';
                     let btnCorreoEnt = '';
-                    if(statusCorreoEnt.toLowerCase().includes('si') || statusCorreoEnt.toLowerCase().includes('enviado') || statusCorreoEnt.toLowerCase().includes('realiz')) {
+                    if(statusCorreoEnt.toLowerCase() === 'si' || statusCorreoEnt.toLowerCase() === 'sí') {
                         btnCorreoEnt = `<span class="badge badge-ok">✅ Enviado</span>`;
                     } else {
-                        let mes = "-";
-                        if(fechaPactadaPopup !== '-' && parseDate(fechaPactadaPopup)) {
-                            const dateObj = parseDate(fechaPactadaPopup);
-                            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                            mes = meses[dateObj.getMonth()];
-                        }
-                        let bodyEnt = `Estimado equipo ${marca},\n\nLes escribo para comentarles que su local estará listo para ser recepcionado el ${fechaPactadaPopup} de ${mes}, la entrega tiene una duración aproximada de 1 hora y 30 minutos y para el ingreso deberán contar con SCTR, DNI y EPPs completos.\n\nNos confirman los siguientes datos:\n\nNombre de persona que recepcionará el local:\nDia y Horario tentativo: ${fechaPactadaPopup} a las ${horaPactada}\n\nQuedo atenta a su pronta respuesta.\n\nGracias.\nSaludos.`;
+                        let bodyEnt = `Estimado equipo ${marca},\n\nLes escribo para comentarles que su local estará listo para ser recepcionado el ${printDate(fecComp)}, la entrega tiene una duración aproximada de 1 hora y 30 minutos y para el ingreso deberán contar con SCTR, DNI y EPPs completos.\n\nNos confirman los siguientes datos:\n\nNombre de persona que recepcionará el local:\nDia y Horario tentativo: XXX\n\nQuedo atenta a su pronta respuesta.\n\nGracias.\nSaludos.`;
                         btnCorreoEnt = `<button onclick="window.enviarCorreoCoordPers('${marca}', 'Coordinación de Entrega de Local', \`${encodeURIComponent(bodyEnt)}\`)" class="btn-mail">✉️ Correo</button>`;
                     }
 
                     let statusCorreoObra = getCol(row, 'Correo de coordinación de inicio de obra HDL > SSCC') || '-';
                     let btnCorreoObra = '';
-                    if(statusCorreoObra.toLowerCase().includes('si') || statusCorreoObra.toLowerCase().includes('enviado') || statusCorreoObra.toLowerCase().includes('realiz')) {
+                    if(statusCorreoObra.toLowerCase() === 'si' || statusCorreoObra.toLowerCase() === 'sí') {
                         btnCorreoObra = `<span class="badge badge-ok">✅ Enviado</span>`;
                     } else {
                         let bodyObra = `Estimado equipo ${marca},\n\nNos comunicamos para realizar la coordinación de inicio de obra de su local.\nPor favor, confirmarnos la fecha exacta y enviarnos la documentación requerida por HDL.\n\nSaludos cordiales.`;
@@ -719,24 +712,27 @@
                     }
 
                     let cronoStatus = getCol(row, 'Cronograma') || '-';
-                    let isCronoReady = cronoStatus.toLowerCase().includes('si') || cronoStatus.toLowerCase().includes('sí');
-                    let btnCronograma = `<a href="https://drive.google.com/drive/folders/1hAE0NK7Ov4K-M78qpkgY8XF5Hz5x2gTB?usp=drive_link" target="_blank" class="btn-mail ${isCronoReady ? 'btn-success' : ''}">📁 ${isCronoReady ? 'Cargado' : 'Carpeta'}</a>`;
+                    let isCronoReady = cronoStatus.toLowerCase() === 'si' || cronoStatus.toLowerCase() === 'sí';
+                    let btnCronograma = `<a href="https://drive.google.com/drive/folders/1hAE0NK7Ov4K-M78qpkgY8XF5Hz5x2gTB?usp=drive_link" target="_blank" class="btn-mail ${isCronoReady ? 'btn-success' : ''}">${isCronoReady ? '✅ Listo' : '📁 Carpeta'}</a>`;
 
                     let tr3 = document.createElement('tr');
+                    let badgeArq = alertaArq.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
+                    let badgeEsp = alertaEsp.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
+
                     tr3.innerHTML = `
-                    <td class="font-bold text-plum">${marca}</td>
-                    <td class="text-[9px]">${getCol(row, 'Arquitecta') || '-'}</td>
-                    <td class="text-[9px]">${getCol(row, 'Ingeniero') || '-'}</td>
-                    <td>${getHdlBadge(estHdl)}</td>
-                    <td class="text-[10px]">${alertaArq || '-'}</td>
-                    <td class="text-[10px]">${alertaEsp || '-'}</td>
-                    <td>${btnCorreoEnt}</td>
-                    <td class="text-[10px]">${printDate(fechaPactadaPopup)}</td>
-                    <td class="text-[10px]">${horaPactada}</td>
-                    <td class="text-[10px] font-bold text-mallplaza">${recepcionadoStatus}</td>
-                    <td>${btnCorreoObra}</td>
-                    <td class="text-[10px] font-bold">${printDate(fecInicioObra)}</td>
-                    <td>${btnCronograma}</td>`;
+                    <td class="font-bold text-plum nowrap">${marca}</td>
+                    <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
+                    <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
+                    <td class="nowrap">${getHdlBadge(estHdl)}</td>
+                    <td class="text-[10px] nowrap"><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td>
+                    <td class="text-[10px] nowrap"><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td>
+                    <td class="nowrap">${btnCorreoEnt}</td>
+                    <td class="text-[9px] nowrap">${printDate(fechaPactadaPopup)}</td>
+                    <td class="text-[9px] nowrap">${horaPactada}</td>
+                    <td class="text-[9px] font-bold text-mallplaza nowrap">${recepcionadoStatus}</td>
+                    <td class="nowrap">${btnCorreoObra}</td>
+                    <td class="text-[9px] font-bold nowrap">${printDate(fecInicioObra)}</td>
+                    <td class="nowrap">${btnCronograma}</td>`;
                     t3.appendChild(tr3);
 
                     // Render Tabla 5 (Doc)
@@ -754,7 +750,7 @@
                     let badgeRes = dRes.includes('aprobado') ? `<span class="badge badge-ok">${getCol(row, 'Resultado de Revisión') || '-'}</span>` : (dRes.includes('observado') || dRes.includes('incompleto') || dRes.includes('evaluación') || dRes.includes('evaluacion') ? `<span class="badge badge-warn">${getCol(row, 'Resultado de Revisión') || '-'}</span>` : `<span class="badge badge-neutral">${getCol(row, 'Resultado de Revisión') || '-'}</span>`);
                     let badgeFinal = dFin.includes('aprobado') ? `<span class="badge badge-ok">${getCol(row, 'Estatus Final') || '-'}</span>` : (dFin.includes('observado') ? `<span class="badge badge-warn">${getCol(row, 'Estatus Final') || '-'}</span>` : `<span class="badge badge-neutral">${getCol(row, 'Estatus Final') || '-'}</span>`);
                     let fecEnvioDoc = getCol(row, 'Fecha de envío'); let fecRespHV = getCol(row, 'Fecha de Respuesta (HV)'); let fecLevObs = getCol(row, 'Fecha de Lev. de Observaciones');
-                    tr5.innerHTML = `<td class="font-bold text-plum">${marca}</td><td>${badgeDocEst}</td><td class="text-[10px] font-medium text-slate-700">${printDate(fecEnvioDoc)}</td><td>${badgeRes}</td><td>${calcSLA_HV(fecEnvioDoc, fecRespHV)}</td><td class="text-[10px] text-slate-600">${printDate(fecLevObs)}</td><td>${badgeFinal}</td>`;
+                    tr5.innerHTML = `<td class="font-bold text-plum nowrap">${marca}</td><td class="nowrap">${badgeDocEst}</td><td class="text-[10px] font-medium text-slate-700 nowrap">${printDate(fecEnvioDoc)}</td><td class="nowrap">${badgeRes}</td><td class="nowrap">${calcSLA_HV(fecEnvioDoc, fecRespHV)}</td><td class="text-[10px] text-slate-600 nowrap">${printDate(fecLevObs)}</td><td class="nowrap">${badgeFinal}</td>`;
                     t5.appendChild(tr5);
                 }
             });
@@ -766,14 +762,14 @@
                 return dateA - dateB;
             });
 
-            // Renderizar Sección 2 ya ordenada
             dataSec2.forEach(item => {
+                const tbodySec2 = document.querySelector('#table-sec2 tbody');
                 let tr2 = document.createElement('tr');
                 let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
                 let barraColor = getProgressColor(item.avancePc);
                 
-                tr2.innerHTML = `<td class="font-bold text-plum">${item.marca}</td>
-                <td>
+                tr2.innerHTML = `<td class="font-bold text-plum nowrap">${item.marca}</td>
+                <td class="nowrap">
                     <div class="flex items-center gap-1">
                         <div class="w-16 h-2 bg-slate-200 rounded">
                             <div class="h-full rounded" style="background-color: ${barraColor}; width: ${item.avancePc}%"></div>
@@ -781,15 +777,15 @@
                         <span class="text-[9px] font-bold" style="color: ${barraColor}">${item.avancePc}%</span>
                     </div>
                 </td>
-                <td class="text-[10px]">${printDate(item.fecComp)}</td>
-                <td class="text-[10px] font-bold">${printDate(item.fecReal)}</td>
-                <td>${calcAlerta(item.fecComp)}</td>
-                <td>${item.btnEvidencia}</td>
-                <td>${badgeEstatusPc}</td>
-                <td class="text-[10px]">${printDate(item.fecCompLevObs)}</td>
-                <td class="text-[10px] font-bold">${printDate(item.fecRealLevObs)}</td>
-                <td>${item.btnActaFinal}</td>`;
-                t2.appendChild(tr2);
+                <td class="text-[10px] nowrap">${printDate(item.fecComp)}</td>
+                <td class="text-[10px] font-bold nowrap">${printDate(item.fecReal)}</td>
+                <td class="nowrap">${calcAlerta(item.fecComp)}</td>
+                <td class="nowrap">${item.btnEvidencia}</td>
+                <td class="nowrap">${badgeEstatusPc}</td>
+                <td class="text-[10px] nowrap">${printDate(item.fecCompLevObs)}</td>
+                <td class="text-[10px] font-bold nowrap">${printDate(item.fecRealLevObs)}</td>
+                <td class="nowrap">${item.btnActaFinal}</td>`;
+                tbodySec2.appendChild(tr2);
             });
 
             document.getElementById('kpi-loc-tot').innerText = locTot; document.getElementById('kpi-loc-contrato').innerText = locContrato; document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
@@ -797,46 +793,84 @@
             document.getElementById('kpi-pc-tot').innerText = pcEjec + pcTerm + pcObs + pcEnt; document.getElementById('kpi-pc-ejec').innerText = pcEjec; document.getElementById('kpi-pc-term').innerText = pcTerm; document.getElementById('kpi-pc-obs').innerText = pcObs; document.getElementById('kpi-pc-ent').innerText = pcEnt;
             document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
             document.getElementById('kpi-aperturas').innerText = aperturas;
-            
             document.getElementById('kpi-sin-proy').innerText = totSinProy;
             document.getElementById('kpi-rev-obs').innerText = totRevObs;
             document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
             document.getElementById('kpi-permiso').innerText = totPermiso;
             document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl;
-            
             document.getElementById('kpi-sec2-coord').innerText = s2_coord; document.getElementById('kpi-sec2-ent').innerText = s2_ent;
             document.getElementById('kpi-sec5-ing').innerText = s5_ing; document.getElementById('kpi-sec5-pend').innerText = s5_pend; document.getElementById('kpi-sec5-rev').innerText = s5_rev; document.getElementById('kpi-sec5-apr').innerText = s5_apr; document.getElementById('kpi-sec5-obs').innerText = s5_obs;
-            
             document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
             document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
         }
 
         function procesarDataAcometidas(data) {
-            let s4_tot = 0, s4_pend = 0, s4_aten = 0;
+            let s4_locales = 0, s4_tot = 0, s4_pend = 0, s4_aten = 0;
             const tbodySec4 = document.querySelector('#table-sec4 tbody');
+            let dataSec4 = [];
+
             data.forEach(row => {
                 let sector = getCol(row, 'Sector'); if(!sector) return;
-                let keys = Object.keys(row);
-                let fechas = keys.filter(k => k.toLowerCase().includes('fecha') || k.toLowerCase().trim() === 'fecha');
-                s4_tot++;
+                s4_locales++;
+                
+                let requerimiento = getCol(row, 'Requerimiento 1') || '-';
                 let respuesta = getCol(row, 'Respuesta 1') || '-';
                 
+                let isReq = requerimiento !== '-' && requerimiento !== '';
                 let estRaw = '-';
-                if(respuesta.toLowerCase().includes('aprob')) estRaw = 'Aprobado';
-                else if(respuesta.toLowerCase().includes('rechaz')) estRaw = 'Rechazado';
-                else if(respuesta !== '-') estRaw = 'Atendido';
-                else estRaw = 'Pendiente';
+                let sortOrder = 3;
 
-                let estAco = estRaw.toLowerCase();
-                if(estAco.includes('pendiente')) s4_pend++; else s4_aten++;
-                let badgeAco = estAco.includes('aprob') ? `<span class="badge badge-ok">${estRaw}</span>` : (estAco.includes('rechaz') ? `<span class="badge badge-alert">${estRaw}</span>` : `<span class="badge badge-warn">${estRaw}</span>`);
-                let f1 = fechas.length > 0 ? printDate(row[fechas[0]]) : '-'; let f2 = fechas.length > 1 ? printDate(row[fechas[1]]) : '-';
+                if(isReq) {
+                    s4_tot++;
+                    if(respuesta.toLowerCase().includes('aprob') || respuesta.toLowerCase().includes('atendid') || respuesta.toLowerCase().includes('rechaz') || (respuesta !== '-' && !respuesta.toLowerCase().includes('pend'))) {
+                        estRaw = 'Atendido';
+                        s4_aten++;
+                        sortOrder = 2; // Atendidos al medio
+                    } else {
+                        estRaw = 'Pendiente';
+                        s4_pend++;
+                        sortOrder = 1; // Pendientes primero
+                    }
+                } else {
+                    estRaw = 'Sin Req.';
+                    sortOrder = 3; // Sin req al final
+                }
+
+                let keys = Object.keys(row);
+                let fechas = keys.filter(k => k.toLowerCase().includes('fecha') || k.toLowerCase().trim() === 'fecha');
+                let f1 = fechas.length > 0 ? printDate(row[fechas[0]]) : '-'; 
+                let f2 = fechas.length > 1 ? printDate(row[fechas[1]]) : '-';
+
+                dataSec4.push({row, sector, requerimiento, respuesta, estRaw, sortOrder, f1, f2});
+            });
+
+            // Ordenamiento por defecto (Nuevos requerimientos > Atendidos > Sin Req)
+            dataSec4.sort((a, b) => a.sortOrder - b.sortOrder);
+
+            // Evitar scroll lateral envolviendo los textos largos en múltiples líneas (whitespace-normal)
+            dataSec4.forEach(item => {
+                let badgeAco = item.estRaw === 'Atendido' ? `<span class="badge badge-ok">Atendido</span>` : (item.estRaw === 'Pendiente' ? `<span class="badge badge-alert">Pendiente</span>` : `<span class="badge badge-neutral">-</span>`);
 
                 let tr4 = document.createElement('tr');
-                tr4.innerHTML = `<td class="text-[10px]">${sector}</td><td class="text-[10px] text-center">${getCol(row, 'Bloque') || '-'}</td><td class="text-[10px] font-bold text-plum">${getCol(row, 'Local') || '-'}</td><td class="font-bold text-plum">${getCol(row, 'Socio Comercial') || '-'}</td><td class="text-[10px] text-center">${getCol(row, 'Area (m2)') || '-'}</td><td class="text-[10px] text-slate-700">${getCol(row, 'Requerimiento 1') || '-'}</td><td class="text-[10px]">${f1}</td><td class="text-[10px]">${respuesta}</td><td class="text-[10px] font-bold">${f2}</td><td class="text-[10px] font-medium">${getCol(row, 'Costo (Subtotal sin IGV)') || '-'}</td><td>${badgeAco}</td>`;
+                tr4.innerHTML = `
+                <td class="text-[9px] nowrap">${item.sector}</td>
+                <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Bloque') || '-'}</td>
+                <td class="text-[9px] font-bold text-plum nowrap">${getCol(item.row, 'Local') || '-'}</td>
+                <td class="font-bold text-plum text-[9px] whitespace-normal min-w-[100px] leading-tight">${getCol(item.row, 'Socio Comercial') || '-'}</td>
+                <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Area (m2)') || '-'}</td>
+                <td class="text-[9px] text-slate-700 whitespace-normal min-w-[150px] leading-tight">${item.requerimiento}</td>
+                <td class="text-[9px] nowrap">${item.f1}</td>
+                <td class="text-[9px] whitespace-normal min-w-[120px] leading-tight">${item.respuesta}</td>
+                <td class="text-[9px] font-bold nowrap">${item.f2}</td>
+                <td class="text-[9px] font-medium nowrap">${getCol(item.row, 'Costo (Subtotal sin IGV)') || '-'}</td>
+                <td class="nowrap">${badgeAco}</td>`;
                 tbodySec4.appendChild(tr4);
             });
-            document.getElementById('kpi-sec4-tot').innerText = s4_tot; document.getElementById('kpi-sec4-pend').innerText = s4_pend; document.getElementById('kpi-sec4-aten').innerText = s4_aten;
+
+            document.getElementById('kpi-sec4-locales').innerText = s4_locales;
+            document.getElementById('kpi-sec4-tot').innerText = s4_tot;
+            document.getElementById('kpi-sec4-pend').innerText = s4_pend;
+            document.getElementById('kpi-sec4-aten').innerText = s4_aten;
         }
 
         function procesarDataContactos(data) {
@@ -845,12 +879,11 @@
                 let nombre = getCol(row, 'Nombre'); if(!nombre) return;
                 let correo = getCol(row, 'Correo'); 
                 let tr6 = document.createElement('tr');
-                tr6.innerHTML = `<td class="font-bold text-slate-800">${nombre}</td><td class="text-[10px] font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500">${correo || '-'}</td><td>${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
+                tr6.innerHTML = `<td class="font-bold text-slate-800 nowrap">${nombre}</td><td class="text-[10px] font-bold text-mallplaza nowrap">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600 nowrap">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium nowrap">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500 nowrap">${correo || '-'}</td><td class="nowrap">${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
                 tbodySec6.appendChild(tr6);
             });
         }
 
-        // INTERACCIÓN MAPA (Buscando exactitud)
         const polygons = document.querySelectorAll('.store-polygon');
         const infoPanel = document.getElementById('info-panel');
         polygons.forEach(polygon => {
