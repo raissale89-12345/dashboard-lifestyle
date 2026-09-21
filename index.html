@@ -11,7 +11,10 @@
             theme: {
                 extend: {
                     colors: {
-                        mallplaza: '#E3004F', plum: '#4A154B', crimson: '#D32F4C', lightpink: '#F0B3F0', 
+                        mallplaza: '#E3004F', 
+                        plum: '#4A154B',      
+                        crimson: '#D32F4C',   
+                        lightpink: '#F0B3F0', 
                     }
                 }
             }
@@ -126,6 +129,7 @@
         <div class="map-container">
             <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
             <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none" id="svg-map">
+                <!-- Polígonos de locales -->
                 <polygon class="store-polygon" data-store="capriccio" points="3459,660 3455,844 3295,812 3295,664" />
                 <polygon class="store-polygon" data-store="fridays" points="3451,840 3475,848 3690,788 3714,652 3499,652 3463,660" />
                 <polygon class="store-polygon" data-store="pardos" points="3088,1083 3092,928 3299,876 3299,1095" />
@@ -301,15 +305,17 @@
                         <th class="nowrap" onclick="sortTable('table-sec3', 3)">Est. HDL ⇕</th>
                         <th class="nowrap" onclick="sortTable('table-sec3', 4)">Est. Arq. ⇕</th>
                         <th class="nowrap" onclick="sortTable('table-sec3', 5)">Est. Esp. ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 6)">Coord. Ent. Local ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 7)">Fecha Pactada ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 8)">Hora Pactada ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 9)">Entregado ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 10)">Coord. Ini. Obra ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec3', 11)">F. Inicio Obra ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 6)">F. Ent. Local P&C ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 7)">Coord. Ent. Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 8)">Fecha Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 9)">Hora Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 10)">Entregado ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 11)">Coord. Ini. Obra ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 12)">F. Inicio Obra ⇕</th>
                         <th class="nowrap">Cronograma</th>
                     </tr>
                     <tr class="filter-row">
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
@@ -390,88 +396,88 @@
         </div>
     </section>
 
-    <!-- BURBUJA 5: DOCUMENTACIÓN (OCULTA POR DEFECTO) -->
-    <section id="sec-5" class="burbuja-seccion transition-all duration-300">
-        <div class="flex justify-between items-center cursor-pointer" onclick="document.getElementById('sec5-content').classList.toggle('hidden'); document.getElementById('arrow-5').classList.toggle('rotate-180')">
-            <h2 class="section-title m-0">5. Documentación de Ingreso a Obra</h2>
-            <span id="arrow-5" class="text-xl font-bold text-plum transition-transform duration-300">▼</span>
-        </div>
-        <div id="sec5-content" class="hidden mt-6">
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
-                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales Ingresaron</p>
-                    <p class="text-xl font-black text-slate-800" id="kpi-sec5-ing">0</p>
-                </div>
-                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes de Rev.</p>
-                    <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
-                </div>
-                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En Revisión</p>
-                    <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
-                </div>
-                <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
-                    <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Aprobados</p>
-                    <p class="text-xl font-black text-emerald-800" id="kpi-sec5-apr">0</p>
-                </div>
-                <div class="p-2 bg-red-50 border border-red-200 rounded-lg text-center">
-                    <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Observados</p>
-                    <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
-                </div>
+    <!-- BURBUJA 5: DOCUMENTACIÓN -->
+    <section id="sec-5" class="burbuja-seccion">
+        <h2 class="section-title">5. Documentación de Ingreso a Obra</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales Ingresaron</p>
+                <p class="text-xl font-black text-slate-800" id="kpi-sec5-ing">0</p>
             </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes de Rev.</p>
+                <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En Revisión</p>
+                <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
+            </div>
+            <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Aprobados</p>
+                <p class="text-xl font-black text-emerald-800" id="kpi-sec5-apr">0</p>
+            </div>
+            <div class="p-2 bg-red-50 border border-red-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Observados</p>
+                <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table id="table-sec5">
+                <thead>
+                    <tr>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- BURBUJA 6: CONTACTOS (OCULTA POR DEFECTO) -->
+    <section id="sec-6" class="burbuja-seccion transition-all duration-300">
+        <div class="flex justify-between items-center cursor-pointer" onclick="document.getElementById('sec6-content').classList.toggle('hidden'); document.getElementById('arrow-6').classList.toggle('rotate-180')">
+            <h2 class="section-title m-0">6. Directorio de Contactos Clave</h2>
+            <span id="arrow-6" class="text-xl font-bold text-plum transition-transform duration-300">▼</span>
+        </div>
+        <div id="sec6-content" class="hidden mt-6">
             <div class="table-wrapper">
-                <table id="table-sec5">
+                <table id="table-sec6">
                     <thead>
                         <tr>
-                            <th class="nowrap" onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
-                            <th class="nowrap" onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
-                            <th class="nowrap" onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
-                            <th class="nowrap" onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
-                            <th class="nowrap" onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
-                            <th class="nowrap" onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
-                            <th class="nowrap" onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 0)">Nombre ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 1)">Empresa / Marca ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 2)">Cargo / Rol ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 3)">Teléfono ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 4)">Correo ⇕</th>
+                            <th class="nowrap">Acción</th>
                         </tr>
                         <tr class="filter-row">
-                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
-                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
-        </div>
-    </section>
-
-    <!-- BURBUJA 6: CONTACTOS -->
-    <section id="sec-6" class="burbuja-seccion">
-        <h2 class="section-title">6. Directorio de Contactos Clave</h2>
-        <div class="table-wrapper">
-            <table id="table-sec6">
-                <thead>
-                    <tr>
-                        <th class="nowrap" onclick="sortTable('table-sec6', 0)">Nombre ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec6', 1)">Empresa / Marca ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec6', 2)">Cargo / Rol ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec6', 3)">Teléfono ⇕</th>
-                        <th class="nowrap" onclick="sortTable('table-sec6', 4)">Correo ⇕</th>
-                        <th class="nowrap">Acción</th>
-                    </tr>
-                    <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
-                        <th></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
         </div>
     </section>
 
@@ -586,11 +592,12 @@
             return diffDays <= 5 ? `<span class="badge badge-warn">Día ${diffDays} de 5</span>` : `<span class="badge badge-alert">Vencido (${diffDays}d)</span>`;
         };
 
+        // Escala de Colores para Estatus HDL
         const getHdlBadge = (estHdl) => {
             let s = estHdl.toLowerCase();
-            if(s.includes('sin proy')) return `<span class="badge bg-slate-100 text-slate-500 uppercase">${estHdl}</span>`;
+            if(s.includes('sin proy')) return `<span class="badge bg-red-100 text-red-700 uppercase">${estHdl}</span>`;
             if(s.includes('revis') || s.includes('observ')) return `<span class="badge bg-orange-100 text-orange-700 uppercase">${estHdl}</span>`;
-            if(s.includes('aprobado')) return `<span class="badge bg-blue-100 text-blue-700 uppercase">${estHdl}</span>`;
+            if(s.includes('aprobado')) return `<span class="badge bg-green-100 text-green-700 uppercase">${estHdl}</span>`;
             if(s.includes('permiso')) return `<span class="badge bg-emerald-100 text-emerald-700 uppercase">${estHdl}</span>`;
             if(s.includes('obra')) return `<span class="badge bg-plum text-white uppercase">${estHdl}</span>`;
             return `<span class="badge badge-neutral uppercase">${estHdl}</span>`;
@@ -640,20 +647,17 @@
         };
 
         function procesarDataMain(data) {
-            // Sec 1 Variables
-            let locTot = 77; // FIJO SEGUN REQUERIMIENTO
+            let locTot = 77; 
             let locContrato = 0, locVacancy = 0, modTot = 0, modNombre = 0, modVacancy = 0;
-            let pcTerm = 0; // Terminado será el contador central
+            let pcTerm = 0; 
             let pcEjec = 0, pcObs = 0, pcEnt = 0;
             let entregasInformadas = 0, entregasCoordinadas = 0, localesEntregados = 0;
             let obraLoc = 0, obraMod = 0, aperturas = 0;
 
-            // Sec 2 Variables
             let sumaPc = 0, validPcCount = 0;
             let s2_entregados = 0, s2_levObs = 0, s2_recepcionados = 0;
             let dataSec2 = [];
 
-            // Sec 3 & 5 Variables
             let totSinProy = 0, totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0;
             let s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
 
@@ -677,14 +681,12 @@
                 let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC') || getCol(row, 'Fecha pactada');
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
-                // DATA MAPA
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, implem: 0 };
-                storeData[marca.toLowerCase()] = storeData[id]; // Alias para busquedas raras
+                storeData[marca.toLowerCase()] = storeData[id]; 
                 
                 if(tipo.toLowerCase() === 'local' && !isVacancy) locContrato++; 
                 else if (tipo.toLowerCase() !== 'local') { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
 
-                // P&C (Sec 1)
                 let estPcLower = estPc.toLowerCase();
                 if(avancePc > 0 && avancePc < 100) pcEjec++;
                 else if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
@@ -692,7 +694,6 @@
                 if(estPcLower.includes('observado')) pcObs++; 
                 if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) pcEnt++;
 
-                // HDL ENTREGAS (Sec 1)
                 let correoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC');
                 if(correoEnt.toLowerCase().includes('si') || correoEnt.toLowerCase().includes('sí')) entregasInformadas++;
                 if(fechaPactadaPopup !== '-' && parseDate(fechaPactadaPopup)) entregasCoordinadas++;
@@ -710,7 +711,6 @@
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
 
                 if(!isVacancy) {
-                    // SEC 2 - Recopilación KPIs
                     let fecComp = getCol(row, 'Fecha compromiso de entrega de local'); 
                     let fecReal = getCol(row, 'Fecha de entrega Real a Operaciones');
                     let fecCompLevObs = getCol(row, 'Fecha compromiso de Lev. Observ.');
@@ -757,18 +757,15 @@
                     let isCronoReady = cronoStatus.toLowerCase().includes('si') || cronoStatus.toLowerCase().includes('sí');
                     let btnCronograma = `<a href="https://drive.google.com/drive/folders/1hAE0NK7Ov4K-M78qpkgY8XF5Hz5x2gTB?usp=drive_link" target="_blank" class="btn-mail ${isCronoReady ? 'btn-success' : ''}">${isCronoReady ? '✅ Listo' : '📁 Carpeta'}</a>`;
 
-                    // Colores de texto (sin fondo) para Arq y Esp
-                    let colorArq = alertaArq.toLowerCase().includes('atrasado') ? 'text-red-600 font-bold' : (alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision') ? 'text-orange-500 font-bold' : 'text-green-600 font-bold');
-                    let colorEsp = alertaEsp.toLowerCase().includes('atrasado') ? 'text-red-600 font-bold' : (alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision') ? 'text-orange-500 font-bold' : 'text-green-600 font-bold');
-
                     let tr3 = document.createElement('tr');
                     tr3.innerHTML = `
                     <td class="font-bold text-plum nowrap">${marca}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
                     <td class="nowrap">${getHdlBadge(estHdl)}</td>
-                    <td class="text-[10px] nowrap ${colorArq}">${alertaArq || '-'}</td>
-                    <td class="text-[10px] nowrap ${colorEsp}">${alertaEsp || '-'}</td>
+                    <td class="text-[9px] text-slate-800 nowrap">${alertaArq || '-'}</td>
+                    <td class="text-[9px] text-slate-800 nowrap">${alertaEsp || '-'}</td>
+                    <td class="text-[9px] nowrap">${printDate(fecComp)}</td>
                     <td class="nowrap">${btnCorreoEnt}</td>
                     <td class="text-[9px] nowrap">${printDate(fechaPactadaPopup)}</td>
                     <td class="text-[9px] nowrap">${horaPactada}</td>
@@ -804,12 +801,11 @@
             document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
             
             document.getElementById('kpi-mod-tot').innerText = modTot; document.getElementById('kpi-mod-nombre').innerText = modNombre; document.getElementById('kpi-mod-vacancy').innerText = modVacancy;
-            document.getElementById('kpi-pc-tot').innerText = pcTerm; // Ahora es terminados
+            document.getElementById('kpi-pc-tot').innerText = pcTerm; 
             document.getElementById('kpi-pc-ejec').innerText = pcEjec; document.getElementById('kpi-pc-term').innerText = pcTerm; document.getElementById('kpi-pc-obs').innerText = pcObs; document.getElementById('kpi-pc-ent').innerText = pcEnt;
             document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
             document.getElementById('kpi-aperturas').innerText = aperturas;
             
-            // Lógica final Sec 1 (HDL)
             document.getElementById('kpi-hdl-ent-inf').innerText = entregasInformadas;
             document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
             document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
@@ -876,7 +872,6 @@
             data.forEach(row => {
                 let sector = getCol(row, 'Sector'); if(!sector) return;
                 
-                // Determinar si es Local o Módulo (leyendo el Socio Comercial e infiriendo de storeData)
                 let socio = getCol(row, 'Socio Comercial') || '-';
                 let isMod = socio.toLowerCase().includes('modulo') || sector.toLowerCase().includes('modulo');
                 if(isMod) s4_modulos++; else s4_locales++;
@@ -953,7 +948,6 @@
                 polygons.forEach(p => p.classList.remove('selected')); this.classList.add('selected');
                 const searchId = normalizeId(this.getAttribute('data-store'));
                 
-                // Buscar por ID exacto, o si está incluido (Ej: pardoschicken y pardos)
                 let data = storeData[searchId];
                 if (!data) {
                     const matchingKey = Object.keys(storeData).find(k => k.includes(searchId) || searchId.includes(k));
