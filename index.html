@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Integral - Lifestyle MPT</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- PapaParse -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         tailwind.config = {
@@ -30,9 +28,8 @@
         .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #E3004F; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .burbuja-seccion { background-color: #ffffff; padding: 24px; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 32px; }
-        @media (min-width: 768px) { .burbuja-seccion { padding: 32px; } }
-
+        .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
+        
         .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .map-bg { width: 100%; height: auto; display: block; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
@@ -47,43 +44,42 @@
         .progress-fill { height: 100%; transition: width 0.6s ease, background-color 0.3s ease; border-radius: 4px;}
         .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; }
 
-        .table-wrapper { width: 100%; max-height: 480px; overflow-y: auto; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 0.75rem; }
-        thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 12px 14px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
+        /* Ajustes para tablas ultra compactas que eviten el scroll horizontal */
+        .table-wrapper { width: 100%; max-height: 400px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
+        thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 6px 8px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
         thead tr:first-child th:hover { background-color: #6a1e6b; }
-        thead tr.filter-row th { position: sticky; top: 43px; z-index: 19; background-color: #f8fafc; padding: 8px 10px; border-bottom: 2px solid #e2e8f0; }
+        thead tr.filter-row th { position: sticky; top: 29px; z-index: 19; background-color: #f8fafc; padding: 4px 6px; border-bottom: 2px solid #e2e8f0; }
         
-        .filter-input { width: 100%; text-align: left; font-size: 0.7rem; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 400; color: #334155; outline: none; }
+        .filter-input { width: 100%; text-align: left; font-size: 0.65rem; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; outline: none; }
         .filter-input:focus { border-color: #E3004F; box-shadow: 0 0 0 1px #E3004F; }
-        td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; vertical-align: middle; }
+        td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; vertical-align: middle; }
         tr:hover { background-color: #fff1f2; }
         
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 700; }
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; display: inline-block; text-align: center; }
         .badge-ok { background-color: #dcfce7; color: #166534; }
         .badge-alert { background-color: #fee2e2; color: #b91c1c; }
         .badge-warn { background-color: #fef3c7; color: #b45309; }
         .badge-neutral { background-color: #e2e8f0; color: #475569; }
         
-        .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 18px; font-weight: 800; font-size: 1.25rem; display: inline-block; position: relative;}
-        .section-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 4px; background-color: #E3004F; border-radius: 2px; }
-        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 0.65rem; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 18px; font-weight: 800; font-size: 1.15rem; display: inline-block; position: relative;}
+        .section-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 3px; background-color: #E3004F; border-radius: 2px; }
+        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.6rem; text-decoration: none; cursor: pointer; }
         .btn-mail:hover { background-color: #E3004F; color: #fff; }
     </style>
 </head>
-<body class="p-4 md:p-8 max-w-[1600px] mx-auto">
+<body class="p-2 md:p-6 max-w-[1600px] mx-auto">
 
-    <!-- PANTALLA DE CARGA -->
     <div id="loading-screen">
         <div class="spinner"></div>
         <h2 class="mt-6 text-xl font-bold text-plum">Sincronizando Base de Datos...</h2>
         <p class="text-sm text-slate-500 mt-2">Conectando en vivo con Google Sheets</p>
     </div>
 
-    <!-- CABECERA -->
-    <header class="flex flex-col md:flex-row md:justify-between md:items-end pb-6 mb-6 gap-3">
+    <header class="flex flex-col md:flex-row md:justify-between md:items-end pb-4 mb-4 gap-3 px-2">
         <div>
-            <h1 class="text-3xl md:text-4xl font-black text-mallplaza tracking-tight">Lifestyle Mallplaza Trujillo</h1>
-            <p class="text-slate-500 text-xs md:text-sm mt-1 font-semibold uppercase tracking-widest">Tablero de Control Integrado</p>
+            <h1 class="text-3xl font-black text-mallplaza tracking-tight">Lifestyle Mallplaza Trujillo</h1>
+            <p class="text-slate-500 text-xs mt-1 font-semibold uppercase tracking-widest">Tablero de Control Integrado</p>
         </div>
         <div class="text-xs font-bold text-mallplaza bg-pink-50 px-4 py-2 rounded-full border border-pink-200 self-start md:self-auto flex items-center gap-2 shadow-sm">
             <span class="w-2 h-2 rounded-full bg-mallplaza animate-pulse"></span>
@@ -94,37 +90,36 @@
     <!-- BURBUJA 1: AVANCE GENERAL Y MAPA -->
     <section id="sec-1" class="burbuja-seccion">
         <h2 class="section-title">1. Avance General</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 md:gap-4 mb-8">
-            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-4xl font-black text-plum mt-1" id="kpi-loc-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con contrato: <strong class="text-slate-800 text-[10px]" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza text-[10px]" id="kpi-loc-vacancy">0</strong></span></div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-3xl font-black text-plum mt-1" id="kpi-loc-tot">0</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Contrato: <strong class="text-slate-800" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza" id="kpi-loc-vacancy">0</strong></span></div>
             </div>
-            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-4xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800 text-[10px]" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson text-[10px]" id="kpi-mod-vacancy">0</strong></span></div>
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-3xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson" id="kpi-mod-vacancy">0</strong></span></div>
             </div>
-            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
-                <div class="grid grid-cols-2 gap-x-2 gap-y-1 pt-3 mt-2 border-t border-slate-200 text-[8px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span>Terminados: <strong class="text-slate-800" id="kpi-pc-term">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-2xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
+                <div class="grid grid-cols-2 gap-x-1 gap-y-1 pt-2 mt-1 border-t border-slate-200 text-[8px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span>Terminados: <strong class="text-slate-800" id="kpi-pc-term">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
             </div>
-            <div class="p-5 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Estatus HDL</p><p class="text-3xl font-black text-plum leading-none mt-1" id="kpi-hdl-tot">0</p></div>
-                <div class="grid grid-cols-1 gap-y-1 pt-3 mt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500">
-                    <div class="flex justify-between"><span>Entregas Coordinadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
-                    <div class="flex justify-between text-mallplaza"><span>Locales Entregados:</span> <strong class="text-mallplaza" id="kpi-hdl-ent-reales">0</strong></div>
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">HDL - ENTREGAS</p><p class="text-2xl font-black text-plum leading-none mt-1" id="kpi-hdl-tot">0</p></div>
+                <div class="grid grid-cols-1 gap-y-1 pt-2 mt-1 border-t border-slate-200 text-[9px] font-bold text-slate-500">
+                    <div class="flex justify-between"><span>Entregas Coord:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
+                    <div class="flex justify-between text-mallplaza"><span>Loc. Entregados:</span> <strong class="text-mallplaza" id="kpi-hdl-ent-reales">0</strong></div>
                 </div>
             </div>
-            <div class="p-5 bg-plum text-white rounded-xl shadow-md flex flex-col justify-between transform transition hover:-translate-y-1">
-                <div><p class="text-[9px] font-extrabold text-lightpink uppercase tracking-wider">En Obra (Implem.)</p><p class="text-4xl font-black text-white mt-1" id="kpi-obra-tot">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[9px] font-bold text-white/90"><span>Locales: <strong class="text-white text-[10px]" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white text-[10px]" id="kpi-obra-mod">0</strong></span></div>
+            <div class="p-4 bg-plum text-white rounded-xl shadow-md flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-lightpink uppercase tracking-wider">En Obra (Implem.)</p><p class="text-3xl font-black text-white mt-1" id="kpi-obra-tot">0</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-white/20 text-[9px] font-bold text-white/90"><span>Locales: <strong class="text-white" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white" id="kpi-obra-mod">0</strong></span></div>
             </div>
-            <div class="p-5 bg-mallplaza text-white rounded-xl shadow-md flex flex-col justify-between transform transition hover:-translate-y-1">
-                <div><p class="text-[9px] font-extrabold text-pink-200 uppercase tracking-wider">Aperturas</p><p class="text-4xl font-black text-white mt-1" id="kpi-aperturas">0</p></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-white/20 text-[9px] font-bold text-pink-100"><span>Total Aperturados a la fecha</span></div>
+            <div class="p-4 bg-mallplaza text-white rounded-xl shadow-md flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-pink-200 uppercase tracking-wider">Aperturas</p><p class="text-3xl font-black text-white mt-1" id="kpi-aperturas">0</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-white/20 text-[9px] font-bold text-pink-100"><span>Total Aperturados</span></div>
             </div>
         </div>
 
-        <!-- MAPA INTERACTIVO -->
         <div class="map-container">
             <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
             <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none" id="svg-map">
@@ -180,34 +175,29 @@
             <!-- CUADRO EMERGENTE POPUP -->
             <div class="info-panel" id="info-panel">
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-pink-100">
-                    <h2 id="store-name" class="text-lg font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
+                    <h2 id="store-name" class="text-base font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
                     <button id="close-panel" class="text-slate-400 hover:text-mallplaza font-bold text-xl leading-none">&times;</button>
                 </div>
-                
                 <div class="progress-bar-container">
                     <div class="progress-label">AVANCE OBRA P&C</div>
                     <div class="progress-track"><div id="bar-pc" class="progress-fill" style="width: 0%;"></div></div>
                     <div id="text-pc" class="progress-text text-mallplaza">0%</div>
                 </div>
-                
                 <div class="mb-2 text-[9px]">
                     <span class="font-bold text-plum">HDL - ESTATUS PROYECTO:</span>
                     <span id="text-hdl" class="ml-1 text-slate-700 font-medium">Pendiente</span>
                 </div>
-                
                 <div class="mb-2 text-[9px]">
                     <span class="font-bold text-plum">FECHA PACTADA ENTREGA LOCAL:</span>
                     <span id="text-fecha-pactada" class="ml-1 text-slate-700 font-medium">-</span>
                 </div>
-                
                 <div class="mb-3 text-[9px] pb-2 border-b border-pink-100">
                     <span class="font-bold text-plum">LOCAL RECEPCIONADO:</span>
                     <span id="text-recepcionado" class="ml-1 font-bold text-mallplaza">-</span>
                 </div>
-                
                 <div class="progress-bar-container">
                     <div class="progress-label">IMPLEMENTACIÓN</div>
-                    <div class="progress-track"><div id="bar-implem" class="progress-fill" style="width: 0%;"></div></div>
+                    <div class="progress-track"><div id="bar-implem" class="progress-fill" style="background-color:#4A154B; width: 0%;"></div></div>
                     <div id="text-implem" class="progress-text text-plum">0%</div>
                 </div>
             </div>
@@ -217,30 +207,30 @@
     <!-- BURBUJA 2: ENTREGAS P&C -->
     <section id="sec-2" class="burbuja-seccion">
         <h2 class="section-title">2. Seguimiento de Entregas (P&C a Operaciones)</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Coordinados</p>
-                <p class="text-2xl font-black text-plum" id="kpi-sec2-coord">0</p>
+                <p class="text-xl font-black text-plum" id="kpi-sec2-coord">0</p>
             </div>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Entregados</p>
-                <p class="text-2xl font-black text-emerald-600" id="kpi-sec2-ent">0</p>
+                <p class="text-xl font-black text-emerald-600" id="kpi-sec2-ent">0</p>
             </div>
         </div>
         <div class="table-wrapper">
             <table id="table-sec2">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec2', 0)">Local / Marca ⇕</th>
-                        <th onclick="sortTable('table-sec2', 1)">Avance P&C ⇕</th>
-                        <th onclick="sortTable('table-sec2', 2)">Fecha compromiso de entrega de local ⇕</th>
-                        <th onclick="sortTable('table-sec2', 3)">Fecha de entrega Real a Operaciones ⇕</th>
+                        <th onclick="sortTable('table-sec2', 0)">Local ⇕</th>
+                        <th onclick="sortTable('table-sec2', 1)">% P&C ⇕</th>
+                        <th onclick="sortTable('table-sec2', 2)">F. Comp. Entrega ⇕</th>
+                        <th onclick="sortTable('table-sec2', 3)">F. Real Ops ⇕</th>
                         <th onclick="sortTable('table-sec2', 4)">Alerta ⇕</th>
-                        <th>Evidencia Fotográfica</th>
+                        <th>Evidencia</th>
                         <th onclick="sortTable('table-sec2', 6)">Estatus ⇕</th>
-                        <th onclick="sortTable('table-sec2', 7)">Fecha compromiso de Lev. Observ. ⇕</th>
-                        <th onclick="sortTable('table-sec2', 8)">Fecha Real de levantamiento de obs. ⇕</th>
-                        <th>Acta Final</th>
+                        <th onclick="sortTable('table-sec2', 7)">F. Comp. Obs. ⇕</th>
+                        <th onclick="sortTable('table-sec2', 8)">F. Real Obs. ⇕</th>
+                        <th>Acta Fin.</th>
                     </tr>
                     <tr class="filter-row">
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
@@ -263,46 +253,42 @@
     <!-- BURBUJA 3: HABILITACIONES -->
     <section id="sec-3" class="burbuja-seccion">
         <h2 class="section-title">3. Detalle Habilitaciones y Revisiones</h2>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase">Rev. Arq</p>
-                <p class="text-xl font-black text-plum" id="kpi-rev-arq">0</p>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Sin Proyecto</p>
+                <p class="text-xl font-black text-slate-500" id="kpi-sin-proy">0</p>
             </div>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase">Rev. Esp</p>
-                <p class="text-xl font-black text-plum" id="kpi-rev-esp">0</p>
+            <div class="p-2 bg-orange-50 border border-orange-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Observado</p>
+                <p class="text-xl font-black text-orange-800" id="kpi-rev-obs">0</p>
             </div>
-            <div class="p-3 bg-teal-50 border border-teal-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-teal-700 uppercase">Aprobados</p>
-                <p class="text-xl font-black text-teal-800" id="kpi-aprob-hdl">0</p>
+            <div class="p-2 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobados</p>
+                <p class="text-xl font-black text-blue-800" id="kpi-aprob-hdl">0</p>
             </div>
-            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Con Permiso<br>(Sin Ingreso)</p>
+            <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-emerald-700 uppercase">Con Permiso</p>
                 <p class="text-xl font-black text-emerald-800" id="kpi-permiso">0</p>
             </div>
-            <div class="p-3 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition">
+            <div class="p-2 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition">
                 <p class="text-[9px] font-bold text-lightpink uppercase">En Obra</p>
                 <p class="text-xl font-black text-white" id="kpi-enobra-hdl">0</p>
-            </div>
-            <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-red-400 uppercase">Sin Proyecto</p>
-                <p class="text-xl font-black text-crimson" id="kpi-sin-proy">0</p>
             </div>
         </div>
         <div class="table-wrapper">
             <table id="table-sec3">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec3', 0)">Operador ⇕</th>
-                        <th onclick="sortTable('table-sec3', 1)">Arquitecto ⇕</th>
-                        <th onclick="sortTable('table-sec3', 2)">Ingeniero ⇕</th>
-                        <th onclick="sortTable('table-sec3', 3)">Estatus HDL ⇕</th>
-                        <th onclick="sortTable('table-sec3', 4)">Alerta Arq. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 5)">Alerta Esp. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 6)">Fech. Entrega Local ⇕</th>
-                        <th onclick="sortTable('table-sec3', 7)">Coord. Entrega ⇕</th>
+                        <th onclick="sortTable('table-sec3', 0)">Marca ⇕</th>
+                        <th onclick="sortTable('table-sec3', 1)">Arq. ⇕</th>
+                        <th onclick="sortTable('table-sec3', 2)">Ing. ⇕</th>
+                        <th onclick="sortTable('table-sec3', 3)">Est. HDL ⇕</th>
+                        <th onclick="sortTable('table-sec3', 4)">Alerta Arq ⇕</th>
+                        <th onclick="sortTable('table-sec3', 5)">Alerta Esp ⇕</th>
+                        <th onclick="sortTable('table-sec3', 6)">F. Ent. Local ⇕</th>
+                        <th onclick="sortTable('table-sec3', 7)">Coord. Ent. ⇕</th>
                         <th onclick="sortTable('table-sec3', 8)">Coord. Obra ⇕</th>
-                        <th onclick="sortTable('table-sec3', 9)">Cronograma ⇕</th>
+                        <th onclick="sortTable('table-sec3', 9)">Crono. ⇕</th>
                     </tr>
                     <tr class="filter-row">
                         <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
@@ -325,18 +311,18 @@
     <!-- BURBUJA 4: ACOMETIDAS -->
     <section id="sec-4" class="burbuja-seccion">
         <h2 class="section-title">4. Solicitudes de Cambios de Acometidas</h2>
-        <div class="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Solicitudes Totales</p>
-                <p class="text-2xl font-black text-slate-800" id="kpi-sec4-tot">0</p>
+                <p class="text-xl font-black text-slate-800" id="kpi-sec4-tot">0</p>
             </div>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-plum">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-plum">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Pendientes</p>
-                <p class="text-2xl font-black text-plum" id="kpi-sec4-pend">0</p>
+                <p class="text-xl font-black text-plum" id="kpi-sec4-pend">0</p>
             </div>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Atendidas</p>
-                <p class="text-2xl font-black text-emerald-600" id="kpi-sec4-aten">0</p>
+                <p class="text-xl font-black text-emerald-600" id="kpi-sec4-aten">0</p>
             </div>
         </div>
         <div class="table-wrapper">
@@ -352,21 +338,21 @@
                         <th onclick="sortTable('table-sec4', 6)">F. Solicitud ⇕</th>
                         <th onclick="sortTable('table-sec4', 7)">Respuesta ⇕</th>
                         <th onclick="sortTable('table-sec4', 8)">F. Respuesta ⇕</th>
-                        <th onclick="sortTable('table-sec4', 9)">Costo (S/ IGV) ⇕</th>
+                        <th onclick="sortTable('table-sec4', 9)">Costo ⇕</th>
                         <th onclick="sortTable('table-sec4', 10)">Estatus ⇕</th>
                     </tr>
                     <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="Buscar..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -377,25 +363,25 @@
     <!-- BURBUJA 5: DOCUMENTACIÓN -->
     <section id="sec-5" class="burbuja-seccion">
         <h2 class="section-title">5. Documentación de Ingreso a Obra</h2>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-4">
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales que<br>Ingresaron Doc.</p>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales Ingresaron</p>
                 <p class="text-xl font-black text-slate-800" id="kpi-sec5-ing">0</p>
             </div>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes<br>de Revisión</p>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes de Rev.</p>
                 <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
             </div>
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En<br>Revisión</p>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En Revisión</p>
                 <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
             </div>
-            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Estatus<br>Aprobado</p>
+            <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Aprobados</p>
                 <p class="text-xl font-black text-emerald-800" id="kpi-sec5-apr">0</p>
             </div>
-            <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-center">
-                <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Estatus<br>Observado</p>
+            <div class="p-2 bg-red-50 border border-red-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Observados</p>
                 <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
             </div>
         </div>
@@ -403,22 +389,22 @@
             <table id="table-sec5">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec5', 0)">Local / Marca ⇕</th>
-                        <th onclick="sortTable('table-sec5', 1)">Estatus Documentación ⇕</th>
-                        <th onclick="sortTable('table-sec5', 2)">Fecha de Envío ⇕</th>
-                        <th onclick="sortTable('table-sec5', 3)">Resultado de Revisión ⇕</th>
-                        <th onclick="sortTable('table-sec5', 4)">Respuesta HV (SLA 5 días) ⇕</th>
-                        <th onclick="sortTable('table-sec5', 5)">Levantamiento por SC ⇕</th>
+                        <th onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
+                        <th onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
+                        <th onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
+                        <th onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
+                        <th onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
+                        <th onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
                         <th onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
                     </tr>
                     <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="Buscar..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -438,14 +424,14 @@
                         <th onclick="sortTable('table-sec6', 2)">Cargo / Rol ⇕</th>
                         <th onclick="sortTable('table-sec6', 3)">Teléfono ⇕</th>
                         <th onclick="sortTable('table-sec6', 4)">Correo ⇕</th>
-                        <th>Acción Rápida</th>
+                        <th>Acción</th>
                     </tr>
                     <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="Buscar nombre..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="Buscar empresa..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="Buscar cargo..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
                         <th></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="Buscar correo..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -474,20 +460,26 @@
             });
         }
 
+        // BUSCADOR INTELIGENTE DE COLUMNAS (A prueba de espacios extra)
+        const getCol = (row, colName) => {
+            const keys = Object.keys(row);
+            const foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
+            return foundKey ? safeString(row[foundKey]) : '';
+        };
+
+        // NORMALIZADOR PARA EL MAPA (Elimina tildes, & y espacios)
+        const normalizeId = (id) => {
+            if (!id) return '';
+            return String(id).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+        };
+
         window.onload = function() {
             Promise.all([
-                fetchCSV(LINK_BASE),
-                fetchCSV(LINK_DOC),
-                fetchCSV(LINK_ACO),
-                fetchCSV(LINK_CONT)
+                fetchCSV(LINK_BASE), fetchCSV(LINK_DOC), fetchCSV(LINK_ACO), fetchCSV(LINK_CONT)
             ]).then(([dataBase, dataDoc, dataAco, dataCont]) => {
                 let mergedMain = dataBase.map(baseRow => {
-                    // Usamos una búsqueda segura por id_poligono
-                    const baseId = getCol(baseRow, 'id_poligono');
-                    let docRow = dataDoc.find(d => {
-                        const docId = getCol(d, 'id_poligono');
-                        return docId && baseId && docId.trim().toLowerCase() === baseId.trim().toLowerCase();
-                    }) || {};
+                    const baseId = normalizeId(getCol(baseRow, 'id_poligono'));
+                    let docRow = dataDoc.find(d => normalizeId(getCol(d, 'id_poligono')) === baseId) || {};
                     return { ...baseRow, ...docRow };
                 });
                 procesarDataMain(mergedMain);
@@ -499,65 +491,72 @@
                 setTimeout(() => loader.style.display = 'none', 500);
 
             }).catch(error => {
-                console.error("Error al descargar datos:", error);
-                document.getElementById('loading-screen').innerHTML = `<h2 class="text-xl font-bold text-crimson">Error de Conexión</h2><p class="text-sm mt-2">Por favor actualiza la página e inténtalo de nuevo.</p>`;
+                console.error("Error:", error);
+                document.getElementById('loading-screen').innerHTML = `<h2 class="text-xl font-bold text-crimson">Error de Conexión</h2><p class="text-sm mt-2">Por favor actualiza la página.</p>`;
             });
         };
 
-        // Utilidades de Datos
         const safeString = (val) => (val === undefined || val === null) ? '' : String(val).trim();
-        const currentDate = new Date(); 
-
-        // BUSCADOR INTELIGENTE DE COLUMNAS (A prueba de espacios extra en Excel)
-        const getCol = (row, colName) => {
-            const keys = Object.keys(row);
-            const foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
-            return foundKey ? safeString(row[foundKey]) : '';
-        };
-
-        // Algoritmo de color "Termómetro Semáforo" para barras
-        const getProgressColor = (percent) => {
-            if (percent < 20) return '#ef4444'; // Rojo (Lowest)
-            if (percent < 45) return '#f97316'; // Naranja (Low)
-            if (percent < 65) return '#eab308'; // Amarillo (Medium)
-            if (percent < 90) return '#84cc16'; // Verde claro (Normal)
-            if (percent < 100) return '#22c55e'; // Verde (High)
-            return '#16a34a'; // Verde oscuro (Highest)
-        };
-
-        const printDate = (val) => {
-            if(!val || val === '-' || val === '') return '-';
-            return String(val);
-        }
+        const printDate = (val) => { return (!val || val === '-' || val === '') ? '-' : String(val); }
 
         const parseDate = (str) => { 
-            if(!str || str === '-' || str === '') return currentDate;
+            if(!str || str === '-' || str === '') return null;
             const parts = String(str).split('/'); 
-            if(parts.length < 3) return currentDate;
+            if(parts.length < 3) return null;
             return new Date(parts[2], parts[1] - 1, parts[0]); 
         };
 
-        const calcDelay = (compromiso, real) => {
-            if(!compromiso || compromiso === '-' || compromiso === '') return '<span class="text-slate-400 text-xs">-</span>';
-            const dComp = parseDate(compromiso); 
-            let dEval = (real && real !== '-' && real !== '') ? parseDate(real) : currentDate; 
-            const diffDays = Math.ceil((dEval - dComp) / (1000 * 60 * 60 * 24));
-            if (diffDays <= 0) return '<span class="badge badge-ok">En tiempo</span>';
-            return `<span class="badge badge-alert">Retraso ${diffDays}d</span>`;
+        // SEMÁFORO DE PORCENTAJES
+        const getProgressColor = (percent) => {
+            if (percent < 20) return '#ef4444'; // Rojo
+            if (percent < 45) return '#f97316'; // Naranja
+            if (percent < 65) return '#eab308'; // Amarillo
+            if (percent < 90) return '#84cc16'; // Verde claro
+            if (percent < 100) return '#22c55e'; // Verde
+            return '#16a34a'; // Verde oscuro
+        };
+
+        // ALERTA FECHAS (Hasta día actual)
+        const calcAlerta = (fecComp) => {
+            if(!fecComp || fecComp === '-') return '<span class="badge badge-neutral">-</span>';
+            const dComp = parseDate(fecComp);
+            if(!dComp) return '<span class="badge badge-neutral">-</span>';
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            
+            const diffDays = Math.ceil((dComp - today) / (1000 * 60 * 60 * 24));
+            if (diffDays > 0) return `<span class="badge badge-ok">Faltan ${diffDays} d</span>`;
+            if (diffDays === 0) return `<span class="badge badge-warn">Hoy</span>`;
+            return `<span class="badge badge-alert">Atrasado ${Math.abs(diffDays)} d</span>`;
         };
 
         const calcSLA_HV = (fecEnvio, fecRespHV) => {
             if(!fecEnvio || fecEnvio === '-' || fecEnvio === '') return '<span class="badge badge-neutral">-</span>';
-            const dEnvio = parseDate(fecEnvio); 
+            const dEnvio = parseDate(fecEnvio); if(!dEnvio) return '-';
             let respondido = (fecRespHV && fecRespHV !== '' && fecRespHV !== '-' && String(fecRespHV).toLowerCase() !== 'pendiente');
-            let dEval = respondido ? parseDate(fecRespHV) : currentDate;
+            
+            let dEval = new Date(); dEval.setHours(0,0,0,0);
+            if(respondido) dEval = parseDate(fecRespHV);
+            
             const diffDays = Math.ceil((dEval - dEnvio) / (1000 * 60 * 60 * 24));
             if (respondido) return diffDays <= 5 ? `<span class="badge badge-ok">En tiempo (${diffDays}d)</span>` : `<span class="badge badge-alert">Atrasado (${diffDays}d)</span>`;
             return diffDays <= 5 ? `<span class="badge badge-warn">Día ${diffDays} de 5</span>` : `<span class="badge badge-alert">Vencido (${diffDays}d)</span>`;
         };
 
+        // Escala de Colores para HDL (Sección 3)
+        const getHdlBadge = (estHdl) => {
+            let s = estHdl.toLowerCase();
+            if(s.includes('sin proy')) return `<span class="badge bg-slate-100 text-slate-500 uppercase">${estHdl}</span>`;
+            if(s.includes('revis') || s.includes('observ')) return `<span class="badge bg-orange-100 text-orange-700 uppercase">${estHdl}</span>`;
+            if(s.includes('aprobado')) return `<span class="badge bg-blue-100 text-blue-700 uppercase">${estHdl}</span>`;
+            if(s.includes('permiso')) return `<span class="badge bg-emerald-100 text-emerald-700 uppercase">${estHdl}</span>`;
+            if(s.includes('obra')) return `<span class="badge bg-plum text-white uppercase">${estHdl}</span>`;
+            return `<span class="badge badge-neutral uppercase">${estHdl}</span>`;
+        }
+
         window.enviarCorreoCoord = function(marca, tipoCoord) {
-            window.location.href = `mailto:?subject=${encodeURIComponent(`Coordinación de ${tipoCoord} -${marca} - Mallplaza Trujillo`)}&body=${encodeURIComponent(`Estimado equipo de ${marca},\n\nNos ponemos en contacto para gestionar la${tipoCoord}.\nPor favor indicarnos disponibilidad.\n\nSaludos.`)}`;
+            window.location.href = `mailto:?subject=${encodeURIComponent(`Coordinación de ${tipoCoord} -${marca} - Mallplaza Trujillo`)}`;
         };
 
         window.filtrarTabla = function(tableId) {
@@ -591,46 +590,40 @@
 
         function procesarDataMain(data) {
             let locTot = 0, locContrato = 0, locVacancy = 0, modTot = 0, modNombre = 0, modVacancy = 0;
-            let pcEjec = 0, pcTerm = 0, pcObs = 0, pcEnt = 0, hdlRev = 0, hdlApr = 0, hdlEnt = 0;
-            let obraLoc = 0, obraMod = 0, aperturas = 0, revArq = 0, revEsp = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0, totSinProy = 0;
+            let pcEjec = 0, pcTerm = 0, pcObs = 0, pcEnt = 0;
+            let totSinProy = 0, totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0;
+            let obraLoc = 0, obraMod = 0, aperturas = 0, revArq = 0, revEsp = 0;
             let s2_coord = 0, s2_ent = 0, s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
             let entregasCoordinadas = 0, localesEntregados = 0;
+            
+            let dataSec2 = [];
 
             const t2 = document.querySelector('#table-sec2 tbody'), t3 = document.querySelector('#table-sec3 tbody'), t5 = document.querySelector('#table-sec5 tbody');
 
             data.forEach(row => {
-                let id = getCol(row, 'id_poligono'); 
+                let rawId = getCol(row, 'id_poligono');
+                let id = normalizeId(rawId); 
                 if(!id) return; 
                 
                 let marca = getCol(row, 'Operador') || '-'; 
                 let tipo = getCol(row, 'Tipo') || 'Local';
                 let avancePc = parseFloat(getCol(row, 'Avance P&C')) || 0; 
-                let avanceImplem = 0; 
                 let estHdl = getCol(row, 'Estatus general') || '-'; 
                 let estPc = getCol(row, 'Estatus') || '-';
                 
-                // Conexión exacta para Recepcionado y Fecha Pactada (Popup)
                 let recepcionadoStatus = getCol(row, 'Entregado') || '-';
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
                 else if(recepcionadoStatus !== '-') recepcionadoStatus = 'NO';
                 
                 let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC');
-                
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
-                storeData[id] = { 
-                    name: marca, 
-                    pc: avancePc, 
-                    hdl: estHdl, 
-                    fechaPactada: printDate(fechaPactadaPopup),
-                    recepcionado: recepcionadoStatus, 
-                    implem: avanceImplem 
-                };
+                // Mapeo seguro para el popup interactivo
+                storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, implem: 0 };
 
                 if(tipo.toLowerCase() === 'local') { locTot++; if(isVacancy) locVacancy++; else locContrato++; } 
                 else { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
 
-                // Lógica de P&C
                 let estPcLower = estPc.toLowerCase();
                 if(avancePc > 0 && avancePc < 100) pcEjec++;
                 else if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
@@ -639,24 +632,23 @@
                 if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) pcEnt++;
 
                 let estHdlLower = estHdl.toLowerCase();
-                if(estHdlLower.includes('revisión') || estHdlLower.includes('revision')) hdlRev++; 
-                if(estHdlLower.includes('aprobado')) { hdlApr++; totAprobHdl++; }
+                if(estHdlLower.includes('sin proy')) totSinProy++;
+                else if(estHdlLower.includes('revis') || estHdlLower.includes('observ')) totRevObs++;
+                else if(estHdlLower.includes('aprobado')) totAprobHdl++;
+                else if(estHdlLower.includes('permiso')) totPermiso++;
+                else if(estHdlLower.includes('obra')) { totEnObraHdl++; if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; }
+                
                 if(estHdlLower.includes('entregado') || estHdlLower.includes('aperturado')) entregasCoordinadas++; 
                 if(estHdlLower.includes('aperturado')) aperturas++; 
-                if(estHdlLower.includes('permiso sin ingreso')) totPermiso++; 
-                if(estHdlLower.includes('en obra')) { totEnObraHdl++; if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; }
-                if(estHdlLower.includes('sin proyecto')) totSinProy++;
                 
                 if(recepcionadoStatus === 'SÍ') localesEntregados++;
 
                 let alertaArq = getCol(row, 'Estatus Arquitectura');
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
-                
                 if(alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision')) revArq++; 
                 if(alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision')) revEsp++;
 
                 if(!isVacancy) {
-                    // Datos para la SECCIÓN 2
                     let fecComp = getCol(row, 'Fecha compromiso de entrega de local'); 
                     let fecReal = getCol(row, 'Fecha de entrega Real a Operaciones');
                     let fecCompLevObs = getCol(row, 'Fecha compromiso de Lev. Observ.');
@@ -665,70 +657,76 @@
                     if(fecComp !== '-' && fecComp.toLowerCase() !== 'pendiente') s2_coord++;
                     if(fecReal !== '-' && fecReal.toLowerCase() !== 'pendiente') s2_ent++;
 
-                    // Datos para la SECCIÓN 5
-                    let dEst = getCol(row, 'Estatus Documentacion').toLowerCase() || '-'; 
-                    let dRes = getCol(row, 'Resultado de Revisión').toLowerCase() || '-'; 
-                    let dFin = getCol(row, 'Estatus Final').toLowerCase() || '-';
-                    
-                    if(dEst.includes('enviado') || dEst.includes('ingresado')) s5_ing++;
-                    if(dRes === 'pendiente' || dRes === '-') s5_pend++;
-                    if(dRes.includes('evaluación') || dRes.includes('evaluacion') || dRes.includes('revisión') || dRes.includes('revision')) s5_rev++;
-                    if(dFin.includes('aprobado') || dRes.includes('aprobado')) s5_apr++;
-                    if(dFin.includes('observado') || dRes.includes('observado') || dRes.includes('incompleto')) s5_obs++;
+                    // Guardar para renderizar y ordenar Sección 2
+                    dataSec2.push({
+                        marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs
+                    });
 
-                    // Render Tabla 2
-                    let tr2 = document.createElement('tr');
-                    let btnUpload = `<span class="cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[10px] rounded border border-slate-300">📎 Evidencia</span>`;
-                    let badgeEstatusPc = estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (estPcLower.includes('entregado') || estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${estPc}</span>`);
-                    
-                    let barraColor = getProgressColor(avancePc);
-                    
-                    tr2.innerHTML = `<td class="font-bold text-plum">${marca}</td>
-                    <td>
-                        <div class="flex items-center gap-2">
-                            <div class="w-20 h-2 bg-slate-200 rounded">
-                                <div class="h-full rounded" style="background-color: ${barraColor}; width: ${avancePc}%"></div>
-                            </div>
-                            <span class="text-xs font-bold" style="color: ${barraColor}">${avancePc}%</span>
-                        </div>
-                    </td>
-                    <td class="text-xs">${printDate(fecComp)}</td>
-                    <td class="text-xs font-bold">${printDate(fecReal)}</td>
-                    <td>${calcDelay(fecComp, fecReal)}</td>
-                    <td>${btnUpload}</td>
-                    <td>${badgeEstatusPc}</td>
-                    <td class="text-xs">${printDate(fecCompLevObs)}</td>
-                    <td class="text-xs font-bold">${printDate(fecRealLevObs)}</td>
-                    <td>${btnUpload}</td>`;
-                    t2.appendChild(tr2);
-
-                    // Render Tabla 3
+                    // Render Tabla 3 (Habilitaciones)
                     let tr3 = document.createElement('tr');
                     let badgeArq = alertaArq.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
                     let badgeEsp = alertaEsp.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
                     let btnEntrega = `<button onclick="enviarCorreoCoord('${marca}', 'Entrega de Local')" class="btn-mail">Enviar Correo</button>`;
                     let btnObra = `<button onclick="enviarCorreoCoord('${marca}', 'Inicio de Obra')" class="btn-mail">Enviar Correo</button>`;
-                    let uploadCrono = `<div class="flex items-center gap-2"><span class="text-xs font-medium text-slate-700">-</span><label class="cursor-pointer bg-slate-100 px-2 py-1 rounded text-[10px] font-bold border border-slate-300 flex items-center gap-1"><input type="file" class="hidden" onchange="this.parentElement.querySelector('.check-icon').classList.remove('hidden')">Subir <span class="hidden check-icon text-emerald-600 font-black">✓</span></label></div>`;
+                    let uploadCrono = `<div class="flex items-center gap-2"><span class="text-xs font-medium text-slate-700">-</span><label class="cursor-pointer bg-slate-100 px-2 py-1 rounded text-[9px] font-bold border border-slate-300">Subir</label></div>`;
                     
-                    tr3.innerHTML = `<td class="font-bold text-plum">${marca}</td><td class="text-xs">${getCol(row, 'Arquitecta') || '-'}</td><td class="text-xs">${getCol(row, 'Ingeniero') || '-'}</td><td class="text-xs font-bold text-mallplaza">${estHdl}</td><td><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td><td><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td><td class="text-xs font-bold">-</td><td>${btnEntrega}</td><td>${btnObra}</td><td>${uploadCrono}</td>`;
+                    tr3.innerHTML = `<td class="font-bold text-plum">${marca}</td><td class="text-[9px]">${getCol(row, 'Arquitecta') || '-'}</td><td class="text-[9px]">${getCol(row, 'Ingeniero') || '-'}</td>
+                    <td>${getHdlBadge(estHdl)}</td>
+                    <td><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td><td><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td><td class="text-[10px] font-bold">-</td><td>${btnEntrega}</td><td>${btnObra}</td><td>${uploadCrono}</td>`;
                     t3.appendChild(tr3);
 
-                    // Render Tabla 5
+                    // Render Tabla 5 (Doc)
+                    let dEst = getCol(row, 'Estatus Documentacion').toLowerCase() || '-'; 
+                    let dRes = getCol(row, 'Resultado de Revisión').toLowerCase() || '-'; 
+                    let dFin = getCol(row, 'Estatus Final').toLowerCase() || '-';
+                    if(dEst.includes('enviado') || dEst.includes('ingresado')) s5_ing++;
+                    if(dRes === 'pendiente' || dRes === '-') s5_pend++;
+                    if(dRes.includes('evaluación') || dRes.includes('evaluacion') || dRes.includes('revisión') || dRes.includes('revision')) s5_rev++;
+                    if(dFin.includes('aprobado') || dRes.includes('aprobado')) s5_apr++;
+                    if(dFin.includes('observado') || dRes.includes('observado') || dRes.includes('incompleto')) s5_obs++;
+                    
                     let tr5 = document.createElement('tr');
-                    let docResultRaw = getCol(row, 'Resultado de Revisión') || '-'; 
-                    let docEstFinalRaw = getCol(row, 'Estatus Final') || '-';
-                    
                     let badgeDocEst = dEst === 'pendiente' || dEst === '-' ? `<span class="badge badge-warn">${getCol(row, 'Estatus Documentacion') || '-'}</span>` : `<span class="badge bg-slate-100 text-slate-700">${getCol(row, 'Estatus Documentacion')}</span>`;
-                    let badgeRes = dRes.includes('aprobado') ? `<span class="badge badge-ok">${docResultRaw}</span>` : (dRes.includes('observado') || dRes.includes('incompleto') || dRes.includes('evaluación') || dRes.includes('evaluacion') ? `<span class="badge badge-warn">${docResultRaw}</span>` : `<span class="badge badge-neutral">${docResultRaw}</span>`);
-                    let badgeFinal = dFin.includes('aprobado') ? `<span class="badge badge-ok">${docEstFinalRaw}</span>` : (dFin.includes('observado') ? `<span class="badge badge-warn">${docEstFinalRaw}</span>` : `<span class="badge badge-neutral">${docEstFinalRaw}</span>`);
-                    
-                    let fecEnvioDoc = getCol(row, 'Fecha de envío');
-                    let fecRespHV = getCol(row, 'Fecha de Respuesta (HV)');
-                    let fecLevObs = getCol(row, 'Fecha de Lev. de Observaciones');
-
-                    tr5.innerHTML = `<td class="font-bold text-plum">${marca}</td><td>${badgeDocEst}</td><td class="text-xs font-medium text-slate-700">${printDate(fecEnvioDoc)}</td><td>${badgeRes}</td><td>${calcSLA_HV(fecEnvioDoc, fecRespHV)}</td><td class="text-xs text-slate-600">${printDate(fecLevObs)}</td><td>${badgeFinal}</td>`;
+                    let badgeRes = dRes.includes('aprobado') ? `<span class="badge badge-ok">${getCol(row, 'Resultado de Revisión') || '-'}</span>` : (dRes.includes('observado') || dRes.includes('incompleto') || dRes.includes('evaluación') || dRes.includes('evaluacion') ? `<span class="badge badge-warn">${getCol(row, 'Resultado de Revisión') || '-'}</span>` : `<span class="badge badge-neutral">${getCol(row, 'Resultado de Revisión') || '-'}</span>`);
+                    let badgeFinal = dFin.includes('aprobado') ? `<span class="badge badge-ok">${getCol(row, 'Estatus Final') || '-'}</span>` : (dFin.includes('observado') ? `<span class="badge badge-warn">${getCol(row, 'Estatus Final') || '-'}</span>` : `<span class="badge badge-neutral">${getCol(row, 'Estatus Final') || '-'}</span>`);
+                    let fecEnvioDoc = getCol(row, 'Fecha de envío'); let fecRespHV = getCol(row, 'Fecha de Respuesta (HV)'); let fecLevObs = getCol(row, 'Fecha de Lev. de Observaciones');
+                    tr5.innerHTML = `<td class="font-bold text-plum">${marca}</td><td>${badgeDocEst}</td><td class="text-[10px] font-medium text-slate-700">${printDate(fecEnvioDoc)}</td><td>${badgeRes}</td><td>${calcSLA_HV(fecEnvioDoc, fecRespHV)}</td><td class="text-[10px] text-slate-600">${printDate(fecLevObs)}</td><td>${badgeFinal}</td>`;
                     t5.appendChild(tr5);
                 }
+            });
+
+            // Ordenamiento por defecto Sección 2 (Fechas Próximas primero)
+            dataSec2.sort((a, b) => {
+                let dateA = parseDate(a.fecComp); let dateB = parseDate(b.fecComp);
+                if(!dateA && !dateB) return 0; if(!dateA) return 1; if(!dateB) return -1;
+                return dateA - dateB;
+            });
+
+            // Renderizar Sección 2 ya ordenada
+            dataSec2.forEach(item => {
+                let tr2 = document.createElement('tr');
+                let btnUpload = `<span class="cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[9px] rounded border border-slate-300">Evidencia</span>`;
+                let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
+                let barraColor = getProgressColor(item.avancePc);
+                
+                tr2.innerHTML = `<td class="font-bold text-plum">${item.marca}</td>
+                <td>
+                    <div class="flex items-center gap-1">
+                        <div class="w-16 h-2 bg-slate-200 rounded">
+                            <div class="h-full rounded" style="background-color: ${barraColor}; width: ${item.avancePc}%"></div>
+                        </div>
+                        <span class="text-[9px] font-bold" style="color: ${barraColor}">${item.avancePc}%</span>
+                    </div>
+                </td>
+                <td class="text-[10px]">${printDate(item.fecComp)}</td>
+                <td class="text-[10px] font-bold">${printDate(item.fecReal)}</td>
+                <td>${calcAlerta(item.fecComp)}</td>
+                <td>${btnUpload}</td>
+                <td>${badgeEstatusPc}</td>
+                <td class="text-[10px]">${printDate(item.fecCompLevObs)}</td>
+                <td class="text-[10px] font-bold">${printDate(item.fecRealLevObs)}</td>
+                <td>${btnUpload}</td>`;
+                t2.appendChild(tr2);
             });
 
             document.getElementById('kpi-loc-tot').innerText = locTot; document.getElementById('kpi-loc-contrato').innerText = locContrato; document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
@@ -736,7 +734,14 @@
             document.getElementById('kpi-pc-tot').innerText = pcEjec + pcTerm + pcObs + pcEnt; document.getElementById('kpi-pc-ejec').innerText = pcEjec; document.getElementById('kpi-pc-term').innerText = pcTerm; document.getElementById('kpi-pc-obs').innerText = pcObs; document.getElementById('kpi-pc-ent').innerText = pcEnt;
             document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
             document.getElementById('kpi-aperturas').innerText = aperturas;
-            document.getElementById('kpi-rev-arq').innerText = revArq; document.getElementById('kpi-rev-esp').innerText = revEsp; document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl; document.getElementById('kpi-permiso').innerText = totPermiso; document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl; document.getElementById('kpi-sin-proy').innerText = totSinProy;
+            
+            // KPIs Sección 3 ordenados
+            document.getElementById('kpi-sin-proy').innerText = totSinProy;
+            document.getElementById('kpi-rev-obs').innerText = totRevObs;
+            document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
+            document.getElementById('kpi-permiso').innerText = totPermiso;
+            document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl;
+            
             document.getElementById('kpi-sec2-coord').innerText = s2_coord; document.getElementById('kpi-sec2-ent').innerText = s2_ent;
             document.getElementById('kpi-sec5-ing').innerText = s5_ing; document.getElementById('kpi-sec5-pend').innerText = s5_pend; document.getElementById('kpi-sec5-rev').innerText = s5_rev; document.getElementById('kpi-sec5-apr').innerText = s5_apr; document.getElementById('kpi-sec5-obs').innerText = s5_obs;
             
@@ -749,10 +754,8 @@
             const tbodySec4 = document.querySelector('#table-sec4 tbody');
             data.forEach(row => {
                 let sector = getCol(row, 'Sector'); if(!sector) return;
-                
                 let keys = Object.keys(row);
                 let fechas = keys.filter(k => k.toLowerCase().includes('fecha') || k.toLowerCase().trim() === 'fecha');
-
                 s4_tot++;
                 let respuesta = getCol(row, 'Respuesta 1') || '-';
                 
@@ -764,14 +767,11 @@
 
                 let estAco = estRaw.toLowerCase();
                 if(estAco.includes('pendiente')) s4_pend++; else s4_aten++;
-                
                 let badgeAco = estAco.includes('aprob') ? `<span class="badge badge-ok">${estRaw}</span>` : (estAco.includes('rechaz') ? `<span class="badge badge-alert">${estRaw}</span>` : `<span class="badge badge-warn">${estRaw}</span>`);
-                
-                let f1 = fechas.length > 0 ? printDate(row[fechas[0]]) : '-';
-                let f2 = fechas.length > 1 ? printDate(row[fechas[1]]) : '-';
+                let f1 = fechas.length > 0 ? printDate(row[fechas[0]]) : '-'; let f2 = fechas.length > 1 ? printDate(row[fechas[1]]) : '-';
 
                 let tr4 = document.createElement('tr');
-                tr4.innerHTML = `<td class="text-xs">${sector}</td><td class="text-xs text-center">${getCol(row, 'Bloque') || '-'}</td><td class="text-xs font-bold text-plum">${getCol(row, 'Local') || '-'}</td><td class="font-bold text-plum">${getCol(row, 'Socio Comercial') || '-'}</td><td class="text-xs text-center">${getCol(row, 'Area (m2)') || '-'}</td><td class="text-xs text-slate-700">${getCol(row, 'Requerimiento 1') || '-'}</td><td class="text-xs">${f1}</td><td class="text-xs">${respuesta}</td><td class="text-xs font-bold">${f2}</td><td class="text-xs font-medium">${getCol(row, 'Costo (Subtotal sin IGV)') || '-'}</td><td>${badgeAco}</td>`;
+                tr4.innerHTML = `<td class="text-[10px]">${sector}</td><td class="text-[10px] text-center">${getCol(row, 'Bloque') || '-'}</td><td class="text-[10px] font-bold text-plum">${getCol(row, 'Local') || '-'}</td><td class="font-bold text-plum">${getCol(row, 'Socio Comercial') || '-'}</td><td class="text-[10px] text-center">${getCol(row, 'Area (m2)') || '-'}</td><td class="text-[10px] text-slate-700">${getCol(row, 'Requerimiento 1') || '-'}</td><td class="text-[10px]">${f1}</td><td class="text-[10px]">${respuesta}</td><td class="text-[10px] font-bold">${f2}</td><td class="text-[10px] font-medium">${getCol(row, 'Costo (Subtotal sin IGV)') || '-'}</td><td>${badgeAco}</td>`;
                 tbodySec4.appendChild(tr4);
             });
             document.getElementById('kpi-sec4-tot').innerText = s4_tot; document.getElementById('kpi-sec4-pend').innerText = s4_pend; document.getElementById('kpi-sec4-aten').innerText = s4_aten;
@@ -783,23 +783,24 @@
                 let nombre = getCol(row, 'Nombre'); if(!nombre) return;
                 let correo = getCol(row, 'Correo'); 
                 let tr6 = document.createElement('tr');
-                tr6.innerHTML = `<td class="font-bold text-slate-800">${nombre}</td><td class="text-xs font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-xs text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-xs font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-xs text-slate-500">${correo || '-'}</td><td>${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
+                tr6.innerHTML = `<td class="font-bold text-slate-800">${nombre}</td><td class="text-[10px] font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500">${correo || '-'}</td><td>${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
                 tbodySec6.appendChild(tr6);
             });
         }
 
-        // INTERACCIÓN MAPA
+        // INTERACCIÓN MAPA (Buscando exactitud sin tildes ni espacios)
         const polygons = document.querySelectorAll('.store-polygon');
         const infoPanel = document.getElementById('info-panel');
         polygons.forEach(polygon => {
             polygon.addEventListener('click', function(e) {
                 polygons.forEach(p => p.classList.remove('selected')); this.classList.add('selected');
-                const data = storeData[this.getAttribute('data-store')];
+                // Almacenamos y buscamos usando la versión normalizada ("7sopas", "hm")
+                const searchId = normalizeId(this.getAttribute('data-store'));
+                const data = storeData[searchId];
                 if (data) {
                     infoPanel.style.display = 'block'; 
                     document.getElementById('store-name').innerText = data.name;
                     
-                    // Aplicar color termómetro a la barra y al texto
                     let colorTermometro = getProgressColor(data.pc);
                     document.getElementById('bar-pc').style.width = data.pc + '%'; 
                     document.getElementById('bar-pc').style.backgroundColor = colorTermometro; 
