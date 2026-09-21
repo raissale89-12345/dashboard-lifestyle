@@ -44,8 +44,8 @@
         .progress-fill { height: 100%; transition: width 0.6s ease, background-color 0.3s ease; border-radius: 4px;}
         .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; }
 
-        /* Ajustes para tablas ultra compactas que eviten el scroll horizontal */
-        .table-wrapper { width: 100%; max-height: 400px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
+        /* Ajustes para tablas ultra compactas */
+        .table-wrapper { width: 100%; max-height: 450px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
         thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 6px 8px; text-align: left; font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
         thead tr:first-child th:hover { background-color: #6a1e6b; }
@@ -64,8 +64,11 @@
         
         .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 18px; font-weight: 800; font-size: 1.15rem; display: inline-block; position: relative;}
         .section-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 3px; background-color: #E3004F; border-radius: 2px; }
-        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.6rem; text-decoration: none; cursor: pointer; }
+        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 3px 6px; border-radius: 4px; font-weight: 600; font-size: 0.6rem; text-decoration: none; cursor: pointer; transition: all 0.2s;}
         .btn-mail:hover { background-color: #E3004F; color: #fff; }
+        
+        /* Botones verdes cuando la tarea está hecha */
+        .btn-success { background-color: #dcfce7 !important; color: #166534 !important; border-color: #22c55e !important; pointer-events: none;}
     </style>
 </head>
 <body class="p-2 md:p-6 max-w-[1600px] mx-auto">
@@ -224,24 +227,24 @@
                         <th onclick="sortTable('table-sec2', 0)">Local ⇕</th>
                         <th onclick="sortTable('table-sec2', 1)">% P&C ⇕</th>
                         <th onclick="sortTable('table-sec2', 2)">F. Comp. Entrega ⇕</th>
-                        <th onclick="sortTable('table-sec2', 3)">F. Real Ops ⇕</th>
+                        <th onclick="sortTable('table-sec2', 3)">F. Real a OP ⇕</th>
                         <th onclick="sortTable('table-sec2', 4)">Alerta ⇕</th>
-                        <th>Evidencia</th>
+                        <th>Evidencia Fotográfica</th>
                         <th onclick="sortTable('table-sec2', 6)">Estatus ⇕</th>
-                        <th onclick="sortTable('table-sec2', 7)">F. Comp. Obs. ⇕</th>
-                        <th onclick="sortTable('table-sec2', 8)">F. Real Obs. ⇕</th>
-                        <th>Acta Fin.</th>
+                        <th onclick="sortTable('table-sec2', 7)">Fecha compromiso de Lev. Observ. ⇕</th>
+                        <th onclick="sortTable('table-sec2', 8)">Fecha Real de levantamiento de obs. ⇕</th>
+                        <th>Acta Final</th>
                     </tr>
                     <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
                         <th></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="Buscar..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -279,28 +282,34 @@
             <table id="table-sec3">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('table-sec3', 0)">Marca ⇕</th>
+                        <th onclick="sortTable('table-sec3', 0)">Operador ⇕</th>
                         <th onclick="sortTable('table-sec3', 1)">Arq. ⇕</th>
                         <th onclick="sortTable('table-sec3', 2)">Ing. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 3)">Est. HDL ⇕</th>
-                        <th onclick="sortTable('table-sec3', 4)">Alerta Arq ⇕</th>
-                        <th onclick="sortTable('table-sec3', 5)">Alerta Esp ⇕</th>
-                        <th onclick="sortTable('table-sec3', 6)">F. Ent. Local ⇕</th>
-                        <th onclick="sortTable('table-sec3', 7)">Coord. Ent. ⇕</th>
-                        <th onclick="sortTable('table-sec3', 8)">Coord. Obra ⇕</th>
-                        <th onclick="sortTable('table-sec3', 9)">Crono. ⇕</th>
+                        <th onclick="sortTable('table-sec3', 3)">Estatus HDL ⇕</th>
+                        <th onclick="sortTable('table-sec3', 4)">Est. Arq. ⇕</th>
+                        <th onclick="sortTable('table-sec3', 5)">Est. Esp. ⇕</th>
+                        <th onclick="sortTable('table-sec3', 6)">Coord. Ent. Local ⇕</th>
+                        <th onclick="sortTable('table-sec3', 7)">Fecha Pactada ⇕</th>
+                        <th onclick="sortTable('table-sec3', 8)">Hora Pactada ⇕</th>
+                        <th onclick="sortTable('table-sec3', 9)">Entregado ⇕</th>
+                        <th onclick="sortTable('table-sec3', 10)">Coord. Ini. Obra ⇕</th>
+                        <th onclick="sortTable('table-sec3', 11)">F. Inicio Obra ⇕</th>
+                        <th>Cronograma</th>
                     </tr>
                     <tr class="filter-row">
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
-                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="Buscar..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -460,14 +469,14 @@
             });
         }
 
-        // BUSCADOR INTELIGENTE DE COLUMNAS (A prueba de espacios extra)
+        // BUSCADOR INTELIGENTE DE COLUMNAS
         const getCol = (row, colName) => {
             const keys = Object.keys(row);
             const foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
             return foundKey ? safeString(row[foundKey]) : '';
         };
 
-        // NORMALIZADOR PARA EL MAPA (Elimina tildes, & y espacios)
+        // NORMALIZADOR DE MAPA 100% (Ignora espacios, tildes y símbolos raros como el &)
         const normalizeId = (id) => {
             if (!id) return '';
             return String(id).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
@@ -499,11 +508,18 @@
         const safeString = (val) => (val === undefined || val === null) ? '' : String(val).trim();
         const printDate = (val) => { return (!val || val === '-' || val === '') ? '-' : String(val); }
 
+        // MOTOR DE FECHAS ESTRICTO Y CORREGIDO
         const parseDate = (str) => { 
-            if(!str || str === '-' || str === '') return null;
-            const parts = String(str).split('/'); 
+            if(!str || str === '-' || str.trim() === '') return null;
+            let s = String(str).trim();
+            if (s.includes(' ')) s = s.split(' ')[0]; // Quitar horas si las trae
+            const parts = s.split(/[\/\-]/); 
             if(parts.length < 3) return null;
-            return new Date(parts[2], parts[1] - 1, parts[0]); 
+            let day = parseInt(parts[0], 10);
+            let month = parseInt(parts[1], 10) - 1; // Meses en JS van de 0 a 11
+            let year = parseInt(parts[2], 10);
+            if (year < 100) year += 2000; // Corrige si Excel manda el año como "24" en vez de "2024"
+            return new Date(year, month, day); 
         };
 
         // SEMÁFORO DE PORCENTAJES
@@ -516,7 +532,7 @@
             return '#16a34a'; // Verde oscuro
         };
 
-        // ALERTA FECHAS (Hasta día actual)
+        // ALERTA FECHAS (Calcula días respecto a HOY)
         const calcAlerta = (fecComp) => {
             if(!fecComp || fecComp === '-') return '<span class="badge badge-neutral">-</span>';
             const dComp = parseDate(fecComp);
@@ -526,9 +542,9 @@
             today.setHours(0,0,0,0);
             
             const diffDays = Math.ceil((dComp - today) / (1000 * 60 * 60 * 24));
-            if (diffDays > 0) return `<span class="badge badge-ok">Faltan ${diffDays} d</span>`;
-            if (diffDays === 0) return `<span class="badge badge-warn">Hoy</span>`;
-            return `<span class="badge badge-alert">Atrasado ${Math.abs(diffDays)} d</span>`;
+            if (diffDays > 0) return `<span class="badge badge-ok" style="background:#dcfce7; color:#166534">Faltan ${diffDays} d</span>`;
+            if (diffDays === 0) return `<span class="badge badge-warn" style="background:#fef3c7; color:#b45309">Hoy</span>`;
+            return `<span class="badge badge-alert" style="background:#fee2e2; color:#b91c1c">Atrasado ${Math.abs(diffDays)} d</span>`;
         };
 
         const calcSLA_HV = (fecEnvio, fecRespHV) => {
@@ -537,7 +553,10 @@
             let respondido = (fecRespHV && fecRespHV !== '' && fecRespHV !== '-' && String(fecRespHV).toLowerCase() !== 'pendiente');
             
             let dEval = new Date(); dEval.setHours(0,0,0,0);
-            if(respondido) dEval = parseDate(fecRespHV);
+            if(respondido) {
+                let pResp = parseDate(fecRespHV);
+                if(pResp) dEval = pResp;
+            }
             
             const diffDays = Math.ceil((dEval - dEnvio) / (1000 * 60 * 60 * 24));
             if (respondido) return diffDays <= 5 ? `<span class="badge badge-ok">En tiempo (${diffDays}d)</span>` : `<span class="badge badge-alert">Atrasado (${diffDays}d)</span>`;
@@ -555,8 +574,8 @@
             return `<span class="badge badge-neutral uppercase">${estHdl}</span>`;
         }
 
-        window.enviarCorreoCoord = function(marca, tipoCoord) {
-            window.location.href = `mailto:?subject=${encodeURIComponent(`Coordinación de ${tipoCoord} -${marca} - Mallplaza Trujillo`)}`;
+        window.enviarCorreoCoordPers = function(marca, asunto, bodyEncoded) {
+            window.location.href = `mailto:?subject=${encodeURIComponent(asunto + ' - ' + marca + ' - Mallplaza Trujillo')}&body=${bodyEncoded}`;
         };
 
         window.filtrarTabla = function(tableId) {
@@ -615,7 +634,7 @@
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
                 else if(recepcionadoStatus !== '-') recepcionadoStatus = 'NO';
                 
-                let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC');
+                let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC') || getCol(row, 'Fecha pactada');
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
                 // Mapeo seguro para el popup interactivo
@@ -657,22 +676,67 @@
                     if(fecComp !== '-' && fecComp.toLowerCase() !== 'pendiente') s2_coord++;
                     if(fecReal !== '-' && fecReal.toLowerCase() !== 'pendiente') s2_ent++;
 
+                    // BOTONES GOOGLE DRIVE (SECCION 2)
+                    let statusEvidencia1 = getCol(row, 'Evidencia Fotográfica') || getCol(row, 'Acta 1') || '-';
+                    let isEvidenciaReady = statusEvidencia1.toLowerCase().includes('si') || statusEvidencia1.toLowerCase().includes('sí');
+                    let btnEvidencia = `<a href="https://drive.google.com/drive/folders/1YCgT5QQToCBy3w1b2QaRq1wjW-CiZnwI?usp=drive_link" target="_blank" class="btn-mail ${isEvidenciaReady ? 'btn-success' : ''}">📁 ${isEvidenciaReady ? 'Subido' : 'Evidencia'}</a>`;
+                    
+                    let statusActaFinal = getCol(row, 'Acta Final') || '-';
+                    let isActaFinalReady = statusActaFinal.toLowerCase().includes('si') || statusActaFinal.toLowerCase().includes('sí');
+                    let btnActaFinal = `<a href="https://drive.google.com/drive/folders/1-Klu9o3CM_Y7cl0px5kWHmxteBeOA85Y?usp=drive_link" target="_blank" class="btn-mail ${isActaFinalReady ? 'btn-success' : ''}">📁 ${isActaFinalReady ? 'Subido' : 'Acta'}</a>`;
+
                     // Guardar para renderizar y ordenar Sección 2
                     dataSec2.push({
-                        marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs
+                        marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal
                     });
 
-                    // Render Tabla 3 (Habilitaciones)
-                    let tr3 = document.createElement('tr');
-                    let badgeArq = alertaArq.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaArq.toLowerCase().includes('revisión') || alertaArq.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
-                    let badgeEsp = alertaEsp.toLowerCase().includes('atrasado') ? 'badge-alert' : (alertaEsp.toLowerCase().includes('revisión') || alertaEsp.toLowerCase().includes('revision') ? 'badge-warn' : 'badge-ok');
-                    let btnEntrega = `<button onclick="enviarCorreoCoord('${marca}', 'Entrega de Local')" class="btn-mail">Enviar Correo</button>`;
-                    let btnObra = `<button onclick="enviarCorreoCoord('${marca}', 'Inicio de Obra')" class="btn-mail">Enviar Correo</button>`;
-                    let uploadCrono = `<div class="flex items-center gap-2"><span class="text-xs font-medium text-slate-700">-</span><label class="cursor-pointer bg-slate-100 px-2 py-1 rounded text-[9px] font-bold border border-slate-300">Subir</label></div>`;
+                    // Render Tabla 3 (Habilitaciones con Correos)
+                    let horaPactada = getCol(row, 'Hora pactada') || '-';
+                    let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
-                    tr3.innerHTML = `<td class="font-bold text-plum">${marca}</td><td class="text-[9px]">${getCol(row, 'Arquitecta') || '-'}</td><td class="text-[9px]">${getCol(row, 'Ingeniero') || '-'}</td>
+                    let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local') || '-';
+                    let btnCorreoEnt = '';
+                    if(statusCorreoEnt.toLowerCase().includes('si') || statusCorreoEnt.toLowerCase().includes('enviado') || statusCorreoEnt.toLowerCase().includes('realiz')) {
+                        btnCorreoEnt = `<span class="badge badge-ok">✅ Enviado</span>`;
+                    } else {
+                        let mes = "-";
+                        if(fechaPactadaPopup !== '-' && parseDate(fechaPactadaPopup)) {
+                            const dateObj = parseDate(fechaPactadaPopup);
+                            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                            mes = meses[dateObj.getMonth()];
+                        }
+                        let bodyEnt = `Estimado equipo ${marca},\n\nLes escribo para comentarles que su local estará listo para ser recepcionado el ${fechaPactadaPopup} de ${mes}, la entrega tiene una duración aproximada de 1 hora y 30 minutos y para el ingreso deberán contar con SCTR, DNI y EPPs completos.\n\nNos confirman los siguientes datos:\n\nNombre de persona que recepcionará el local:\nDia y Horario tentativo: ${fechaPactadaPopup} a las ${horaPactada}\n\nQuedo atenta a su pronta respuesta.\n\nGracias.\nSaludos.`;
+                        btnCorreoEnt = `<button onclick="window.enviarCorreoCoordPers('${marca}', 'Coordinación de Entrega de Local', \`${encodeURIComponent(bodyEnt)}\`)" class="btn-mail">✉️ Correo</button>`;
+                    }
+
+                    let statusCorreoObra = getCol(row, 'Correo de coordinación de inicio de obra HDL > SSCC') || '-';
+                    let btnCorreoObra = '';
+                    if(statusCorreoObra.toLowerCase().includes('si') || statusCorreoObra.toLowerCase().includes('enviado') || statusCorreoObra.toLowerCase().includes('realiz')) {
+                        btnCorreoObra = `<span class="badge badge-ok">✅ Enviado</span>`;
+                    } else {
+                        let bodyObra = `Estimado equipo ${marca},\n\nNos comunicamos para realizar la coordinación de inicio de obra de su local.\nPor favor, confirmarnos la fecha exacta y enviarnos la documentación requerida por HDL.\n\nSaludos cordiales.`;
+                        btnCorreoObra = `<button onclick="window.enviarCorreoCoordPers('${marca}', 'Coordinación de Inicio de Obra', \`${encodeURIComponent(bodyObra)}\`)" class="btn-mail">✉️ Correo</button>`;
+                    }
+
+                    let cronoStatus = getCol(row, 'Cronograma') || '-';
+                    let isCronoReady = cronoStatus.toLowerCase().includes('si') || cronoStatus.toLowerCase().includes('sí');
+                    let btnCronograma = `<a href="https://drive.google.com/drive/folders/1hAE0NK7Ov4K-M78qpkgY8XF5Hz5x2gTB?usp=drive_link" target="_blank" class="btn-mail ${isCronoReady ? 'btn-success' : ''}">📁 ${isCronoReady ? 'Cargado' : 'Carpeta'}</a>`;
+
+                    let tr3 = document.createElement('tr');
+                    tr3.innerHTML = `
+                    <td class="font-bold text-plum">${marca}</td>
+                    <td class="text-[9px]">${getCol(row, 'Arquitecta') || '-'}</td>
+                    <td class="text-[9px]">${getCol(row, 'Ingeniero') || '-'}</td>
                     <td>${getHdlBadge(estHdl)}</td>
-                    <td><span class="badge ${badgeArq}">${alertaArq || '-'}</span></td><td><span class="badge ${badgeEsp}">${alertaEsp || '-'}</span></td><td class="text-[10px] font-bold">-</td><td>${btnEntrega}</td><td>${btnObra}</td><td>${uploadCrono}</td>`;
+                    <td class="text-[10px]">${alertaArq || '-'}</td>
+                    <td class="text-[10px]">${alertaEsp || '-'}</td>
+                    <td>${btnCorreoEnt}</td>
+                    <td class="text-[10px]">${printDate(fechaPactadaPopup)}</td>
+                    <td class="text-[10px]">${horaPactada}</td>
+                    <td class="text-[10px] font-bold text-mallplaza">${recepcionadoStatus}</td>
+                    <td>${btnCorreoObra}</td>
+                    <td class="text-[10px] font-bold">${printDate(fecInicioObra)}</td>
+                    <td>${btnCronograma}</td>`;
                     t3.appendChild(tr3);
 
                     // Render Tabla 5 (Doc)
@@ -705,7 +769,6 @@
             // Renderizar Sección 2 ya ordenada
             dataSec2.forEach(item => {
                 let tr2 = document.createElement('tr');
-                let btnUpload = `<span class="cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-1 text-[9px] rounded border border-slate-300">Evidencia</span>`;
                 let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
                 let barraColor = getProgressColor(item.avancePc);
                 
@@ -721,11 +784,11 @@
                 <td class="text-[10px]">${printDate(item.fecComp)}</td>
                 <td class="text-[10px] font-bold">${printDate(item.fecReal)}</td>
                 <td>${calcAlerta(item.fecComp)}</td>
-                <td>${btnUpload}</td>
+                <td>${item.btnEvidencia}</td>
                 <td>${badgeEstatusPc}</td>
                 <td class="text-[10px]">${printDate(item.fecCompLevObs)}</td>
                 <td class="text-[10px] font-bold">${printDate(item.fecRealLevObs)}</td>
-                <td>${btnUpload}</td>`;
+                <td>${item.btnActaFinal}</td>`;
                 t2.appendChild(tr2);
             });
 
@@ -735,7 +798,6 @@
             document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
             document.getElementById('kpi-aperturas').innerText = aperturas;
             
-            // KPIs Sección 3 ordenados
             document.getElementById('kpi-sin-proy').innerText = totSinProy;
             document.getElementById('kpi-rev-obs').innerText = totRevObs;
             document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
@@ -788,13 +850,12 @@
             });
         }
 
-        // INTERACCIÓN MAPA (Buscando exactitud sin tildes ni espacios)
+        // INTERACCIÓN MAPA (Buscando exactitud)
         const polygons = document.querySelectorAll('.store-polygon');
         const infoPanel = document.getElementById('info-panel');
         polygons.forEach(polygon => {
             polygon.addEventListener('click', function(e) {
                 polygons.forEach(p => p.classList.remove('selected')); this.classList.add('selected');
-                // Almacenamos y buscamos usando la versión normalizada ("7sopas", "hm")
                 const searchId = normalizeId(this.getAttribute('data-store'));
                 const data = storeData[searchId];
                 if (data) {
