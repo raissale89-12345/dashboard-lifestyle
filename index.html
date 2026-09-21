@@ -502,13 +502,17 @@
         </div>
     </section>
 
-    <!-- BURBUJA 6: CONTACTOS (OCULTA POR DEFECTO Y MINIMALISTA) -->
-    <section id="sec-6" class="burbuja-seccion transition-all duration-300">
-        <div class="flex justify-between items-center cursor-pointer" onclick="document.getElementById('sec6-content').classList.toggle('hidden'); document.getElementById('arrow-6').classList.toggle('rotate-180')">
+    <!-- BURBUJA 6: CONTACTOS -->
+    <section id="sec-6" class="burbuja-seccion">
+        <div class="flex items-center justify-between mb-2">
             <h2 class="section-title m-0">6. Directorio de Contactos Clave</h2>
-            <span id="arrow-6" class="text-xl font-bold text-plum transition-transform duration-300">▼</span>
         </div>
-        <div id="sec6-content" class="hidden mt-6">
+        
+        <div class="toggle-btn" onclick="document.getElementById('content-sec6').classList.toggle('hidden');">
+            ▼ Ver / Ocultar Directorio ▼
+        </div>
+
+        <div id="content-sec6" class="hidden mt-4">
             <div class="table-wrapper">
                 <table id="table-sec6">
                     <thead>
@@ -697,6 +701,10 @@
         };
 
         function procesarDataMain(data) {
+            const tbodySec2 = document.querySelector('#table-sec2 tbody');
+            const t3 = document.querySelector('#table-sec3 tbody');
+            const t5 = document.querySelector('#table-sec5 tbody');
+
             let locTot = 77; 
             let locContrato = 0, locVacancy = 0, modTot = 0, modNombre = 0, modVacancy = 0;
             let pcTerm = 0, pcEjec = 0, pcObs = 0, pcEnt = 0;
@@ -708,13 +716,9 @@
             let dataSec2 = [];
 
             let totSinProy = 0, totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0;
-            
-            // Listas para los tooltips
             let listSinProy = [], listRevObs = [], listAprobHdl = [], listPermiso = [], listEnObraHdl = [];
 
             let dataSec5 = [];
-
-            const t3 = document.querySelector('#table-sec3 tbody');
 
             data.forEach(row => {
                 let rawId = getCol(row, 'id_poligono');
@@ -792,7 +796,6 @@
 
                     dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
 
-                    // SEC 3 - Render y Correos
                     let horaPactada = getCol(row, 'Hora pactada') || '-';
                     let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
@@ -834,7 +837,15 @@
                     <td class="font-bold text-plum nowrap">${marca}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
                     <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
-                    <td class="nowrap">${getHdlBadge(estHdl)}</td>
+                    <td class="nowrap">${(function(){
+                        let s = estHdl.toLowerCase();
+                        if(s.includes('sin proy')) return `<span class="badge bg-red-100 text-red-700 uppercase">${estHdl}</span>`;
+                        if(s.includes('revis') || s.includes('observ')) return `<span class="badge bg-orange-100 text-orange-700 uppercase">${estHdl}</span>`;
+                        if(s.includes('aprobado')) return `<span class="badge bg-green-100 text-green-700 uppercase">${estHdl}</span>`;
+                        if(s.includes('permiso')) return `<span class="badge bg-emerald-100 text-emerald-700 uppercase">${estHdl}</span>`;
+                        if(s.includes('obra')) return `<span class="badge bg-plum text-white uppercase">${estHdl}</span>`;
+                        return `<span class="badge badge-neutral uppercase">${estHdl}</span>`;
+                    })()}</td>
                     <td class="text-[9px] nowrap">${barArqHtml} <span class="text-[8px] ${colorArqTxt}">${alertaArq || '-'}</span></td>
                     <td class="text-[9px] nowrap">${barEspHtml} <span class="text-[8px] ${colorEspTxt}">${alertaEsp || '-'}</span></td>
                     <td class="text-[9px] nowrap">${printDate(fecComp)}</td>
@@ -847,7 +858,6 @@
                     <td class="nowrap">${btnCronograma}</td>`;
                     t3.appendChild(tr3);
 
-                    // SEC 5 - Recolección para ordenamiento
                     let dEst = getCol(row, 'Estatus Documentacion').toLowerCase() || '-'; 
                     let dRes = getCol(row, 'Resultado de Revisión').toLowerCase() || '-'; 
                     let dFin = getCol(row, 'Estatus Final').toLowerCase() || '-';
@@ -861,14 +871,12 @@
                 }
             });
 
-            // Llenar tooltips Sección 3
             document.getElementById('tooltip-sin-proy').innerText = listSinProy.length > 0 ? listSinProy.join('\n') : 'Ninguno';
             document.getElementById('tooltip-rev-obs').innerText = listRevObs.length > 0 ? listRevObs.join('\n') : 'Ninguno';
             document.getElementById('tooltip-aprob-hdl').innerText = listAprobHdl.length > 0 ? listAprobHdl.join('\n') : 'Ninguno';
             document.getElementById('tooltip-permiso').innerText = listPermiso.length > 0 ? listPermiso.join('\n') : 'Ninguno';
             document.getElementById('tooltip-enobra-hdl').innerText = listEnObraHdl.length > 0 ? listEnObraHdl.join('\n') : 'Ninguno';
 
-            // Lógica final Sec 1
             locVacancy = locTot - locContrato; 
             document.getElementById('kpi-loc-contrato').innerText = locContrato; 
             document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
@@ -881,21 +889,18 @@
             document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
             document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
             
-            // Lógica final Sec 3 KPIs
             document.getElementById('kpi-sin-proy').innerText = totSinProy;
             document.getElementById('kpi-rev-obs').innerText = totRevObs;
             document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
             document.getElementById('kpi-permiso').innerText = totPermiso;
             document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl;
             
-            // Ordenamiento por defecto Sección 2 (Fechas Próximas primero)
             dataSec2.sort((a, b) => {
                 let dateA = parseDate(a.fecComp); let dateB = parseDate(b.fecComp);
                 if(!dateA && !dateB) return 0; if(!dateA) return 1; if(!dateB) return -1;
                 return dateA - dateB;
             });
 
-            const tbodySec2 = document.querySelector('#table-sec2 tbody');
             dataSec2.forEach(item => {
                 let tr2 = document.createElement('tr');
                 let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
@@ -926,12 +931,11 @@
             document.getElementById('kpi-sec2-levobs').innerText = s2_levObs;
             document.getElementById('kpi-sec2-recepcionados').innerText = s2_recepcionados;
 
-            // Ordenamiento por defecto Sección 5 (Documentos más recientes primero, luego pendientes)
             let s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
             dataSec5.sort((a, b) => {
                 let dateA = parseDate(a.fecEnvioDoc); let dateB = parseDate(b.fecEnvioDoc);
                 if(!dateA && !dateB) return 0; if(!dateA) return 1; if(!dateB) return -1;
-                return dateB - dateA; // Orden descendente (más recientes primero)
+                return dateB - dateA; 
             });
 
             dataSec5.forEach(item => {
