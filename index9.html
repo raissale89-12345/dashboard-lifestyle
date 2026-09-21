@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Integral - Lifestyle MPT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mallplaza: '#E3004F', plum: '#4A154B', crimson: '#D32F4C', lightpink: '#F0B3F0', 
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        
+        #loading-screen { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: opacity 0.5s ease; }
+        .spinner { width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top-color: #E3004F; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
+        
+        .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .map-bg { width: 100%; height: auto; display: block; }
+        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+        .store-polygon { fill: rgba(227, 0, 79, 0.05); stroke: transparent; stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
+        .store-polygon:hover { fill: rgba(240, 179, 240, 0.5); stroke: #F0B3F0; }
+        .store-polygon.selected { fill: rgba(227, 0, 79, 0.2); stroke: #E3004F; stroke-width: 4px; }
+
+        .info-panel { position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.97); padding: 16px; border: 1px solid #F0B3F0; border-radius: 12px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); width: calc(100% - 30px); max-width: 300px; z-index: 20; display: none; backdrop-filter: blur(8px); }
+        .progress-bar-container { display: flex; align-items: center; margin-bottom: 10px; }
+        .progress-label { width: 130px; font-size: 9px; font-weight: 700; color: #4A154B; letter-spacing: 0.5px; }
+        .progress-track { flex-grow: 1; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 0 8px; }
+        .progress-fill { height: 100%; transition: width 0.6s ease, background-color 0.3s ease; border-radius: 4px;}
+        .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; }
+
+        .table-wrapper { width: 100%; max-height: 500px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
+        thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 6px 8px; text-align: left; font-weight: 600; cursor: pointer; user-select: none; }
+        thead tr:first-child th:hover { background-color: #6a1e6b; }
+        thead tr.filter-row th { position: sticky; top: 29px; z-index: 19; background-color: #f8fafc; padding: 4px 6px; border-bottom: 2px solid #e2e8f0; }
+        
+        .filter-input { width: 100%; text-align: left; font-size: 0.6rem; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; outline: none; }
+        .filter-input:focus { border-color: #E3004F; box-shadow: 0 0 0 1px #E3004F; }
+        td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        tr:hover { background-color: #fff1f2; }
+        
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; display: inline-block; text-align: center; }
+        .badge-ok { background-color: #dcfce7; color: #166534; }
+        .badge-alert { background-color: #fee2e2; color: #b91c1c; }
+        .badge-warn { background-color: #fef3c7; color: #b45309; }
+        .badge-neutral { background-color: #e2e8f0; color: #475569; }
+        
+        .section-title { color: #4A154B; padding-bottom: 6px; margin-bottom: 4px; font-weight: 800; font-size: 1.15rem; display: inline-block; position: relative;}
+        .section-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 3px; background-color: #E3004F; border-radius: 2px; }
+        .counter-pill { background-color: #F0B3F0; color: #4A154B; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; margin-left: 8px; vertical-align: middle; }
+        
+        .btn-mail { display: inline-flex; align-items: center; justify-content: center; background-color: white; color: #E3004F; border: 1px solid #E3004F; padding: 3px 6px; border-radius: 4px; font-weight: 600; font-size: 0.6rem; text-decoration: none; cursor: pointer; transition: all 0.2s;}
+        .btn-mail:hover { background-color: #E3004F; color: #fff; }
+        .btn-success { background-color: #dcfce7 !important; color: #166534 !important; border-color: #22c55e !important; pointer-events: none;}
+        
+        .nowrap { white-space: nowrap; }
+    </style>
+</head>
+<body class="p-2 md:p-6 max-w-[1600px] mx-auto">
+
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <h2 class="mt-6 text-xl font-bold text-plum">Sincronizando Base de Datos...</h2>
+        <p class="text-sm text-slate-500 mt-2">Conectando en vivo con Google Sheets</p>
+    </div>
+
+    <header class="flex flex-col md:flex-row md:justify-between md:items-end pb-4 mb-4 gap-3 px-2">
+        <div>
+            <h1 class="text-3xl font-black text-mallplaza tracking-tight">Lifestyle Mallplaza Trujillo</h1>
+            <p class="text-slate-500 text-xs mt-1 font-semibold uppercase tracking-widest">Tablero de Control Integrado</p>
+        </div>
+        <div class="text-xs font-bold text-mallplaza bg-pink-50 px-4 py-2 rounded-full border border-pink-200 self-start md:self-auto flex items-center gap-2 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-mallplaza animate-pulse"></span>
+            En Vivo (Tiempo Real)
+        </div>
+    </header>
+
+    <!-- BURBUJA 1: AVANCE GENERAL Y MAPA -->
+    <section id="sec-1" class="burbuja-seccion">
+        <h2 class="section-title mb-6">1. Avance General</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-3xl font-black text-plum mt-1" id="kpi-loc-tot">77</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Contrato: <strong class="text-slate-800" id="kpi-loc-contrato">0</strong></span><span>Vacancy: <strong class="text-mallplaza" id="kpi-loc-vacancy">0</strong></span></div>
+            </div>
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-3xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson" id="kpi-mod-vacancy">0</strong></span></div>
+            </div>
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-2xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
+                <div class="grid grid-cols-2 gap-x-1 gap-y-1 pt-2 mt-1 border-t border-slate-200 text-[8px] font-bold text-slate-500"><span>Ejecución: <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></span><span class="text-plum font-bold">Terminados: <strong id="kpi-pc-term" class="text-plum">0</strong></span><span>Observados: <strong class="text-slate-800" id="kpi-pc-obs">0</strong></span><span>Entregados: <strong class="text-slate-800" id="kpi-pc-ent">0</strong></span></div>
+            </div>
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">HDL - ENTREGAS</p>
+                    <div class="flex justify-between mt-1 text-[9px] font-bold text-slate-500"><span>Informadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-inf">0</strong></div>
+                </div>
+                <div class="grid grid-cols-1 gap-y-1 pt-1 mt-1 border-t border-slate-200 text-[9px] font-bold text-slate-500">
+                    <div class="flex justify-between"><span>Coordinadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
+                    <div class="flex justify-between text-mallplaza"><span>Loc. Entregados:</span> <strong class="text-mallplaza" id="kpi-hdl-ent-reales">0</strong></div>
+                </div>
+            </div>
+            <div class="p-4 bg-plum text-white rounded-xl shadow-md flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-lightpink uppercase tracking-wider">En Obra (Implem.)</p><p class="text-3xl font-black text-white mt-1" id="kpi-obra-tot">0</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-white/20 text-[9px] font-bold text-white/90"><span>Locales: <strong class="text-white" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white" id="kpi-obra-mod">0</strong></span></div>
+            </div>
+            <div class="p-4 bg-mallplaza text-white rounded-xl shadow-md flex flex-col justify-between">
+                <div><p class="text-[9px] font-extrabold text-pink-200 uppercase tracking-wider">Aperturas</p><p class="text-3xl font-black text-white mt-1" id="kpi-aperturas">0</p></div>
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-white/20 text-[9px] font-bold text-pink-100"><span>Total Aperturados</span></div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
+            <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none" id="svg-map">
+                <!-- Polígonos de locales -->
+                <polygon class="store-polygon" data-store="capriccio" points="3459,660 3455,844 3295,812 3295,664" />
+                <polygon class="store-polygon" data-store="fridays" points="3451,840 3475,848 3690,788 3714,652 3499,652 3463,660" />
+                <polygon class="store-polygon" data-store="pardos" points="3088,1083 3092,928 3299,876 3299,1095" />
+                <polygon class="store-polygon" data-store="7-sopas" points="3778,512 4081,512 4081,696 3898,644 3814,636" />
+                <polygon class="store-polygon" data-store="mr-joy" points="4097,1083 4081,512 4332,512 4380,592 4364,1083" />
+                <polygon class="store-polygon" data-store="madam-tusan" points="4049,1035 3922,1027 3922,1091 3870,1075 3866,860 3938,804 4045,812" />
+                <polygon class="store-polygon" data-store="naruto" points="3471,1075 3475,908 3606,864 3598,1079" />
+                <polygon class="store-polygon" data-store="don-eduardo" points="3076,660 3219,648 3271,652 3291,812 3156,828 3080,756" />
+                <polygon class="store-polygon" data-store="tramontina" points="3080,540 3080,632 3211,628 3207,540" />
+                <polygon class="store-polygon" data-store="columbia" points="2932,656 2928,780 2900,792 2876,792 2872,652" />
+                <polygon class="store-polygon" data-store="celsius" points="3762,1079 3770,872 3858,872 3862,1083" />
+                <polygon class="store-polygon" data-store="wayu" points="2864,1011 2864,940 2904,940 2932,963 2928,1019" />
+                <polygon class="store-polygon" data-store="freh" points="3750,780 3794,824 3818,796 3778,748" />
+                <polygon class="store-polygon" data-store="el-rincon-de-vallejo" points="3303,1088 3303,880 3459,908 3459,1076 3347,1096" />
+                <polygon class="store-polygon" data-store="vacancy-1" points="3602,1076 3610,860 3754,856 3758,1088 3650,1096" />
+                <polygon class="store-polygon" data-store="vacancy-2" points="3491,537 3662,533 3710,637 3491,641" />
+                <polygon class="store-polygon" data-store="mic" points="2821,533 2932,537 2932,609 2821,617" />
+                <polygon class="store-polygon" data-store="new-era" points="2817,681 2868,681 2868,793 2809,789" />
+                <polygon class="store-polygon" data-store="gap" points="2569,797 2693,793 2685,569 2581,565" />
+                <polygon class="store-polygon" data-store="opticalia" points="2513,781 2513,657 2565,653 2565,793" />
+                <polygon class="store-polygon" data-store="kipling" points="2469,788 2469,692 2513,684 2513,780" />
+                <polygon class="store-polygon" data-store="ilaria" points="2250,788 2250,700 2218,700 2214,792" />
+                <polygon class="store-polygon" data-store="steve-madden" points="2154,652 2214,652 2218,784 2158,788" />
+                <polygon class="store-polygon" data-store="bubba-bags" points="2102,788 2102,648 2150,652 2150,788" />
+                <polygon class="store-polygon" data-store="iria" points="2063,792 2067,708 2094,700 2102,788" />
+                <polygon class="store-polygon" data-store="parfois" points="1983,796 1983,656 2098,656 2102,700 2071,696 2059,796" />
+                <polygon class="store-polygon" data-store="portenos" points="1695,780 1695,660 1632,664 1628,796 1676,800" />
+                <polygon class="store-polygon" data-store="tous" points="1564,796 1564,660 1624,664 1628,780" />
+                <polygon class="store-polygon" data-store="bimba-y-lola" points="1512,788 1512,660 1560,660 1560,780" />
+                <polygon class="store-polygon" data-store="michelle-belau" points="1448,796 1508,796 1500,660 1448,652" />
+                <polygon class="store-polygon" data-store="hurley" points="1229,793 1324,797 1328,653 1277,657 1277,693 1245,693" />
+                <polygon class="store-polygon" data-store="footloose" points="874,665 894,521 965,533 938,697" />
+                <polygon class="store-polygon" data-store="john-holden" points="754,624 870,668 890,520 818,508" />
+                <polygon class="store-polygon" data-store="exit" points="1073,912 1017,1003 1081,1031 1125,944" />
+                <polygon class="store-polygon" data-store="dulcinelly" points="1205,1077 1201,937 1273,937 1269,1077" />
+                <polygon class="store-polygon" data-store="blush-bar" points="1416,951 1508,955 1508,1039 1412,1043" />
+                <polygon class="store-polygon" data-store="hm" points="1504,947 1508,1039 1340,1055 1336,1322 1684,1322 1688,1031 1648,931" />
+                <polygon class="store-polygon" data-store="naf-naf" points="1983,1091 1983,940 2059,940 2059,1095" />
+                <polygon class="store-polygon" data-store="malva-shoe-shop" points="2067,1089 2067,941 2130,945 2134,1085" />
+                <polygon class="store-polygon" data-store="prune" points="2262,1041 2330,1041 2330,941 2250,937" />
+                <polygon class="store-polygon" data-store="natura" points="2334,1027 2410,1035 2410,940 2338,940" />
+                <polygon class="store-polygon" data-store="mia-beauty-bar" points="2398,1099 2390,1047 2414,1047 2418,940 2485,940 2497,1091" />
+                <polygon class="store-polygon" data-store="levis" points="2501,1095 2501,940 2613,928 2613,1099" />
+                <polygon class="store-polygon" data-store="the-north-face" points="2689,1099 2745,1099 2745,940 2693,940" />
+                <polygon class="store-polygon" data-store="camila-viali" points="2757,1099 2817,1095 2813,951 2757,944" />
+                <polygon class="store-polygon" data-store="dermotienda" points="2821,1017 2856,1017 2864,933 2821,941" />
+            </svg>
+
+            <!-- CUADRO EMERGENTE POPUP -->
+            <div class="info-panel" id="info-panel">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-pink-100">
+                    <h2 id="store-name" class="text-base font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
+                    <button id="close-panel" class="text-slate-400 hover:text-mallplaza font-bold text-xl leading-none">&times;</button>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">AVANCE OBRA P&C</div>
+                    <div class="progress-track"><div id="bar-pc" class="progress-fill" style="width: 0%;"></div></div>
+                    <div id="text-pc" class="progress-text text-mallplaza">0%</div>
+                </div>
+                <div class="mb-2 text-[9px]">
+                    <span class="font-bold text-plum">HDL - ESTATUS PROYECTO:</span>
+                    <span id="text-hdl" class="ml-1 text-slate-700 font-medium">Pendiente</span>
+                </div>
+                <div class="mb-2 text-[9px]">
+                    <span class="font-bold text-plum">FECHA PACTADA ENTREGA LOCAL:</span>
+                    <span id="text-fecha-pactada" class="ml-1 text-slate-700 font-medium">-</span>
+                </div>
+                <div class="mb-3 text-[9px] pb-2 border-b border-pink-100">
+                    <span class="font-bold text-plum">LOCAL RECEPCIONADO:</span>
+                    <span id="text-recepcionado" class="ml-1 font-bold text-mallplaza">-</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">IMPLEMENTACIÓN</div>
+                    <div class="progress-track"><div id="bar-implem" class="progress-fill" style="background-color:#4A154B; width: 0%;"></div></div>
+                    <div id="text-implem" class="progress-text text-plum">0%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BURBUJA 2: ENTREGAS P&C -->
+    <section id="sec-2" class="burbuja-seccion">
+        <div class="flex items-center mb-4">
+            <h2 class="section-title m-0">2. Seguimiento de Entregas (P&C a Operaciones)</h2>
+            <span id="count-sec2" class="counter-pill">0</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">% Avance de Obra</p>
+                <p class="text-xl font-black text-mallplaza" id="kpi-sec2-promedio">0%</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Entregados</p>
+                <p class="text-xl font-black text-plum" id="kpi-sec2-entregados">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Con Lev. Observ.</p>
+                <p class="text-xl font-black text-orange-500" id="kpi-sec2-levobs">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Recepcionados OP</p>
+                <p class="text-xl font-black text-emerald-600" id="kpi-sec2-recepcionados">0</p>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table id="table-sec2">
+                <thead>
+                    <tr>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 0)">Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 1)">% P&C ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 2)">F. Comp. Entrega ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 3)">F. Real a OP ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 4)">Alerta ⇕</th>
+                        <th class="nowrap">Evidencia Fotográfica</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 6)">Estatus ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 7)">Fecha comp. Lev. Obs. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec2', 8)">Fecha Real Lev. Obs. ⇕</th>
+                        <th class="nowrap">Acta Final</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec2')" placeholder="..."></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- BURBUJA 3: HABILITACIONES -->
+    <section id="sec-3" class="burbuja-seccion">
+        <div class="flex items-center mb-4">
+            <h2 class="section-title m-0">3. Detalle Habilitaciones y Revisiones</h2>
+            <span id="count-sec3" class="counter-pill">0</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Sin Proyecto</p>
+                <p class="text-xl font-black text-slate-500" id="kpi-sin-proy">0</p>
+            </div>
+            <div class="p-2 bg-orange-50 border border-orange-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Observado</p>
+                <p class="text-xl font-black text-orange-600" id="kpi-rev-obs">0</p>
+            </div>
+            <div class="p-2 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobados</p>
+                <p class="text-xl font-black text-blue-600" id="kpi-aprob-hdl">0</p>
+            </div>
+            <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-emerald-700 uppercase">Con Permiso</p>
+                <p class="text-xl font-black text-emerald-600" id="kpi-permiso">0</p>
+            </div>
+            <div class="p-2 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition">
+                <p class="text-[9px] font-bold text-lightpink uppercase">En Obra</p>
+                <p class="text-xl font-black text-white" id="kpi-enobra-hdl">0</p>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table id="table-sec3">
+                <thead>
+                    <tr>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 0)">Operador ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 1)">Arq. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 2)">Ing. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 3)">Est. HDL ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 4)">% Rev. Arq. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 5)">% Rev. Esp. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 6)">Coord. Ent. Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 7)">Fecha Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 8)">Hora Pactada ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 9)">Entregado ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 10)">Coord. Ini. Obra ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec3', 11)">F. Inicio Obra ⇕</th>
+                        <th class="nowrap">Cronograma</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec3')" placeholder="..."></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- BURBUJA 4: ACOMETIDAS -->
+    <section id="sec-4" class="burbuja-seccion">
+        <h2 class="section-title">4. Solicitudes de Cambios de Acometidas</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Total Locales</p>
+                <p class="text-xl font-black text-slate-800" id="kpi-sec4-locales">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Total Módulos</p>
+                <p class="text-xl font-black text-slate-800" id="kpi-sec4-modulos">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Nº Solicitudes</p>
+                <p class="text-xl font-black text-blue-600" id="kpi-sec4-tot">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Atendidas</p>
+                <p class="text-xl font-black text-emerald-600" id="kpi-sec4-aten">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-red-500">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">Pendientes</p>
+                <p class="text-xl font-black text-red-600" id="kpi-sec4-pend">0</p>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table id="table-sec4">
+                <thead>
+                    <tr>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 0)">Sector ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 1)">Bloque ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 2)">Local ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 3)">Socio Comercial ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 4)">Área (m2) ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 5)">Requerimiento ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 6)">F. Solicitud ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 7)">Respuesta ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 8)">F. Respuesta ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 9)">Costo ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec4', 10)">Estatus ⇕</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec4')" placeholder="..."></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- BURBUJA 5: DOCUMENTACIÓN -->
+    <section id="sec-5" class="burbuja-seccion">
+        <h2 class="section-title">5. Documentación de Ingreso a Obra</h2>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Locales Ingresaron</p>
+                <p class="text-xl font-black text-slate-800" id="kpi-sec5-ing">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">Pendientes de Rev.</p>
+                <p class="text-xl font-black text-plum" id="kpi-sec5-pend">0</p>
+            </div>
+            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-slate-400 uppercase leading-tight">En Revisión</p>
+                <p class="text-xl font-black text-mallplaza" id="kpi-sec5-rev">0</p>
+            </div>
+            <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Aprobados</p>
+                <p class="text-xl font-black text-emerald-800" id="kpi-sec5-apr">0</p>
+            </div>
+            <div class="p-2 bg-red-50 border border-red-200 rounded-lg text-center">
+                <p class="text-[9px] font-bold text-red-600 uppercase leading-tight">Observados</p>
+                <p class="text-xl font-black text-crimson" id="kpi-sec5-obs">0</p>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table id="table-sec5">
+                <thead>
+                    <tr>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 0)">Marca ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 1)">Estatus Doc ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 2)">F. Envío ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 3)">Result. Rev. ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 4)">Rpta HV ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 5)">Lev. SC ⇕</th>
+                        <th class="nowrap" onclick="sortTable('table-sec5', 6)">Estatus Final ⇕</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                        <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec5')" placeholder="..."></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- BURBUJA 6: CONTACTOS (OCULTA POR DEFECTO) -->
+    <section id="sec-6" class="burbuja-seccion transition-all duration-300">
+        <div class="flex justify-between items-center cursor-pointer" onclick="document.getElementById('sec6-content').classList.toggle('hidden'); document.getElementById('arrow-6').classList.toggle('rotate-180')">
+            <h2 class="section-title m-0">6. Directorio de Contactos Clave</h2>
+            <span id="arrow-6" class="text-xl font-bold text-plum transition-transform duration-300">▼</span>
+        </div>
+        <div id="sec6-content" class="hidden mt-6">
+            <div class="table-wrapper">
+                <table id="table-sec6">
+                    <thead>
+                        <tr>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 0)">Nombre ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 1)">Empresa / Marca ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 2)">Cargo / Rol ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 3)">Teléfono ⇕</th>
+                            <th class="nowrap" onclick="sortTable('table-sec6', 4)">Correo ⇕</th>
+                            <th class="nowrap">Acción</th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th></th>
+                            <th><input type="text" class="filter-input" onkeyup="filtrarTabla('table-sec6')" placeholder="..."></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ENLACES EN VIVO
+        const cacheBuster = `&_=${new Date().getTime()}`;
+        const LINK_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=5692487&single=true&output=csv' + cacheBuster;
+        const LINK_ACO  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=18642517&single=true&output=csv' + cacheBuster;
+        const LINK_DOC  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=36710013&single=true&output=csv' + cacheBuster;
+        const LINK_CONT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=1380359432&single=true&output=csv' + cacheBuster;
+
+        let storeData = {};
+
+        function fetchCSV(url) {
+            return new Promise((resolve, reject) => {
+                Papa.parse(url, {
+                    download: true, header: true, skipEmptyLines: true,
+                    complete: function(results) { resolve(results.data); },
+                    error: function(err) { console.error("Error PapaParse:", err); reject(err); }
+                });
+            });
+        }
+
+        const getCol = (row, colName) => {
+            const keys = Object.keys(row);
+            const foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
+            return foundKey ? safeString(row[foundKey]) : '';
+        };
+
+        const normalizeId = (id) => {
+            if (!id) return '';
+            return String(id).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+        };
+
+        window.onload = function() {
+            Promise.all([
+                fetchCSV(LINK_BASE), fetchCSV(LINK_DOC), fetchCSV(LINK_ACO), fetchCSV(LINK_CONT)
+            ]).then(([dataBase, dataDoc, dataAco, dataCont]) => {
+                let mergedMain = dataBase.map(baseRow => {
+                    const baseId = normalizeId(getCol(baseRow, 'id_poligono'));
+                    let docRow = dataDoc.find(d => normalizeId(getCol(d, 'id_poligono')) === baseId) || {};
+                    return { ...baseRow, ...docRow };
+                });
+                procesarDataMain(mergedMain);
+                procesarDataAcometidas(dataAco);
+                procesarDataContactos(dataCont);
+
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+
+            }).catch(error => {
+                console.error("Error:", error);
+                document.getElementById('loading-screen').innerHTML = `<h2 class="text-xl font-bold text-crimson">Error de Conexión</h2><p class="text-sm mt-2">Por favor actualiza la página.</p>`;
+            });
+        };
+
+        const safeString = (val) => (val === undefined || val === null) ? '' : String(val).trim();
+        const printDate = (val) => { return (!val || val === '-' || val === '') ? '-' : String(val); }
+
+        const parseDate = (str) => { 
+            if(!str || str === '-' || String(str).trim() === '') return null;
+            let s = String(str).trim();
+            if (s.includes(' ')) s = s.split(' ')[0]; 
+            const parts = s.split(/[\/\-]/); 
+            if(parts.length < 3) return null;
+            
+            let day = parseInt(parts[0], 10);
+            let month = parseInt(parts[1], 10) - 1; 
+            let year = parseInt(parts[2], 10);
+            if (year < 100) year += 2000; 
+            
+            return new Date(year, month, day); 
+        };
+
+        const getProgressColor = (percent) => {
+            if (percent < 20) return '#ef4444'; 
+            if (percent < 45) return '#f97316'; 
+            if (percent < 65) return '#eab308'; 
+            if (percent < 90) return '#84cc16'; 
+            if (percent < 100) return '#22c55e'; 
+            return '#16a34a'; 
+        };
+
+        const calcAlerta = (fecComp) => {
+            if(!fecComp || fecComp === '-') return '<span class="badge badge-neutral">-</span>';
+            const dComp = parseDate(fecComp);
+            if(!dComp) return '<span class="badge badge-neutral">-</span>';
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            
+            const diffDays = Math.ceil((dComp - today) / (1000 * 60 * 60 * 24));
+            if (diffDays > 0) return `<span class="badge badge-ok" style="background:#dcfce7; color:#166534">Faltan ${diffDays} d</span>`;
+            if (diffDays === 0) return `<span class="badge badge-warn" style="background:#fef3c7; color:#b45309">Hoy</span>`;
+            return `<span class="badge badge-alert" style="background:#fee2e2; color:#b91c1c">Atrasado ${Math.abs(diffDays)} d</span>`;
+        };
+
+        const calcSLA_HV = (fecEnvio, fecRespHV) => {
+            if(!fecEnvio || fecEnvio === '-' || fecEnvio === '') return '<span class="badge badge-neutral">-</span>';
+            const dEnvio = parseDate(fecEnvio); if(!dEnvio) return '-';
+            let respondido = (fecRespHV && fecRespHV !== '' && fecRespHV !== '-' && String(fecRespHV).toLowerCase() !== 'pendiente');
+            
+            let dEval = new Date(); dEval.setHours(0,0,0,0);
+            if(respondido) {
+                let pResp = parseDate(fecRespHV);
+                if(pResp) dEval = pResp;
+            }
+            
+            const diffDays = Math.ceil((dEval - dEnvio) / (1000 * 60 * 60 * 24));
+            if (respondido) return diffDays <= 5 ? `<span class="badge badge-ok">En tiempo (${diffDays}d)</span>` : `<span class="badge badge-alert">Atrasado (${diffDays}d)</span>`;
+            return diffDays <= 5 ? `<span class="badge badge-warn">Día ${diffDays} de 5</span>` : `<span class="badge badge-alert">Vencido (${diffDays}d)</span>`;
+        };
+
+        // Escala de Colores para Estatus HDL (Sec 3)
+        const getHdlBadge = (estHdl) => {
+            let s = estHdl.toLowerCase();
+            if(s.includes('sin proy')) return `<span class="badge bg-red-100 text-red-700 uppercase">${estHdl}</span>`;
+            if(s.includes('revis') || s.includes('observ')) return `<span class="badge bg-orange-100 text-orange-700 uppercase">${estHdl}</span>`;
+            if(s.includes('aprobado')) return `<span class="badge bg-green-100 text-green-700 uppercase">${estHdl}</span>`;
+            if(s.includes('permiso')) return `<span class="badge bg-emerald-100 text-emerald-700 uppercase">${estHdl}</span>`;
+            if(s.includes('obra')) return `<span class="badge bg-plum text-white uppercase">${estHdl}</span>`;
+            return `<span class="badge badge-neutral uppercase">${estHdl}</span>`;
+        }
+
+        window.enviarCorreoCoordPers = function(marca, asunto, bodyEncoded) {
+            window.location.href = `mailto:?subject=${encodeURIComponent(asunto + ' - ' + marca + ' - Mallplaza Trujillo')}&body=${bodyEncoded}`;
+        };
+
+        function actContadorSec(tableId, spanId) {
+            const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+            let count = 0;
+            rows.forEach(r => { if(r.style.display !== 'none') count++; });
+            document.getElementById(spanId).innerText = count;
+        }
+
+        window.filtrarTabla = function(tableId) {
+            const table = document.getElementById(tableId);
+            const inputs = table.querySelector('.filter-row').querySelectorAll('input');
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                let showRow = true;
+                inputs.forEach((input, index) => {
+                    if (input && input.value.toLowerCase()) {
+                        if (!row.cells[index].innerText.toLowerCase().includes(input.value.toLowerCase())) showRow = false;
+                    }
+                });
+                row.style.display = showRow ? '' : 'none';
+            });
+            if(tableId === 'table-sec2') actContadorSec('table-sec2', 'count-sec2');
+            if(tableId === 'table-sec3') actContadorSec('table-sec3', 'count-sec3');
+        };
+
+        let sortDirections = {};
+        window.sortTable = function(tableId, colIndex) {
+            const tbody = document.getElementById(tableId).querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            let dir = sortDirections[tableId + colIndex] === 'asc' ? 'desc' : 'asc';
+            sortDirections[tableId + colIndex] = dir;
+            rows.sort((a, b) => {
+                let aT = a.cells[colIndex].innerText.trim(), bT = b.cells[colIndex].innerText.trim();
+                if(aT.includes('%')) { aT = parseFloat(aT)||0; bT = parseFloat(bT)||0; return dir === 'asc' ? aT - bT : bT - aT; }
+                return dir === 'asc' ? (aT < bT ? -1 : 1) : (aT > bT ? -1 : 1);
+            });
+            rows.forEach(row => tbody.appendChild(row));
+        };
+
+        function procesarDataMain(data) {
+            let locTot = 77; 
+            let locContrato = 0, locVacancy = 0, modTot = 0, modNombre = 0, modVacancy = 0;
+            let pcTerm = 0; 
+            let pcEjec = 0, pcObs = 0, pcEnt = 0;
+            let entregasInformadas = 0, entregasCoordinadas = 0, localesEntregados = 0;
+            let obraLoc = 0, obraMod = 0, aperturas = 0;
+
+            let sumaPc = 0, validPcCount = 0;
+            let s2_entregados = 0, s2_levObs = 0, s2_recepcionados = 0;
+            let dataSec2 = [];
+
+            let totSinProy = 0, totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0;
+            let s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
+
+            const t3 = document.querySelector('#table-sec3 tbody'), t5 = document.querySelector('#table-sec5 tbody');
+
+            data.forEach(row => {
+                let rawId = getCol(row, 'id_poligono');
+                let id = normalizeId(rawId); 
+                if(!id) return; 
+                
+                let marca = getCol(row, 'Operador') || '-'; 
+                let tipo = getCol(row, 'Tipo') || 'Local';
+                let avancePc = parseFloat(getCol(row, 'Avance P&C')) || 0; 
+                let estHdl = getCol(row, 'Estatus general') || '-'; 
+                let estPc = getCol(row, 'Estatus') || '-';
+                
+                let recepcionadoStatus = getCol(row, 'Entregado') || '-';
+                if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
+                else if(recepcionadoStatus !== '-') recepcionadoStatus = 'NO';
+                
+                let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC') || getCol(row, 'Fecha pactada');
+                let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
+                
+                storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, implem: 0 };
+                storeData[marca.toLowerCase()] = storeData[id]; 
+                
+                if(tipo.toLowerCase() === 'local' && !isVacancy) locContrato++; 
+                else if (tipo.toLowerCase() !== 'local') { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
+
+                let estPcLower = estPc.toLowerCase();
+                if(avancePc > 0 && avancePc < 100) pcEjec++;
+                else if(estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) pcEjec++; 
+                if(estPcLower.includes('terminado') || avancePc === 100) pcTerm++; 
+                if(estPcLower.includes('observado')) pcObs++; 
+                if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) pcEnt++;
+
+                let correoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC');
+                if(correoEnt.toLowerCase().includes('si') || correoEnt.toLowerCase().includes('sí')) entregasInformadas++;
+                if(fechaPactadaPopup !== '-' && parseDate(fechaPactadaPopup)) entregasCoordinadas++;
+                if(recepcionadoStatus === 'SÍ') localesEntregados++;
+
+                let estHdlLower = estHdl.toLowerCase();
+                if(estHdlLower.includes('sin proy')) totSinProy++;
+                else if(estHdlLower.includes('revis') || estHdlLower.includes('observ')) totRevObs++;
+                else if(estHdlLower.includes('aprobado')) totAprobHdl++;
+                else if(estHdlLower.includes('permiso')) totPermiso++;
+                else if(estHdlLower.includes('obra')) { totEnObraHdl++; if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; }
+                if(estHdlLower.includes('aperturado')) aperturas++; 
+
+                let alertaArq = getCol(row, 'Estatus Arquitectura');
+                let alertaEsp = getCol(row, 'Estatus Especialidades');
+
+                // Lógica Barras de Progreso Revisiones
+                let numRevArq = parseInt(getCol(row, '# de revision de arq')) || 0;
+                let numRevEsp = parseInt(getCol(row, '# de revision de esp')) || parseInt(getCol(row, '# de revision de especialidades')) || parseInt(getCol(row, '# de revision de arq de especialidades')) || 0;
+
+                let pctArq = 0, pctEsp = 0;
+                if (alertaArq.toLowerCase().includes('aprobado')) { pctArq = 100; }
+                else if (numRevArq >= 4) { pctArq = 90; } else { pctArq = numRevArq * 25; }
+
+                if (alertaEsp.toLowerCase().includes('aprobado')) { pctEsp = 100; }
+                else if (numRevEsp >= 4) { pctEsp = 90; } else { pctEsp = numRevEsp * 25; }
+
+                if(!isVacancy) {
+                    let fecComp = getCol(row, 'Fecha compromiso de entrega de local'); 
+                    let fecReal = getCol(row, 'Fecha de entrega Real a Operaciones');
+                    let fecCompLevObs = getCol(row, 'Fecha compromiso de Lev. Observ.');
+                    let fecRealLevObs = getCol(row, 'Fecha Real de levantamiento de obs.');
+
+                    sumaPc += avancePc; validPcCount++;
+                    if(estPcLower.includes('entregado') || estPcLower.includes('recepcionado')) s2_entregados++;
+                    if(fecRealLevObs !== '-' && parseDate(fecRealLevObs)) s2_levObs++;
+
+                    let statusEvidencia1 = getCol(row, 'Evidencia Fotográfica') || '-';
+                    let isEvidenciaReady = statusEvidencia1.toLowerCase().includes('si') || statusEvidencia1.toLowerCase().includes('sí');
+                    let btnEvidencia = `<a href="https://drive.google.com/drive/folders/1YCgT5QQToCBy3w1b2QaRq1wjW-CiZnwI?usp=drive_link" target="_blank" class="btn-mail ${isEvidenciaReady ? 'btn-success' : ''}">${isEvidenciaReady ? '✅ Listo' : '📁 Evidencia'}</a>`;
+                    
+                    let statusActaFinal = getCol(row, 'Acta Final') || '-';
+                    let isActaFinalReady = statusActaFinal.toLowerCase().includes('si') || statusActaFinal.toLowerCase().includes('sí');
+                    if(isActaFinalReady) s2_recepcionados++;
+                    let btnActaFinal = `<a href="https://drive.google.com/drive/folders/1-Klu9o3CM_Y7cl0px5kWHmxteBeOA85Y?usp=drive_link" target="_blank" class="btn-mail ${isActaFinalReady ? 'btn-success' : ''}">${isActaFinalReady ? '✅ Recepcionado' : '📁 Acta'}</a>`;
+
+                    dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
+
+                    // SEC 3 - Render y Correos
+                    let horaPactada = getCol(row, 'Hora pactada') || '-';
+                    let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
+                    
+                    let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || '-';
+                    let btnCorreoEnt = '';
+                    if(statusCorreoEnt.toLowerCase().includes('si') || statusCorreoEnt.toLowerCase().includes('sí')) {
+                        btnCorreoEnt = `<span class="badge badge-ok">✅ Enviado</span>`;
+                    } else {
+                        let bodyEnt = `Estimado equipo ${marca},\n\nLes escribo para comentarles que su local estará listo para ser recepcionado el ${printDate(fecComp)}, la entrega tiene una duración aproximada de 1 hora y 30 minutos y para el ingreso deberán contar con SCTR, DNI y EPPs completos.\n\nNos confirman los siguientes datos:\n\nNombre de persona que recepcionará el local:\nDia y Horario tentativo: XXX\n\nQuedo atenta a su pronta respuesta.\n\nGracias.\nSaludos.`;
+                        btnCorreoEnt = `<button onclick="window.enviarCorreoCoordPers('${marca}', 'Coordinación de Entrega de Local', \`${encodeURIComponent(bodyEnt)}\`)" class="btn-mail">✉️ Correo</button>`;
+                    }
+
+                    let statusCorreoObra = getCol(row, 'Correo de coordinación de inicio de obra HDL > SSCC') || '-';
+                    let btnCorreoObra = '';
+                    if(statusCorreoObra.toLowerCase().includes('si') || statusCorreoObra.toLowerCase().includes('sí')) {
+                        btnCorreoObra = `<span class="badge badge-ok">✅ Enviado</span>`;
+                    } else {
+                        let bodyObra = `Estimado equipo ${marca},\n\nLes comento que estamos próximos al inicio de obra de su local en Mallplaza Trujillo; por lo que les solicito nos envíen el cronograma de obra (considerar que se puede trabajar 24/7) y adicionalmente a ello les envío los siguientes documentos (requisitos de ingreso a obra) que deben presentar:\n\n1. Requisitos de ingreso a Obra por parte de HV (Constructora) los cuales debe presentar para su validación por parte de HV.\n2. Formato de Charla de Inducción (debe completar y adjuntar)\n3. Formato de Ingreso de Sub-Contratas (debe completar y adjuntar)\n4. Lineamientos SSOMA para Locatarios de PMS (Supervisión) los cuales debe cumplir para garantizar un ambiente de trabajo seguro bajo normativa legal vigente.\n\nAdicionalmente considerar:\nPDR / Supervisor SSOMA con 2 años de experiencia acreditada como mínimo en construcción en Retail. Enviar su CV documentado para validación a PMS.\n\nLes pido por favor puedan enviar estos documentos a la brevedad posible para que el equipo pueda revisarlos, considerar que se tiene un plazo de 7 días para la revisión de la documentación.\n\nSumo a Gaudy Arana (garana@pmsproyectos.com.pe) para que nos pueda ayudar con la revisión y/o con cualquier duda que puedan tener sobre el ingreso a obra.\n\nSaludos,`;
+                        btnCorreoObra = `<button onclick="window.enviarCorreoCoordPers('${marca}', 'Coordinación de Inicio de Obra', \`${encodeURIComponent(bodyObra)}\`)" class="btn-mail">✉️ Correo</button>`;
+                    }
+
+                    let cronoStatus = getCol(row, 'Cronograma') || '-';
+                    let isCronoReady = cronoStatus.toLowerCase().includes('si') || cronoStatus.toLowerCase().includes('sí');
+                    let btnCronograma = `<a href="https://drive.google.com/drive/folders/1hAE0NK7Ov4K-M78qpkgY8XF5Hz5x2gTB?usp=drive_link" target="_blank" class="btn-mail ${isCronoReady ? 'btn-success' : ''}">${isCronoReady ? '✅ Listo' : '📁 Carpeta'}</a>`;
+
+                    let colorBarArq = getProgressColor(pctArq);
+                    let colorBarEsp = getProgressColor(pctEsp);
+
+                    let barArqHtml = `<div class="flex items-center gap-1 w-16"><div class="w-full h-1.5 bg-slate-200 rounded"><div class="h-full rounded" style="background-color: ${colorBarArq}; width: ${pctArq}%"></div></div><span class="text-[8px] font-bold" style="color: ${colorBarArq}">${pctArq}%</span></div>`;
+                    let barEspHtml = `<div class="flex items-center gap-1 w-16"><div class="w-full h-1.5 bg-slate-200 rounded"><div class="h-full rounded" style="background-color: ${colorBarEsp}; width: ${pctEsp}%"></div></div><span class="text-[8px] font-bold" style="color: ${colorBarEsp}">${pctEsp}%</span></div>`;
+
+                    let tr3 = document.createElement('tr');
+                    tr3.innerHTML = `
+                    <td class="font-bold text-plum nowrap">${marca}</td>
+                    <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
+                    <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
+                    <td class="nowrap">${getHdlBadge(estHdl)}</td>
+                    <td class="text-[9px] nowrap">${barArqHtml}</td>
+                    <td class="text-[9px] nowrap">${barEspHtml}</td>
+                    <td class="nowrap">${btnCorreoEnt}</td>
+                    <td class="text-[9px] nowrap">${printDate(fechaPactadaPopup)}</td>
+                    <td class="text-[9px] nowrap">${horaPactada}</td>
+                    <td class="text-[9px] font-bold text-mallplaza nowrap">${recepcionadoStatus}</td>
+                    <td class="nowrap">${btnCorreoObra}</td>
+                    <td class="text-[9px] font-bold nowrap">${printDate(fecInicioObra)}</td>
+                    <td class="nowrap">${btnCronograma}</td>`;
+                    t3.appendChild(tr3);
+
+                    // SEC 5 - Doc
+                    let dEst = getCol(row, 'Estatus Documentacion').toLowerCase() || '-'; 
+                    let dRes = getCol(row, 'Resultado de Revisión').toLowerCase() || '-'; 
+                    let dFin = getCol(row, 'Estatus Final').toLowerCase() || '-';
+                    if(dEst.includes('enviado') || dEst.includes('ingresado')) s5_ing++;
+                    if(dRes === 'pendiente' || dRes === '-') s5_pend++;
+                    if(dRes.includes('evaluación') || dRes.includes('evaluacion') || dRes.includes('revisión') || dRes.includes('revision')) s5_rev++;
+                    if(dFin.includes('aprobado') || dRes.includes('aprobado')) s5_apr++;
+                    if(dFin.includes('observado') || dRes.includes('observado') || dRes.includes('incompleto')) s5_obs++;
+                    
+                    let tr5 = document.createElement('tr');
+                    let badgeDocEst = dEst === 'pendiente' || dEst === '-' ? `<span class="badge badge-warn">${getCol(row, 'Estatus Documentacion') || '-'}</span>` : `<span class="badge bg-slate-100 text-slate-700">${getCol(row, 'Estatus Documentacion')}</span>`;
+                    let badgeRes = dRes.includes('aprobado') ? `<span class="badge badge-ok">${getCol(row, 'Resultado de Revisión') || '-'}</span>` : (dRes.includes('observado') || dRes.includes('incompleto') || dRes.includes('evaluación') || dRes.includes('evaluacion') ? `<span class="badge badge-warn">${getCol(row, 'Resultado de Revisión') || '-'}</span>` : `<span class="badge badge-neutral">${getCol(row, 'Resultado de Revisión') || '-'}</span>`);
+                    let badgeFinal = dFin.includes('aprobado') ? `<span class="badge badge-ok">${getCol(row, 'Estatus Final') || '-'}</span>` : (dFin.includes('observado') ? `<span class="badge badge-warn">${getCol(row, 'Estatus Final') || '-'}</span>` : `<span class="badge badge-neutral">${getCol(row, 'Estatus Final') || '-'}</span>`);
+                    let fecEnvioDoc = getCol(row, 'Fecha de envío'); let fecRespHV = getCol(row, 'Fecha de Respuesta (HV)'); let fecLevObs = getCol(row, 'Fecha de Lev. de Observaciones');
+                    tr5.innerHTML = `<td class="font-bold text-plum nowrap">${marca}</td><td class="nowrap">${badgeDocEst}</td><td class="text-[10px] font-medium text-slate-700 nowrap">${printDate(fecEnvioDoc)}</td><td class="nowrap">${badgeRes}</td><td class="nowrap">${calcSLA_HV(fecEnvioDoc, fecRespHV)}</td><td class="text-[10px] text-slate-600 nowrap">${printDate(fecLevObs)}</td><td class="nowrap">${badgeFinal}</td>`;
+                    t5.appendChild(tr5);
+                }
+            });
+
+            // Lógica final Sec 1
+            locVacancy = locTot - locContrato; 
+            document.getElementById('kpi-loc-contrato').innerText = locContrato; 
+            document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
+            
+            document.getElementById('kpi-mod-tot').innerText = modTot; document.getElementById('kpi-mod-nombre').innerText = modNombre; document.getElementById('kpi-mod-vacancy').innerText = modVacancy;
+            document.getElementById('kpi-pc-tot').innerText = pcTerm; 
+            document.getElementById('kpi-pc-ejec').innerText = pcEjec; document.getElementById('kpi-pc-term').innerText = pcTerm; document.getElementById('kpi-pc-obs').innerText = pcObs; document.getElementById('kpi-pc-ent').innerText = pcEnt;
+            document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
+            document.getElementById('kpi-aperturas').innerText = aperturas;
+            
+            document.getElementById('kpi-hdl-ent-inf').innerText = entregasInformadas;
+            document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
+            document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
+            
+            // Lógica final Sec 3 KPIs
+            document.getElementById('kpi-sin-proy').innerText = totSinProy;
+            document.getElementById('kpi-rev-obs').innerText = totRevObs;
+            document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
+            document.getElementById('kpi-permiso').innerText = totPermiso;
+            document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl;
+            
+            // Lógica final Sec 5 KPIs
+            document.getElementById('kpi-sec5-ing').innerText = s5_ing; document.getElementById('kpi-sec5-pend').innerText = s5_pend; document.getElementById('kpi-sec5-rev').innerText = s5_rev; document.getElementById('kpi-sec5-apr').innerText = s5_apr; document.getElementById('kpi-sec5-obs').innerText = s5_obs;
+
+            // Ordenamiento por defecto Sección 2 (Fechas Próximas primero)
+            dataSec2.sort((a, b) => {
+                let dateA = parseDate(a.fecComp); let dateB = parseDate(b.fecComp);
+                if(!dateA && !dateB) return 0; if(!dateA) return 1; if(!dateB) return -1;
+                return dateA - dateB;
+            });
+
+            const tbodySec2 = document.querySelector('#table-sec2 tbody');
+            dataSec2.forEach(item => {
+                let tr2 = document.createElement('tr');
+                let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
+                let barraColor = getProgressColor(item.avancePc);
+                
+                tr2.innerHTML = `<td class="font-bold text-plum nowrap">${item.marca}</td>
+                <td class="nowrap">
+                    <div class="flex items-center gap-1">
+                        <div class="w-16 h-2 bg-slate-200 rounded">
+                            <div class="h-full rounded" style="background-color: ${barraColor}; width: ${item.avancePc}%"></div>
+                        </div>
+                        <span class="text-[9px] font-bold" style="color: ${barraColor}">${item.avancePc}%</span>
+                    </div>
+                </td>
+                <td class="text-[10px] nowrap">${printDate(item.fecComp)}</td>
+                <td class="text-[10px] font-bold nowrap">${printDate(item.fecReal)}</td>
+                <td class="nowrap">${calcAlerta(item.fecComp)}</td>
+                <td class="nowrap">${item.btnEvidencia}</td>
+                <td class="nowrap">${badgeEstatusPc}</td>
+                <td class="text-[10px] nowrap">${printDate(item.fecCompLevObs)}</td>
+                <td class="text-[10px] font-bold nowrap">${printDate(item.fecRealLevObs)}</td>
+                <td class="nowrap">${item.btnActaFinal}</td>`;
+                tbodySec2.appendChild(tr2);
+            });
+
+            // KPIs Sección 2 actualizados
+            document.getElementById('kpi-sec2-promedio').innerText = validPcCount > 0 ? (sumaPc / validPcCount).toFixed(1) + '%' : '0%';
+            document.getElementById('kpi-sec2-entregados').innerText = s2_entregados;
+            document.getElementById('kpi-sec2-levobs').innerText = s2_levObs;
+            document.getElementById('kpi-sec2-recepcionados').innerText = s2_recepcionados;
+
+            // Iniciar contadores
+            actContadorSec('table-sec2', 'count-sec2');
+            actContadorSec('table-sec3', 'count-sec3');
+        }
+
+        function procesarDataAcometidas(data) {
+            let s4_locales = 0, s4_modulos = 0, s4_tot = 0, s4_pend = 0, s4_aten = 0;
+            const tbodySec4 = document.querySelector('#table-sec4 tbody');
+            let dataSec4 = [];
+
+            data.forEach(row => {
+                let sector = getCol(row, 'Sector'); if(!sector) return;
+                
+                let socio = getCol(row, 'Socio Comercial') || '-';
+                let isMod = socio.toLowerCase().includes('modulo') || sector.toLowerCase().includes('modulo');
+                if(isMod) s4_modulos++; else s4_locales++;
+                
+                let requerimiento = getCol(row, 'Requerimiento 1') || '-';
+                let respuesta = getCol(row, 'Respuesta 1') || '-';
+                
+                let isReq = requerimiento !== '-' && requerimiento !== '';
+                let estRaw = '-';
+                let sortOrder = 3;
+
+                if(isReq) {
+                    s4_tot++;
+                    if(respuesta.toLowerCase().includes('aprob') || respuesta.toLowerCase().includes('atendid') || respuesta.toLowerCase().includes('rechaz') || (respuesta !== '-' && !respuesta.toLowerCase().includes('pend'))) {
+                        estRaw = 'Atendido'; s4_aten++; sortOrder = 2; 
+                    } else {
+                        estRaw = 'Pendiente'; s4_pend++; sortOrder = 1; 
+                    }
+                } else {
+                    estRaw = 'Sin Req.'; sortOrder = 3;
+                }
+
+                let keys = Object.keys(row);
+                let fechas = keys.filter(k => k.toLowerCase().includes('fecha') || k.toLowerCase().trim() === 'fecha');
+                let f1 = fechas.length > 0 ? printDate(row[fechas[0]]) : '-'; 
+                let f2 = fechas.length > 1 ? printDate(row[fechas[1]]) : '-';
+
+                dataSec4.push({row, sector, requerimiento, respuesta, estRaw, sortOrder, f1, f2});
+            });
+
+            dataSec4.sort((a, b) => a.sortOrder - b.sortOrder);
+
+            dataSec4.forEach(item => {
+                let badgeAco = item.estRaw === 'Atendido' ? `<span class="badge badge-ok">Atendido</span>` : (item.estRaw === 'Pendiente' ? `<span class="badge badge-alert">Pendiente</span>` : `<span class="badge badge-neutral">-</span>`);
+                let tr4 = document.createElement('tr');
+                tr4.innerHTML = `
+                <td class="text-[9px] nowrap">${item.sector}</td>
+                <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Bloque') || '-'}</td>
+                <td class="text-[9px] font-bold text-plum nowrap">${getCol(item.row, 'Local') || '-'}</td>
+                <td class="font-bold text-plum text-[9px] whitespace-normal min-w-[100px] leading-tight">${getCol(item.row, 'Socio Comercial') || '-'}</td>
+                <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Area (m2)') || '-'}</td>
+                <td class="text-[9px] text-slate-700 whitespace-normal min-w-[150px] leading-tight">${item.requerimiento}</td>
+                <td class="text-[9px] nowrap">${item.f1}</td>
+                <td class="text-[9px] whitespace-normal min-w-[120px] leading-tight">${item.respuesta}</td>
+                <td class="text-[9px] font-bold nowrap">${item.f2}</td>
+                <td class="text-[9px] font-medium nowrap">${getCol(item.row, 'Costo (Subtotal sin IGV)') || '-'}</td>
+                <td class="nowrap">${badgeAco}</td>`;
+                tbodySec4.appendChild(tr4);
+            });
+
+            document.getElementById('kpi-sec4-locales').innerText = s4_locales;
+            document.getElementById('kpi-sec4-modulos').innerText = s4_modulos;
+            document.getElementById('kpi-sec4-tot').innerText = s4_tot;
+            document.getElementById('kpi-sec4-pend').innerText = s4_pend;
+            document.getElementById('kpi-sec4-aten').innerText = s4_aten;
+        }
+
+        function procesarDataContactos(data) {
+            const tbodySec6 = document.querySelector('#table-sec6 tbody');
+            data.forEach(row => {
+                let nombre = getCol(row, 'Nombre'); if(!nombre) return;
+                let correo = getCol(row, 'Correo'); 
+                let tr6 = document.createElement('tr');
+                tr6.innerHTML = `<td class="font-bold text-slate-800 nowrap">${nombre}</td><td class="text-[10px] font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500">${correo || '-'}</td><td class="nowrap">${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
+                tbodySec6.appendChild(tr6);
+            });
+        }
+
+        const polygons = document.querySelectorAll('.store-polygon');
+        const infoPanel = document.getElementById('info-panel');
+        polygons.forEach(polygon => {
+            polygon.addEventListener('click', function(e) {
+                polygons.forEach(p => p.classList.remove('selected')); this.classList.add('selected');
+                const searchId = normalizeId(this.getAttribute('data-store'));
+                
+                let data = storeData[searchId];
+                if (!data) {
+                    const matchingKey = Object.keys(storeData).find(k => k.includes(searchId) || searchId.includes(k));
+                    if(matchingKey) data = storeData[matchingKey];
+                }
+
+                if (data) {
+                    infoPanel.style.display = 'block'; 
+                    document.getElementById('store-name').innerText = data.name;
+                    
+                    let colorTermometro = getProgressColor(data.pc);
+                    document.getElementById('bar-pc').style.width = data.pc + '%'; 
+                    document.getElementById('bar-pc').style.backgroundColor = colorTermometro; 
+                    document.getElementById('text-pc').innerText = data.pc + '%';
+                    document.getElementById('text-pc').style.color = colorTermometro;
+                    
+                    document.getElementById('text-hdl').innerText = data.hdl; 
+                    document.getElementById('text-fecha-pactada').innerText = data.fechaPactada;
+                    document.getElementById('text-recepcionado').innerText = data.recepcionado;
+                    document.getElementById('bar-implem').style.width = data.implem + '%'; document.getElementById('text-implem').innerText = data.implem + '%';
+                }
+            });
+        });
+        document.addEventListener('click', function(e) { if (!e.target.closest('.map-container')) { polygons.forEach(p => p.classList.remove('selected')); infoPanel.style.display = 'none'; } });
+        document.getElementById('close-panel').addEventListener('click', function(e) { e.stopPropagation(); polygons.forEach(p => p.classList.remove('selected')); infoPanel.style.display = 'none'; });
+    </script>
+</body>
+</html>
