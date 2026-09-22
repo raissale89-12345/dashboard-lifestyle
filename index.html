@@ -27,10 +27,10 @@
 
         .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
         
-        /* AJUSTES PARA ANCLAR EL MAPA Y QUE NO SE MUEVAN LOS POLIGONOS */
+        /* AJUSTES PARA ANCLAR EL MAPA PERFECTAMENTE */
         .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); line-height: 0; display: block; }
         .map-bg { width: 100%; height: auto; display: block; object-fit: contain; }
-        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } /* pointer-events: none evita que el fondo del svg bloquee clicks o descuadre */
+        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } 
         
         /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
         .store-polygon { pointer-events: auto; fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
@@ -45,17 +45,10 @@
 
         /* LEYENDA DEL MAPA HORIZONTAL Y TRANSPARENTE */
         .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
-        .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; items-center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+        .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 
         /* TOOLTIP RÁPIDO (MOUSEOVER) */
         .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 14px; border-radius: 8px; color: white; font-size: 11px; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); white-space: nowrap; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-
-        .info-panel { position: absolute; top: 40px; right: 15px; background: rgba(255, 255, 255, 0.97); padding: 16px; border: 1px solid #F0B3F0; border-radius: 12px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); width: calc(100% - 30px); max-width: 300px; z-index: 30; display: none; backdrop-filter: blur(8px); }
-        .progress-bar-container { display: flex; align-items: center; margin-bottom: 10px; }
-        .progress-label { width: 130px; font-size: 9px; font-weight: 700; color: #4A154B; letter-spacing: 0.5px; }
-        .progress-track { flex-grow: 1; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 0 8px; }
-        .progress-fill { height: 100%; transition: width 0.6s ease, background-color 0.3s ease; border-radius: 4px;}
-        .progress-text { width: 30px; font-size: 10px; font-weight: 800; text-align: right; }
 
         .table-wrapper { width: 100%; max-height: 500px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
@@ -95,8 +88,8 @@
 
     <div id="loading-screen">
         <div class="spinner"></div>
-        <h2 class="mt-6 text-xl font-bold text-plum">Sincronizando Base de Datos...</h2>
-        <p class="text-sm text-slate-500 mt-2">Conectando en vivo con Google Sheets</p>
+        <h2 class="mt-6 text-xl font-bold text-plum" id="loading-title">Sincronizando Base de Datos...</h2>
+        <p class="text-sm text-slate-500 mt-2" id="loading-desc">Conectando en vivo con Google Sheets</p>
     </div>
 
     <header class="flex flex-col md:flex-row md:justify-between md:items-end pb-4 mb-4 gap-3 px-2">
@@ -126,18 +119,18 @@
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson" id="kpi-mod-vacancy">0</strong></span></div>
             </div>
             
-            <!-- KPI OBRA P&C REESTRUCTURADO -->
+            <!-- KPI OBRA P&C REESTRUCTURADO (Locales Entregados) -->
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
                 <div>
                     <p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p>
                     <div class="flex items-end gap-2 mt-1">
-                        <p class="text-3xl font-black text-plum leading-none" id="kpi-pc-tot">0</p>
+                        <p class="text-3xl font-black text-plum leading-none" id="kpi-pc-ent-big">0</p>
                         <span class="text-[10px] font-bold text-slate-500 mb-0.5 leading-tight">Locales<br>Entregados</span>
                     </div>
                 </div>
                 <div class="flex flex-col gap-y-1 pt-2 mt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500">
-                    <div class="flex justify-between items-center"><span>Locales Observados:</span> <strong class="text-slate-800" id="kpi-pc-obs">0</strong></div>
-                    <div class="flex justify-between items-center"><span>En Ejecución:</span> <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></div>
+                    <div class="flex justify-between items-center"><span>L. Ent. Observados:</span> <strong class="text-slate-800" id="kpi-pc-obs">0</strong></div>
+                    <div class="flex justify-between items-center"><span>En Ejecución:</span> <strong class="text-slate-800" id="kpi-pc-ejec">0</strong></div>
                     <div class="flex justify-between items-center text-plum"><span>Terminados:</span> <strong id="kpi-pc-term">0</strong></div>
                 </div>
             </div>
@@ -176,11 +169,11 @@
                 
                 <!-- LEYENDA HORIZONTAL FLOTANTE Y TRANSPARENTE -->
                 <div class="map-legend-container">
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs text-green-700">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-slate-300"></span> En Implementación <span id="legend-implem" class="text-xs text-plum">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-200 border border-green-500"></span> Entregado (V. Claro) <span id="legend-pcterm" class="text-xs text-green-700">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 border border-slate-500"></span> En Obra (Gris) <span id="legend-pcejec" class="text-xs text-slate-700">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50"></span> Sin Asignar <span id="legend-vacancy" class="text-xs text-slate-500">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs text-green-700 ml-1">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-slate-300"></span> En Implementación <span id="legend-implem" class="text-xs text-plum ml-1">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-200 border border-green-500"></span> Entregado (V. Claro) <span id="legend-pcterm" class="text-xs text-green-700 ml-1">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 border border-slate-500"></span> En Obra (Gris) <span id="legend-pcejec" class="text-xs text-slate-700 ml-1">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50"></span> Sin Asignar <span id="legend-vacancy" class="text-xs text-slate-500 ml-1">0</span></div>
                 </div>
 
                 <div id="fast-tooltip" class="fast-tooltip"></div>
@@ -234,36 +227,6 @@
                     <polygon class="store-polygon" data-store="camila-viali" points="2757,1099 2817,1095 2813,951 2757,944" />
                     <polygon class="store-polygon" data-store="dermotienda" points="2821,1017 2856,1017 2864,933 2821,941" />
                 </svg>
-                
-                <!-- POPUP CLÁSICO (AL HACER CLIC) -->
-                <div class="info-panel" id="info-panel">
-                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-pink-100">
-                        <h2 id="store-name" class="text-base font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
-                        <button id="close-panel" class="text-slate-400 hover:text-mallplaza font-bold text-xl leading-none">&times;</button>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-label">AVANCE P&C</div>
-                        <div class="progress-track"><div id="bar-pc" class="progress-fill" style="width: 0%;"></div></div>
-                        <div id="text-pc" class="progress-text text-mallplaza">0%</div>
-                    </div>
-                    <div class="mb-2 text-[9px]">
-                        <span class="font-bold text-plum">HDL - ESTATUS:</span>
-                        <span id="text-hdl" class="ml-1 text-slate-700 font-medium">Pendiente</span>
-                    </div>
-                    <div class="mb-2 text-[9px]">
-                        <span class="font-bold text-plum">FECHA PACTADA:</span>
-                        <span id="text-fecha-pactada" class="ml-1 text-slate-700 font-medium">-</span>
-                    </div>
-                    <div class="mb-3 text-[9px] pb-2 border-b border-pink-100">
-                        <span class="font-bold text-plum">RECEPCIONADO:</span>
-                        <span id="text-recepcionado" class="ml-1 font-bold text-mallplaza">-</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-label">IMPLEMENTACIÓN</div>
-                        <div class="progress-track"><div id="bar-implem" class="progress-fill" style="background-color:#4A154B; width: 0%;"></div></div>
-                        <div id="text-implem" class="progress-text text-plum">0%</div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -611,6 +574,11 @@
             return String(id).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
         };
 
+        const setVal = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = val;
+        };
+
         window.onload = function() {
             Promise.all([
                 fetchCSV(LINK_BASE), fetchCSV(LINK_DOC), fetchCSV(LINK_ACO), fetchCSV(LINK_CONT)
@@ -625,12 +593,18 @@
                 procesarDataContactos(dataCont);
 
                 const loader = document.getElementById('loading-screen');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
+                if(loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
 
             }).catch(error => {
                 console.error("Error:", error);
-                document.getElementById('loading-screen').innerHTML = `<h2 class="text-xl font-bold text-crimson">Error de Conexión</h2><p class="text-sm mt-2">Por favor actualiza la página.</p>`;
+                const loader = document.getElementById('loading-screen');
+                if (loader) {
+                    loader.innerHTML = `
+                        <h2 class="text-xl font-bold text-crimson">Error de Conexión</h2>
+                        <p class="text-sm mt-2 text-slate-700">${error.message || 'Fallo de red al descargar los datos.'}</p>
+                        <p class="text-xs mt-4 text-slate-400">Por favor revisa tu conexión o recarga la página (F5).</p>
+                    `;
+                }
             });
         };
 
@@ -706,12 +680,15 @@
         function actContadorSec(tableId, spanId) {
             const rows = document.querySelectorAll(`#${tableId} tbody tr`);
             let count = 0;
-            rows.forEach(r => { if(r.style.display !== 'none') count++; });
-            document.getElementById(spanId).innerText = count;
+            if(rows.length > 0) {
+                rows.forEach(r => { if(r.style.display !== 'none') count++; });
+                setVal(spanId, count);
+            }
         }
 
         window.filtrarTabla = function(tableId) {
             const table = document.getElementById(tableId);
+            if(!table) return;
             const inputs = table.querySelector('.filter-row').querySelectorAll('input');
             const rows = table.querySelectorAll('tbody tr');
             rows.forEach(row => {
@@ -730,6 +707,7 @@
         let sortDirections = {};
         window.sortTable = function(tableId, colIndex) {
             const tbody = document.getElementById(tableId).querySelector('tbody');
+            if(!tbody) return;
             const rows = Array.from(tbody.querySelectorAll('tr'));
             let dir = sortDirections[tableId + colIndex] === 'asc' ? 'desc' : 'asc';
             sortDirections[tableId + colIndex] = dir;
@@ -762,7 +740,6 @@
             let listSinProy = [], listRevObs = [], listAprobHdl = [], listPermiso = [], listEnObraHdl = [];
 
             let kpiMapOperando = 0, kpiMapImplem = 0, kpiMapPcTerm = 0, kpiMapPcEjec = 0, kpiMapVacancy = 0;
-
             let dataSec5 = [];
 
             data.forEach(row => {
@@ -884,25 +861,27 @@
                     let colorArqTxt = alertaArq.toLowerCase().includes('atrasado') ? 'text-red-600 font-bold' : 'text-slate-800';
                     let colorEspTxt = alertaEsp.toLowerCase().includes('atrasado') ? 'text-red-600 font-bold' : 'text-slate-800';
 
-                    let tr3 = document.createElement('tr');
-                    tr3.innerHTML = `
-                    <td class="text-[9px] nowrap">${tipo}</td>
-                    <td class="text-[9px] nowrap">${anioAper}</td>
-                    <td class="font-bold text-plum nowrap">${marca}</td>
-                    <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
-                    <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
-                    <td class="nowrap">${getHdlBadge(estHdl)}</td>
-                    <td class="text-[9px] nowrap">${barArqHtml} <span class="text-[8px] ${colorArqTxt}">${alertaArq || '-'}</span></td>
-                    <td class="text-[9px] nowrap">${barEspHtml} <span class="text-[8px] ${colorEspTxt}">${alertaEsp || '-'}</span></td>
-                    <td class="text-[9px] nowrap">${printDate(fecComp)}</td>
-                    <td class="nowrap">${btnCorreoEnt}</td>
-                    <td class="text-[9px] nowrap">${printDate(fechaPactadaPopup)}</td>
-                    <td class="text-[9px] nowrap">${horaPactada}</td>
-                    <td class="text-[9px] font-bold text-mallplaza nowrap">${recepcionadoStatus}</td>
-                    <td class="nowrap">${btnCorreoObra}</td>
-                    <td class="text-[9px] font-bold nowrap">${printDate(fecInicioObra)}</td>
-                    <td class="nowrap">${btnCronograma}</td>`;
-                    t3.appendChild(tr3);
+                    if(t3) {
+                        let tr3 = document.createElement('tr');
+                        tr3.innerHTML = `
+                        <td class="text-[9px] nowrap">${tipo}</td>
+                        <td class="text-[9px] nowrap">${anioAper}</td>
+                        <td class="font-bold text-plum nowrap">${marca}</td>
+                        <td class="text-[9px] nowrap">${getCol(row, 'Arquitecta') || '-'}</td>
+                        <td class="text-[9px] nowrap">${getCol(row, 'Ingeniero') || '-'}</td>
+                        <td class="nowrap">${getHdlBadge(estHdl)}</td>
+                        <td class="text-[9px] nowrap">${barArqHtml} <span class="text-[8px] ${colorArqTxt}">${alertaArq || '-'}</span></td>
+                        <td class="text-[9px] nowrap">${barEspHtml} <span class="text-[8px] ${colorEspTxt}">${alertaEsp || '-'}</span></td>
+                        <td class="text-[9px] nowrap">${printDate(fecComp)}</td>
+                        <td class="nowrap">${btnCorreoEnt}</td>
+                        <td class="text-[9px] nowrap">${printDate(fechaPactadaPopup)}</td>
+                        <td class="text-[9px] nowrap">${horaPactada}</td>
+                        <td class="text-[9px] font-bold text-mallplaza nowrap">${recepcionadoStatus}</td>
+                        <td class="nowrap">${btnCorreoObra}</td>
+                        <td class="text-[9px] font-bold nowrap">${printDate(fecInicioObra)}</td>
+                        <td class="nowrap">${btnCronograma}</td>`;
+                        t3.appendChild(tr3);
+                    }
 
                     let dEst = getCol(row, 'Estatus Documentacion').toLowerCase() || '-'; 
                     let dRes = getCol(row, 'Resultado de Revisión').toLowerCase() || '-'; 
@@ -917,11 +896,12 @@
                 }
             });
 
-            document.getElementById('legend-recep').innerText = kpiMapOperando;
-            document.getElementById('legend-implem').innerText = kpiMapImplem;
-            document.getElementById('legend-pcterm').innerText = kpiMapPcTerm;
-            document.getElementById('legend-pcejec').innerText = kpiMapPcEjec;
-            document.getElementById('legend-vacancy').innerText = kpiMapVacancy;
+            // Set UI variables safely
+            setVal('legend-recep', kpiMapOperando);
+            setVal('legend-implem', kpiMapImplem);
+            setVal('legend-pcterm', kpiMapPcTerm);
+            setVal('legend-pcejec', kpiMapPcEjec);
+            setVal('legend-vacancy', kpiMapVacancy);
 
             const svgPolygons = document.querySelectorAll('.store-polygon');
             svgPolygons.forEach(polygon => {
@@ -1007,40 +987,39 @@
             });
 
 
-            document.getElementById('tooltip-sin-proy').innerText = listSinProy.length > 0 ? listSinProy.join('\n') : 'Ninguno';
-            document.getElementById('tooltip-rev-obs').innerText = listRevObs.length > 0 ? listRevObs.join('\n') : 'Ninguno';
-            document.getElementById('tooltip-aprob-hdl').innerText = listAprobHdl.length > 0 ? listAprobHdl.join('\n') : 'Ninguno';
-            document.getElementById('tooltip-permiso').innerText = listPermiso.length > 0 ? listPermiso.join('\n') : 'Ninguno';
-            document.getElementById('tooltip-enobra-hdl').innerText = listEnObraHdl.length > 0 ? listEnObraHdl.join('\n') : 'Ninguno';
+            setVal('tooltip-sin-proy', listSinProy.length > 0 ? listSinProy.join('\n') : 'Ninguno');
+            setVal('tooltip-rev-obs', listRevObs.length > 0 ? listRevObs.join('\n') : 'Ninguno');
+            setVal('tooltip-aprob-hdl', listAprobHdl.length > 0 ? listAprobHdl.join('\n') : 'Ninguno');
+            setVal('tooltip-permiso', listPermiso.length > 0 ? listPermiso.join('\n') : 'Ninguno');
+            setVal('tooltip-enobra-hdl', listEnObraHdl.length > 0 ? listEnObraHdl.join('\n') : 'Ninguno');
 
             locVacancy = locTot - locContrato; 
-            document.getElementById('kpi-loc-contrato').innerText = locContrato; 
-            document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
-            document.getElementById('kpi-mod-tot').innerText = modTot; document.getElementById('kpi-mod-nombre').innerText = modNombre; document.getElementById('kpi-mod-vacancy').innerText = modVacancy;
+            setVal('kpi-loc-contrato', locContrato);
+            setVal('kpi-loc-vacancy', locVacancy);
+            setVal('kpi-mod-tot', modTot);
+            setVal('kpi-mod-nombre', modNombre);
+            setVal('kpi-mod-vacancy', modVacancy);
             
-            // ACTUALIZACIÓN LÓGICA P&C (El total es todos los entregados)
-            document.getElementById('kpi-pc-tot').innerText = pcEnt + pcObs; 
+            setVal('kpi-pc-ent-big', pcEnt + pcObs);
+            setVal('kpi-pc-ejec', pcEjec);
+            setVal('kpi-pc-term', pcTerm);
+            setVal('kpi-pc-obs', pcObs);
             
-            document.getElementById('kpi-pc-ejec').innerText = pcEjec; 
-            document.getElementById('kpi-pc-term').innerText = pcTerm; 
-            document.getElementById('kpi-pc-obs').innerText = pcObs; 
-            document.getElementById('kpi-pc-ent').innerText = pcEnt;
+            setVal('kpi-obra-tot', obraLoc + obraMod);
+            setVal('kpi-obra-loc', obraLoc);
+            setVal('kpi-obra-mod', obraMod);
+            setVal('kpi-aperturas', aperturas);
             
-            document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
-            document.getElementById('kpi-aperturas').innerText = aperturas;
+            setVal('kpi-hdl-tot', localesEntregados);
+            setVal('kpi-hdl-ent-inf', entregasInformadas);
+            setVal('kpi-hdl-ent-coord', entregasCoordinadas);
+            setVal('kpi-hdl-ent-reales', localesEntregados);
             
-            // ACTUALIZACIÓN LÓGICA HDL ENTREGAS
-            document.getElementById('kpi-hdl-tot').innerText = localesEntregados;
-            
-            document.getElementById('kpi-hdl-ent-inf').innerText = entregasInformadas;
-            document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
-            document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
-            
-            document.getElementById('kpi-sin-proy').innerText = totSinProy;
-            document.getElementById('kpi-rev-obs').innerText = totRevObs;
-            document.getElementById('kpi-aprob-hdl').innerText = totAprobHdl;
-            document.getElementById('kpi-permiso').innerText = totPermiso;
-            document.getElementById('kpi-enobra-hdl').innerText = totEnObraHdl;
+            setVal('kpi-sin-proy', totSinProy);
+            setVal('kpi-rev-obs', totRevObs);
+            setVal('kpi-aprob-hdl', totAprobHdl);
+            setVal('kpi-permiso', totPermiso);
+            setVal('kpi-enobra-hdl', totEnObraHdl);
             
             dataSec2.sort((a, b) => {
                 let dateA = parseDate(a.fecComp); let dateB = parseDate(b.fecComp);
@@ -1049,36 +1028,37 @@
             });
 
             dataSec2.forEach(item => {
-                let tr2 = document.createElement('tr');
-                let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
-                let barraColor = getProgressColor(item.avancePc);
-                
-                tr2.innerHTML = `<td class="font-bold text-plum nowrap">${item.marca}</td>
-                <td class="nowrap">
-                    <div class="flex items-center gap-1">
-                        <div class="w-16 h-2 bg-slate-200 rounded">
-                            <div class="h-full rounded" style="background-color: ${barraColor}; width: ${item.avancePc}%"></div>
+                if(tbodySec2) {
+                    let tr2 = document.createElement('tr');
+                    let badgeEstatusPc = item.estPcLower.includes('observado') ? `<span class="badge badge-warn uppercase">Observado</span>` : (item.estPcLower.includes('entregado') || item.estPcLower.includes('recepcionado') ? `<span class="badge badge-ok uppercase">${item.estPc}</span>` : `<span class="badge bg-slate-100 text-slate-600 uppercase">${item.estPc}</span>`);
+                    let barraColor = getProgressColor(item.avancePc);
+                    
+                    tr2.innerHTML = `<td class="font-bold text-plum nowrap">${item.marca}</td>
+                    <td class="nowrap">
+                        <div class="flex items-center gap-1">
+                            <div class="w-16 h-2 bg-slate-200 rounded">
+                                <div class="h-full rounded" style="background-color: ${barraColor}; width: ${item.avancePc}%"></div>
+                            </div>
+                            <span class="text-[9px] font-bold" style="color: ${barraColor}">${item.avancePc}%</span>
                         </div>
-                        <span class="text-[9px] font-bold" style="color: ${barraColor}">${item.avancePc}%</span>
-                    </div>
-                </td>
-                <td class="text-[10px] nowrap">${printDate(item.fecComp)}</td>
-                <td class="text-[10px] font-bold nowrap">${printDate(item.fecReal)}</td>
-                <td class="nowrap">${calcAlerta(item.fecComp)}</td>
-                <td class="nowrap">${item.btnEvidencia}</td>
-                <td class="nowrap">${badgeEstatusPc}</td>
-                <td class="text-[10px] nowrap">${printDate(item.fecCompLevObs)}</td>
-                <td class="text-[10px] font-bold nowrap">${printDate(item.fecRealLevObs)}</td>
-                <td class="nowrap">${item.btnActaFinal}</td>`;
-                tbodySec2.appendChild(tr2);
+                    </td>
+                    <td class="text-[10px] nowrap">${printDate(item.fecComp)}</td>
+                    <td class="text-[10px] font-bold nowrap">${printDate(item.fecReal)}</td>
+                    <td class="nowrap">${calcAlerta(item.fecComp)}</td>
+                    <td class="nowrap">${item.btnEvidencia}</td>
+                    <td class="nowrap">${badgeEstatusPc}</td>
+                    <td class="text-[10px] nowrap">${printDate(item.fecCompLevObs)}</td>
+                    <td class="text-[10px] font-bold nowrap">${printDate(item.fecRealLevObs)}</td>
+                    <td class="nowrap">${item.btnActaFinal}</td>`;
+                    tbodySec2.appendChild(tr2);
+                }
             });
 
-            document.getElementById('kpi-sec2-promedio').innerText = validPcCount > 0 ? (sumaPc / validPcCount).toFixed(1) + '%' : '0%';
-            document.getElementById('kpi-sec2-entregados').innerText = s2_entregados;
-            document.getElementById('kpi-sec2-levobs').innerText = s2_levObs;
-            document.getElementById('kpi-sec2-recepcionados').innerText = s2_recepcionados;
+            setVal('kpi-sec2-promedio', validPcCount > 0 ? (sumaPc / validPcCount).toFixed(1) + '%' : '0%');
+            setVal('kpi-sec2-entregados', s2_entregados);
+            setVal('kpi-sec2-levobs', s2_levObs);
+            setVal('kpi-sec2-recepcionados', s2_recepcionados);
 
-            let s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
             dataSec5.sort((a, b) => {
                 let dateA = parseDate(a.fecEnvioDoc); let dateB = parseDate(b.fecEnvioDoc);
                 if(!dateA && !dateB) return 0; if(!dateA) return 1; if(!dateB) return -1;
@@ -1092,16 +1072,18 @@
                 if(item.dFin.includes('aprobado') || item.dRes.includes('aprobado')) s5_apr++;
                 if(item.dFin.includes('observado') || item.dRes.includes('observado') || item.dRes.includes('incompleto')) s5_obs++;
 
-                let tr5 = document.createElement('tr');
-                tr5.innerHTML = `<td class="font-bold text-plum nowrap">${item.marca}</td><td class="nowrap">${item.badgeDocEst}</td><td class="text-[10px] font-medium text-slate-700 nowrap">${printDate(item.fecEnvioDoc)}</td><td class="nowrap">${item.badgeRes}</td><td class="nowrap">${calcSLA_HV(item.fecEnvioDoc, item.fecRespHV)}</td><td class="text-[10px] text-slate-600 nowrap">${printDate(item.fecLevObs)}</td><td class="nowrap">${item.badgeFinal}</td>`;
-                t5.appendChild(tr5);
+                if(t5) {
+                    let tr5 = document.createElement('tr');
+                    tr5.innerHTML = `<td class="font-bold text-plum nowrap">${item.marca}</td><td class="nowrap">${item.badgeDocEst}</td><td class="text-[10px] font-medium text-slate-700 nowrap">${printDate(item.fecEnvioDoc)}</td><td class="nowrap">${item.badgeRes}</td><td class="nowrap">${calcSLA_HV(item.fecEnvioDoc, item.fecRespHV)}</td><td class="text-[10px] text-slate-600 nowrap">${printDate(item.fecLevObs)}</td><td class="nowrap">${item.badgeFinal}</td>`;
+                    t5.appendChild(tr5);
+                }
             });
 
-            document.getElementById('kpi-sec5-ing').innerText = s5_ing; 
-            document.getElementById('kpi-sec5-pend').innerText = s5_pend; 
-            document.getElementById('kpi-sec5-rev').innerText = s5_rev; 
-            document.getElementById('kpi-sec5-apr').innerText = s5_apr; 
-            document.getElementById('kpi-sec5-obs').innerText = s5_obs;
+            setVal('kpi-sec5-ing', s5_ing);
+            setVal('kpi-sec5-pend', s5_pend);
+            setVal('kpi-sec5-rev', s5_rev);
+            setVal('kpi-sec5-apr', s5_apr);
+            setVal('kpi-sec5-obs', s5_obs);
 
             actContadorSec('table-sec2', 'count-sec2');
             actContadorSec('table-sec3', 'count-sec3');
@@ -1151,29 +1133,31 @@
 
             dataSec4.forEach(item => {
                 let badgeAco = item.estRaw === 'Atendido' ? `<span class="badge badge-ok">Atendido</span>` : (item.estRaw === 'Pendiente' ? `<span class="badge badge-alert">Pendiente</span>` : `<span class="badge badge-neutral">-</span>`);
-                let tr4 = document.createElement('tr');
-                tr4.innerHTML = `
-                <td class="text-[9px] nowrap">${item.sector}</td>
-                <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Bloque') || '-'}</td>
-                <td class="text-[9px] font-bold text-plum nowrap">${getCol(item.row, 'Local') || '-'}</td>
-                <td class="text-[9px] nowrap">${item.tipo}</td>
-                <td class="text-[9px] nowrap">${item.anioAper}</td>
-                <td class="font-bold text-plum text-[9px] whitespace-normal min-w-[100px] leading-tight">${getCol(item.row, 'Socio Comercial') || '-'}</td>
-                <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Area (m2)') || '-'}</td>
-                <td class="text-[9px] text-slate-700 whitespace-normal min-w-[150px] leading-tight">${item.requerimiento}</td>
-                <td class="text-[9px] nowrap">${item.f1}</td>
-                <td class="text-[9px] whitespace-normal min-w-[120px] leading-tight">${item.respuesta}</td>
-                <td class="text-[9px] font-bold nowrap">${item.f2}</td>
-                <td class="text-[9px] font-medium nowrap">${getCol(item.row, 'Costo (Subtotal sin IGV)') || '-'}</td>
-                <td class="nowrap">${badgeAco}</td>`;
-                tbodySec4.appendChild(tr4);
+                if(tbodySec4) {
+                    let tr4 = document.createElement('tr');
+                    tr4.innerHTML = `
+                    <td class="text-[9px] nowrap">${item.sector}</td>
+                    <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Bloque') || '-'}</td>
+                    <td class="text-[9px] font-bold text-plum nowrap">${getCol(item.row, 'Local') || '-'}</td>
+                    <td class="text-[9px] nowrap">${item.tipo}</td>
+                    <td class="text-[9px] nowrap">${item.anioAper}</td>
+                    <td class="font-bold text-plum text-[9px] whitespace-normal min-w-[100px] leading-tight">${getCol(item.row, 'Socio Comercial') || '-'}</td>
+                    <td class="text-[9px] text-center nowrap">${getCol(item.row, 'Area (m2)') || '-'}</td>
+                    <td class="text-[9px] text-slate-700 whitespace-normal min-w-[150px] leading-tight">${item.requerimiento}</td>
+                    <td class="text-[9px] nowrap">${item.f1}</td>
+                    <td class="text-[9px] whitespace-normal min-w-[120px] leading-tight">${item.respuesta}</td>
+                    <td class="text-[9px] font-bold nowrap">${item.f2}</td>
+                    <td class="text-[9px] font-medium nowrap">${getCol(item.row, 'Costo (Subtotal sin IGV)') || '-'}</td>
+                    <td class="nowrap">${badgeAco}</td>`;
+                    tbodySec4.appendChild(tr4);
+                }
             });
 
-            document.getElementById('kpi-sec4-locales').innerText = s4_locales;
-            document.getElementById('kpi-sec4-modulos').innerText = s4_modulos;
-            document.getElementById('kpi-sec4-tot').innerText = s4_tot;
-            document.getElementById('kpi-sec4-pend').innerText = s4_pend;
-            document.getElementById('kpi-sec4-aten').innerText = s4_aten;
+            setVal('kpi-sec4-locales', s4_locales);
+            setVal('kpi-sec4-modulos', s4_modulos);
+            setVal('kpi-sec4-tot', s4_tot);
+            setVal('kpi-sec4-pend', s4_pend);
+            setVal('kpi-sec4-aten', s4_aten);
         }
 
         function procesarDataContactos(data) {
@@ -1181,9 +1165,11 @@
             data.forEach(row => {
                 let nombre = getCol(row, 'Nombre'); if(!nombre) return;
                 let correo = getCol(row, 'Correo'); 
-                let tr6 = document.createElement('tr');
-                tr6.innerHTML = `<td class="font-bold text-slate-800 nowrap">${nombre}</td><td class="text-[10px] font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500">${correo || '-'}</td><td class="nowrap">${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
-                tbodySec6.appendChild(tr6);
+                if(tbodySec6) {
+                    let tr6 = document.createElement('tr');
+                    tr6.innerHTML = `<td class="font-bold text-slate-800 nowrap">${nombre}</td><td class="text-[10px] font-bold text-mallplaza">${getCol(row, 'Empresa') || '-'}</td><td class="text-[10px] text-slate-600">${getCol(row, 'Cargo') || '-'}</td><td class="text-[10px] font-medium">${getCol(row, 'Teléfono') || '-'}</td><td class="text-[10px] text-slate-500">${correo || '-'}</td><td class="nowrap">${correo && correo !== '-' ? `<a href="mailto:${correo}" class="btn-mail">✉️ Correo</a>` : '-'}</td>`;
+                    tbodySec6.appendChild(tr6);
+                }
             });
         }
     </script>
