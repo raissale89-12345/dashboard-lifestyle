@@ -31,16 +31,16 @@
         .map-bg { width: 100%; height: auto; display: block; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
         
-        /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
-        .store-polygon { fill: rgba(203, 213, 225, 0.4); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
-        .status-vacancy { fill: rgba(203, 213, 225, 0.4); stroke: #cbd5e1; }
-        .status-pc-ejec { fill: rgba(249, 115, 22, 0.7); stroke: #c2410c; }
-        .status-pc-term { fill: rgba(132, 204, 22, 0.7); stroke: #4d7c0f; }
-        .status-implem { fill: rgba(74, 21, 75, 0.75); stroke: #2e0a2f; }
-        .status-recep { fill: rgba(34, 197, 94, 0.75); stroke: #15803d; }
+        /* COLORES INTELIGENTES DEL MAPA TEMÁTICO (Actualizados) */
+        .store-polygon { fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
+        .status-vacancy { fill: rgba(248, 250, 252, 0.5); stroke: #e2e8f0; } /* Muy claro para que no cruce con el Gris de Obra */
+        .status-pc-ejec { fill: #cbd5e1; stroke: #64748b; } /* Gris sólido para En Obra P&C */
+        .status-pc-term { fill: #bbf7d0; stroke: #22c55e; } /* Verde claro para Terminado/Entregado */
+        .status-implem { fill: rgba(74, 21, 75, 0.85); stroke: #2e0a2f; } /* Morado Mallplaza para Implementación */
+        .status-recep { fill: #22c55e; stroke: #15803d; } /* Verde Fuerte para Recepcionado final */
         
-        .store-polygon:hover { opacity: 0.8; stroke-width: 4px; stroke: #fff !important; }
-        .store-polygon.selected { stroke: #E3004F !important; stroke-width: 5px !important; fill-opacity: 0.9; }
+        .store-polygon:hover { opacity: 0.9; stroke-width: 4px; stroke: #E3004F !important; }
+        .store-polygon.selected { stroke: #E3004F !important; stroke-width: 5px !important; fill-opacity: 1; }
 
         /* SCORECARD FLOTANTE SOBRE EL MAPA */
         .map-legend-card { position: absolute; top: 20px; left: 20px; background: rgba(15, 23, 42, 0.9); padding: 16px; border-radius: 12px; color: white; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 20; pointer-events: none; backdrop-filter: blur(4px); }
@@ -159,9 +159,9 @@
                     <div class="flex flex-col gap-2 text-xs font-bold">
                         <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500"></span> Operando / Recep.</span> <span id="legend-recep" class="text-base font-black text-green-400">0</span></div>
                         <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-plum border border-white/20"></span> En Implementación</span> <span id="legend-implem" class="text-base font-black text-lightpink">0</span></div>
-                        <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-lime-500"></span> P&C Terminado</span> <span id="legend-pcterm" class="text-base font-black text-lime-400">0</span></div>
-                        <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-500"></span> P&C en Ejecución</span> <span id="legend-pcejec" class="text-base font-black text-orange-400">0</span></div>
-                        <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-slate-400"></span> Sin Asignar</span> <span id="legend-vacancy" class="text-base font-black text-slate-300">0</span></div>
+                        <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-200 border border-green-500"></span> Entregado (Verde Claro)</span> <span id="legend-pcterm" class="text-base font-black text-green-300">0</span></div>
+                        <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-slate-300 border border-slate-500"></span> En Obra (Gris)</span> <span id="legend-pcejec" class="text-base font-black text-slate-300">0</span></div>
+                        <div class="flex justify-between gap-6 items-center"><span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full border border-slate-300"></span> Sin Asignar</span> <span id="legend-vacancy" class="text-base font-black text-slate-400">0</span></div>
                     </div>
                 </div>
 
@@ -217,7 +217,6 @@
                     <polygon class="store-polygon" data-store="dermotienda" points="2821,1017 2856,1017 2864,933 2821,941" />
                 </svg>
                 
-                <!-- POPUP ORIGINAL CON DETALLES EXTRA AL HACER CLIC -->
                 <div class="info-panel" id="info-panel">
                     <div class="flex justify-between items-center mb-3 pb-2 border-b border-pink-100">
                         <h2 id="store-name" class="text-base font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
@@ -771,14 +770,14 @@
                 let estHdlLower = estHdl.toLowerCase();
                 let estPcLower = estPc.toLowerCase();
 
-                // LÓGICA DE CLASES PARA MAPA TEMÁTICO
+                // LÓGICA DE CLASES PARA MAPA TEMÁTICO (Colores actualizados)
                 let mapStatusClass = '';
                 if (isVacancy) { mapStatusClass = 'status-vacancy'; kpiMapVacancy++; }
                 else if (recepcionadoStatus === 'SÍ') { mapStatusClass = 'status-recep'; kpiMapOperando++; }
                 else if (estHdlLower.includes('obra') || estHdlLower.includes('aperturado')) { mapStatusClass = 'status-implem'; kpiMapImplem++; }
-                else if (avancePc === 100 || estPcLower.includes('terminado')) { mapStatusClass = 'status-pc-term'; kpiMapPcTerm++; }
+                else if (avancePc === 100 || estPcLower.includes('terminado') || estPcLower.includes('entregado')) { mapStatusClass = 'status-pc-term'; kpiMapPcTerm++; }
                 else if (avancePc > 0 || estPcLower.includes('ejecución') || estPcLower.includes('ejecucion')) { mapStatusClass = 'status-pc-ejec'; kpiMapPcEjec++; }
-                else { mapStatusClass = 'status-vacancy'; kpiMapVacancy++; } // Fallback
+                else { mapStatusClass = 'status-vacancy'; kpiMapVacancy++; } 
 
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, mapClass: mapStatusClass };
                 storeData[marca.toLowerCase()] = storeData[id]; 
@@ -920,10 +919,8 @@
                 }
                 
                 if (data && data.mapClass) {
-                    // Pintar
                     polygon.classList.add(data.mapClass);
 
-                    // Buscar el centro geométrico del polígono
                     let pointsStr = polygon.getAttribute('points');
                     if (pointsStr) {
                         let points = pointsStr.split(/\s+/).filter(p => p.includes(','));
@@ -937,7 +934,6 @@
                             let cx = (minX + maxX) / 2;
                             let cy = (minY + maxY) / 2;
 
-                            // Crear etiqueta ejecutiva (icono o %)
                             let execText = document.createElementNS("http://www.w3.org/2000/svg", "text");
                             execText.setAttribute("x", cx);
                             execText.setAttribute("y", cy);
@@ -952,12 +948,15 @@
                             } else if (data.mapClass === 'status-implem') {
                                 execText.textContent = "🛠️"; execText.style.fontSize = "18px";
                             } else if (data.mapClass === 'status-pc-term') {
-                                execText.textContent = "👍"; execText.style.fontSize = "18px";
+                                execText.textContent = "100%"; 
+                                execText.style.fontSize = "13px"; 
+                                execText.style.fontWeight = "900"; 
+                                execText.style.fill = "#064e3b"; 
                             } else if (data.mapClass === 'status-pc-ejec') {
                                 execText.textContent = data.pc + "%"; 
-                                execText.style.fontSize = "14px"; execText.style.fontWeight = "900"; 
-                                execText.style.fill = "#ffffff"; 
-                                execText.style.stroke = "#9a3412"; execText.style.strokeWidth = "1px";
+                                execText.style.fontSize = "14px"; 
+                                execText.style.fontWeight = "900"; 
+                                execText.style.fill = "#000000"; 
                             }
                             polygon.parentNode.appendChild(execText);
                         }
