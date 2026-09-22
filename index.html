@@ -30,7 +30,7 @@
         /* AJUSTES PARA ANCLAR EL MAPA Y QUE NO SE MUEVAN LOS POLIGONOS */
         .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); line-height: 0; display: block; }
         .map-bg { width: 100%; height: auto; display: block; object-fit: contain; }
-        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } 
+        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } /* pointer-events: none evita que el fondo del svg bloquee clicks o descuadre */
         
         /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
         .store-polygon { pointer-events: auto; fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
@@ -45,7 +45,7 @@
 
         /* LEYENDA DEL MAPA HORIZONTAL Y TRANSPARENTE */
         .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
-        .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+        .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; items-center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 
         /* TOOLTIP RÁPIDO (MOUSEOVER) */
         .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 14px; border-radius: 8px; color: white; font-size: 11px; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); white-space: nowrap; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -136,7 +136,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-y-1 pt-2 mt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500">
-                    <div class="flex justify-between items-center"><span>L. Ent. Observados:</span> <strong class="text-slate-800" id="kpi-pc-obs">0</strong></div>
+                    <div class="flex justify-between items-center"><span>Locales Observados:</span> <strong class="text-slate-800" id="kpi-pc-obs">0</strong></div>
                     <div class="flex justify-between items-center"><span>En Ejecución:</span> <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></div>
                     <div class="flex justify-between items-center text-plum"><span>Terminados:</span> <strong id="kpi-pc-term">0</strong></div>
                 </div>
@@ -176,18 +176,17 @@
                 
                 <!-- LEYENDA HORIZONTAL FLOTANTE Y TRANSPARENTE -->
                 <div class="map-legend-container">
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs text-green-700 ml-1">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-slate-300"></span> En Implementación <span id="legend-implem" class="text-xs text-plum ml-1">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-200 border border-green-500"></span> Entregado (V. Claro) <span id="legend-pcterm" class="text-xs text-green-700 ml-1">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 border border-slate-500"></span> En Obra (Gris) <span id="legend-pcejec" class="text-xs text-slate-700 ml-1">0</span></div>
-                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50"></span> Sin Asignar <span id="legend-vacancy" class="text-xs text-slate-500 ml-1">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs text-green-700">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-slate-300"></span> En Implementación <span id="legend-implem" class="text-xs text-plum">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-200 border border-green-500"></span> Entregado (V. Claro) <span id="legend-pcterm" class="text-xs text-green-700">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 border border-slate-500"></span> En Obra (Gris) <span id="legend-pcejec" class="text-xs text-slate-700">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50"></span> Sin Asignar <span id="legend-vacancy" class="text-xs text-slate-500">0</span></div>
                 </div>
 
                 <div id="fast-tooltip" class="fast-tooltip"></div>
 
                 <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
                 <svg class="svg-overlay" viewBox="0 0 4500 1500" preserveAspectRatio="none" id="svg-map">
-                    <!-- Polígonos de locales -->
                     <polygon class="store-polygon" data-store="capriccio" points="3459,660 3455,844 3295,812 3295,664" />
                     <polygon class="store-polygon" data-store="fridays" points="3451,840 3475,848 3690,788 3714,652 3499,652 3463,660" />
                     <polygon class="store-polygon" data-store="pardos" points="3088,1083 3092,928 3299,876 3299,1095" />
@@ -235,7 +234,8 @@
                     <polygon class="store-polygon" data-store="camila-viali" points="2757,1099 2817,1095 2813,951 2757,944" />
                     <polygon class="store-polygon" data-store="dermotienda" points="2821,1017 2856,1017 2864,933 2821,941" />
                 </svg>
-
+                
+                <!-- POPUP CLÁSICO (AL HACER CLIC) -->
                 <div class="info-panel" id="info-panel">
                     <div class="flex justify-between items-center mb-3 pb-2 border-b border-pink-100">
                         <h2 id="store-name" class="text-base font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
@@ -1024,6 +1024,7 @@
             document.getElementById('kpi-pc-ejec').innerText = pcEjec; 
             document.getElementById('kpi-pc-term').innerText = pcTerm; 
             document.getElementById('kpi-pc-obs').innerText = pcObs; 
+            document.getElementById('kpi-pc-ent').innerText = pcEnt;
             
             document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
             document.getElementById('kpi-aperturas').innerText = aperturas;
