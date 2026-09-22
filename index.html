@@ -27,12 +27,13 @@
 
         .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
         
-        .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .map-bg { width: 100%; height: auto; display: block; }
-        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+        /* AJUSTES PARA ANCLAR EL MAPA Y QUE NO SE MUEVAN LOS POLIGONOS */
+        .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); line-height: 0; display: block; }
+        .map-bg { width: 100%; height: auto; display: block; object-fit: contain; }
+        .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } /* pointer-events: none evita que el fondo del svg bloquee clicks o descuadre */
         
         /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
-        .store-polygon { fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
+        .store-polygon { pointer-events: auto; fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
         .status-vacancy { fill: rgba(248, 250, 252, 0.5); stroke: #e2e8f0; } 
         .status-pc-ejec { fill: #cbd5e1; stroke: #64748b; } 
         .status-pc-term { fill: #bbf7d0; stroke: #22c55e; } 
@@ -42,13 +43,14 @@
         .store-polygon:hover { opacity: 0.9; stroke-width: 4px; stroke: #E3004F !important; }
         .store-polygon.selected { stroke: #E3004F !important; stroke-width: 5px !important; fill-opacity: 1; }
 
-        /* SCORECARD FLOTANTE SOBRE EL MAPA HORIZONTAL */
-        .map-legend-card { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.85); padding: 8px 24px; border-radius: 50px; color: white; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 20; pointer-events: none; backdrop-filter: blur(4px); display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; width: auto; max-width: 95%; }
-        
+        /* LEYENDA DEL MAPA HORIZONTAL Y TRANSPARENTE */
+        .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
+        .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; items-center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+
         /* TOOLTIP RÁPIDO (MOUSEOVER) */
         .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 14px; border-radius: 8px; color: white; font-size: 11px; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); white-space: nowrap; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
 
-        .info-panel { position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.97); padding: 16px; border: 1px solid #F0B3F0; border-radius: 12px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); width: calc(100% - 30px); max-width: 300px; z-index: 20; display: none; backdrop-filter: blur(8px); }
+        .info-panel { position: absolute; top: 40px; right: 15px; background: rgba(255, 255, 255, 0.97); padding: 16px; border: 1px solid #F0B3F0; border-radius: 12px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.2); width: calc(100% - 30px); max-width: 300px; z-index: 30; display: none; backdrop-filter: blur(8px); }
         .progress-bar-container { display: flex; align-items: center; margin-bottom: 10px; }
         .progress-label { width: 130px; font-size: 9px; font-weight: 700; color: #4A154B; letter-spacing: 0.5px; }
         .progress-track { flex-grow: 1; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 0 8px; }
@@ -123,26 +125,38 @@
                 <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-3xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500"><span>Con nombre: <strong class="text-slate-800" id="kpi-mod-nombre">0</strong></span><span>Vacancy: <strong class="text-crimson" id="kpi-mod-vacancy">0</strong></span></div>
             </div>
+            
+            <!-- KPI OBRA P&C REESTRUCTURADO -->
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-plum flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p><p class="text-2xl font-black text-plum leading-none mt-1" id="kpi-pc-tot">0</p></div>
-                
-                <!-- NUEVO FORMATO DE DETALLES P&C EN LISTA VERTICAL PARA QUE ENTRE PERFECTO -->
-                <div class="flex flex-col gap-y-1 pt-2 mt-1 border-t border-slate-200 text-[8px] font-bold text-slate-500">
-                    <div class="flex justify-between items-center"><span>Ejecución:</span> <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></div>
+                <div>
+                    <p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Obra P&C</p>
+                    <div class="flex items-end gap-2 mt-1">
+                        <p class="text-3xl font-black text-plum leading-none" id="kpi-pc-tot">0</p>
+                        <span class="text-[10px] font-bold text-slate-500 mb-0.5 leading-tight">Locales<br>Entregados</span>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-y-1 pt-2 mt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500">
+                    <div class="flex justify-between items-center"><span>Locales Observados:</span> <strong class="text-slate-800" id="kpi-pc-obs">0</strong></div>
+                    <div class="flex justify-between items-center"><span>En Ejecución:</span> <strong class="text-mallplaza" id="kpi-pc-ejec">0</strong></div>
                     <div class="flex justify-between items-center text-plum"><span>Terminados:</span> <strong id="kpi-pc-term">0</strong></div>
-                    <div class="flex justify-between items-center"><span>L. Ent. Observados:</span> <strong class="text-slate-800" id="kpi-pc-obs">0</strong></div>
-                    <div class="flex justify-between items-center"><span>Entregados:</span> <strong class="text-slate-800" id="kpi-pc-ent">0</strong></div>
                 </div>
             </div>
+            
+            <!-- KPI HDL ENTREGAS REESTRUCTURADO -->
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-lightpink flex flex-col justify-between">
-                <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">HDL - ENTREGAS</p>
-                    <div class="flex justify-between mt-1 text-[9px] font-bold text-slate-500"><span>Informadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-inf">0</strong></div>
+                <div>
+                    <p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">HDL - ENTREGAS</p>
+                    <div class="flex items-end gap-2 mt-1">
+                        <p class="text-3xl font-black text-plum leading-none" id="kpi-hdl-tot">0</p>
+                        <span class="text-[10px] font-bold text-slate-500 mb-0.5 leading-tight">Locales<br>Entregados</span>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 gap-y-1 pt-1 mt-1 border-t border-slate-200 text-[9px] font-bold text-slate-500">
-                    <div class="flex justify-between"><span>Coordinadas:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
-                    <div class="flex justify-between text-mallplaza"><span>Loc. Entregados:</span> <strong class="text-mallplaza" id="kpi-hdl-ent-reales">0</strong></div>
+                <div class="flex flex-col gap-y-1 pt-2 mt-2 border-t border-slate-200 text-[9px] font-bold text-slate-500">
+                    <div class="flex justify-between items-center"><span>Informados:</span> <strong class="text-slate-800" id="kpi-hdl-ent-inf">0</strong></div>
+                    <div class="flex justify-between items-center"><span>Coordinados:</span> <strong class="text-slate-800" id="kpi-hdl-ent-coord">0</strong></div>
                 </div>
             </div>
+
             <div class="p-4 bg-plum text-white rounded-xl shadow-md flex flex-col justify-between">
                 <div><p class="text-[9px] font-extrabold text-lightpink uppercase tracking-wider">En Obra (Implem.)</p><p class="text-3xl font-black text-white mt-1" id="kpi-obra-tot">0</p></div>
                 <div class="flex justify-between items-center mt-2 pt-2 border-t border-white/20 text-[9px] font-bold text-white/90"><span>Locales: <strong class="text-white" id="kpi-obra-loc">0</strong></span><span>Módulos: <strong class="text-white" id="kpi-obra-mod">0</strong></span></div>
@@ -160,13 +174,13 @@
         <div id="content-sec1" class="hidden mt-4">
             <div class="map-container">
                 
-                <!-- SCORECARD FLOTANTE NIVEL EJECUTIVO (HORIZONTAL) -->
-                <div class="map-legend-card">
-                    <div class="flex items-center gap-1.5 text-[10px] font-bold whitespace-nowrap"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs font-black text-green-400 ml-1">0</span></div>
-                    <div class="flex items-center gap-1.5 text-[10px] font-bold whitespace-nowrap"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-white/20"></span> En Implementación <span id="legend-implem" class="text-xs font-black text-lightpink ml-1">0</span></div>
-                    <div class="flex items-center gap-1.5 text-[10px] font-bold whitespace-nowrap"><span class="w-2.5 h-2.5 rounded-full bg-green-200 border border-green-500"></span> Entregado (V. Claro) <span id="legend-pcterm" class="text-xs font-black text-green-300 ml-1">0</span></div>
-                    <div class="flex items-center gap-1.5 text-[10px] font-bold whitespace-nowrap"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 border border-slate-500"></span> En Obra (Gris) <span id="legend-pcejec" class="text-xs font-black text-slate-300 ml-1">0</span></div>
-                    <div class="flex items-center gap-1.5 text-[10px] font-bold whitespace-nowrap"><span class="w-2.5 h-2.5 rounded-full border border-slate-300"></span> Sin Asignar <span id="legend-vacancy" class="text-xs font-black text-slate-400 ml-1">0</span></div>
+                <!-- LEYENDA HORIZONTAL FLOTANTE Y TRANSPARENTE -->
+                <div class="map-legend-container">
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs text-green-700">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-slate-300"></span> En Implementación <span id="legend-implem" class="text-xs text-plum">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-200 border border-green-500"></span> Entregado (V. Claro) <span id="legend-pcterm" class="text-xs text-green-700">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-slate-300 border border-slate-500"></span> En Obra (Gris) <span id="legend-pcejec" class="text-xs text-slate-700">0</span></div>
+                    <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50"></span> Sin Asignar <span id="legend-vacancy" class="text-xs text-slate-500">0</span></div>
                 </div>
 
                 <div id="fast-tooltip" class="fast-tooltip"></div>
@@ -221,6 +235,7 @@
                     <polygon class="store-polygon" data-store="dermotienda" points="2821,1017 2856,1017 2864,933 2821,941" />
                 </svg>
                 
+                <!-- POPUP CLÁSICO (AL HACER CLIC) -->
                 <div class="info-panel" id="info-panel">
                     <div class="flex justify-between items-center mb-3 pb-2 border-b border-pink-100">
                         <h2 id="store-name" class="text-base font-black text-plum truncate pr-2">NOMBRE LOCAL</h2>
@@ -567,7 +582,6 @@
     </section>
 
     <script>
-        // ENLACES EN VIVO
         const cacheBuster = `&_=${new Date().getTime()}`;
         const LINK_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=5692487&single=true&output=csv' + cacheBuster;
         const LINK_ACO  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSwIsu9MxnuYZDsdSK3qFdobRvSQ7celh1fE1rcVTj4IM5Oji5xVyNgOQ2md3qF-WdPgIBqYgZ2erOr/pub?gid=18642517&single=true&output=csv' + cacheBuster;
@@ -1004,7 +1018,7 @@
             document.getElementById('kpi-loc-vacancy').innerText = locVacancy;
             document.getElementById('kpi-mod-tot').innerText = modTot; document.getElementById('kpi-mod-nombre').innerText = modNombre; document.getElementById('kpi-mod-vacancy').innerText = modVacancy;
             
-            // ACTUALIZACIÓN DE LÓGICA DE NÚMERO GRANDE P&C
+            // ACTUALIZACIÓN LÓGICA P&C (El total es todos los entregados)
             document.getElementById('kpi-pc-tot').innerText = pcEnt + pcObs; 
             
             document.getElementById('kpi-pc-ejec').innerText = pcEjec; 
@@ -1014,6 +1028,10 @@
             
             document.getElementById('kpi-obra-tot').innerText = obraLoc + obraMod; document.getElementById('kpi-obra-loc').innerText = obraLoc; document.getElementById('kpi-obra-mod').innerText = obraMod;
             document.getElementById('kpi-aperturas').innerText = aperturas;
+            
+            // ACTUALIZACIÓN LÓGICA HDL ENTREGAS
+            document.getElementById('kpi-hdl-tot').innerText = localesEntregados;
+            
             document.getElementById('kpi-hdl-ent-inf').innerText = entregasInformadas;
             document.getElementById('kpi-hdl-ent-coord').innerText = entregasCoordinadas;
             document.getElementById('kpi-hdl-ent-reales').innerText = localesEntregados;
