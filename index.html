@@ -27,10 +27,12 @@
 
         .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
         
+        /* AJUSTES PARA ANCLAR EL MAPA PERFECTAMENTE */
         .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); line-height: 0; display: block; }
         .map-bg { width: 100%; height: auto; display: block; object-fit: contain; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } 
         
+        /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
         .store-polygon { pointer-events: auto; fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
         .status-vacancy { fill: rgba(248, 250, 252, 0.5); stroke: #e2e8f0; } 
         .status-pc-ejec { fill: #cbd5e1; stroke: #64748b; } 
@@ -41,9 +43,11 @@
         .store-polygon:hover { opacity: 0.9; stroke-width: 4px; stroke: #E3004F !important; }
         .store-polygon.selected { stroke: #E3004F !important; stroke-width: 5px !important; fill-opacity: 1; }
 
+        /* LEYENDA DEL MAPA HORIZONTAL Y TRANSPARENTE */
         .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
         .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 
+        /* TOOLTIP RÁPIDO CORREGIDO */
         .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 12px; border-radius: 8px; color: white; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); box-shadow: 0 10px 25px rgba(0,0,0,0.5); min-width: 180px; display: flex; flex-direction: column; gap: 4px; }
         .tt-head { font-weight: 900; font-size: 13px; color: #F0B3F0; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #334155; line-height: 1; }
         .tt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; gap: 12px; line-height: 1; margin-bottom: 2px;}
@@ -309,37 +313,48 @@
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-            <div class="relative group p-2 bg-slate-50 border border-slate-200 rounded-lg text-center cursor-default">
-                <p class="text-[9px] font-bold text-slate-400 uppercase">Sin Proyecto</p>
-                <p class="text-xl font-black text-slate-500" id="kpi-sin-proy">0</p>
+            
+            <div class="relative group p-2 bg-slate-50 border border-slate-200 rounded-lg flex flex-col justify-between cursor-default">
+                <p class="text-[9px] font-bold text-slate-400 uppercase text-center">Sin Proyecto</p>
+                <p class="text-xl font-black text-slate-500 text-center" id="kpi-sin-proy">0</p>
+                <div class="flex justify-between items-center mt-1 pt-1 border-t border-slate-200 text-[8px] font-bold text-slate-400">
+                    <span>Loc: <strong class="text-slate-600" id="kpi-sin-proy-loc">0</strong></span>
+                    <span>Mod: <strong class="text-slate-600" id="kpi-sin-proy-mod">0</strong></span>
+                </div>
                 <div class="kpi-tooltip" id="tooltip-sin-proy">Ninguno</div>
             </div>
-            <div class="relative group p-2 bg-orange-50 border border-orange-200 rounded-lg text-center cursor-default">
-                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Obs.</p>
+            
+            <div class="relative group p-2 bg-orange-50 border border-orange-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev / Observado</p>
                 <p class="text-xl font-black text-orange-600" id="kpi-rev-obs">0</p>
                 <div class="kpi-tooltip" id="tooltip-rev-obs">Ninguno</div>
             </div>
-            <div class="relative group p-2 bg-cyan-50 border border-cyan-200 rounded-lg text-center cursor-default">
-                <p class="text-[9px] font-bold text-cyan-700 uppercase">Próximos Obra</p>
-                <p class="text-xl font-black text-cyan-600" id="kpi-proximos">0</p>
-                <div class="kpi-tooltip" id="tooltip-proximos">Ninguno</div>
-            </div>
-            <div class="relative group p-2 bg-blue-50 border border-blue-200 rounded-lg text-center cursor-default">
-                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobados</p>
+            
+            <div class="relative group p-2 bg-blue-50 border border-blue-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobado</p>
                 <p class="text-xl font-black text-blue-600" id="kpi-aprob-hdl">0</p>
                 <div class="kpi-tooltip" id="tooltip-aprob-hdl">Ninguno</div>
             </div>
-            <div class="relative group p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center cursor-default">
-                <p class="text-[9px] font-bold text-emerald-700 uppercase">Con Permiso</p>
+            
+            <div class="relative group p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-emerald-700 uppercase leading-tight">Con Permiso Sin Ingreso</p>
                 <p class="text-xl font-black text-emerald-600" id="kpi-permiso">0</p>
                 <div class="kpi-tooltip" id="tooltip-permiso">Ninguno</div>
             </div>
-            <div class="relative group p-2 bg-purple-50 border border-purple-200 rounded-lg text-center cursor-default">
-                <p class="text-[9px] font-bold text-purple-700 uppercase">JOCA Entregado</p>
-                <p class="text-xl font-black text-purple-600" id="kpi-joca">0</p>
-                <div class="kpi-tooltip" id="tooltip-joca">Ninguno</div>
+            
+            <div class="relative group p-2 bg-cyan-50 border border-cyan-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-cyan-700 uppercase leading-tight">Próximos a Obra</p>
+                <p class="text-xl font-black text-cyan-600" id="kpi-proximos">0</p>
+                <div class="kpi-tooltip" id="tooltip-proximos">Ninguno</div>
             </div>
-            <div class="relative group p-2 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition cursor-default">
+            
+            <div class="relative group p-2 bg-purple-50 border border-purple-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-purple-700 uppercase leading-tight">Locales Entregados</p>
+                <p class="text-xl font-black text-purple-600" id="kpi-loc-entregados-sec3">0</p>
+                <div class="kpi-tooltip" id="tooltip-loc-entregados-sec3">Ninguno</div>
+            </div>
+            
+            <div class="relative group p-2 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition cursor-default flex flex-col justify-center">
                 <p class="text-[9px] font-bold text-lightpink uppercase">En Obra</p>
                 <p class="text-xl font-black text-white" id="kpi-enobra-hdl">0</p>
                 <div class="kpi-tooltip" id="tooltip-enobra-hdl">Ninguno</div>
@@ -682,7 +697,6 @@
         const getHdlBadge = (estHdl) => {
             let s = estHdl.toLowerCase();
             if(s.includes('sin proy')) return `<span class="badge bg-red-100 text-red-700 uppercase">${estHdl}</span>`;
-            if(s.includes('joca')) return `<span class="badge bg-purple-100 text-purple-700 uppercase">${estHdl}</span>`;
             if(s.includes('revis') || s.includes('observ')) return `<span class="badge bg-orange-100 text-orange-700 uppercase">${estHdl}</span>`;
             if(s.includes('aprobado')) return `<span class="badge bg-green-100 text-green-700 uppercase">${estHdl}</span>`;
             if(s.includes('permiso')) return `<span class="badge bg-emerald-100 text-emerald-700 uppercase">${estHdl}</span>`;
@@ -755,8 +769,9 @@
             let s2_entregados = 0, s2_observados = 0, s2_recepcionados = 0;
             let dataSec2 = [];
 
-            let totSinProy = 0, totRevObs = 0, totProximosObra = 0, totAprobHdl = 0, totPermiso = 0, totJocaEntregado = 0, totEnObraHdl = 0;
-            let listSinProy = [], listRevObs = [], listProximosObra = [], listAprobHdl = [], listPermiso = [], listJocaEntregado = [], listEnObraHdl = [];
+            let totSinProy = 0, sinProyLoc = 0, sinProyMod = 0;
+            let totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totProximosObra = 0, totLocEntregadosSec3 = 0, totEnObraHdl = 0;
+            let listSinProy = [], listRevObs = [], listAprobHdl = [], listPermiso = [], listProximosObra = [], listLocEntregadosSec3 = [], listEnObraHdl = [];
 
             let kpiMapOperando = 0, kpiMapImplem = 0, kpiMapPcTerm = 0, kpiMapPcEjec = 0, kpiMapVacancy = 0;
             let dataSec5 = [];
@@ -796,7 +811,10 @@
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, mapClass: mapStatusClass };
                 storeData[marca.toLowerCase()] = storeData[id]; 
                 
-                // LÓGICA DE FIRMAS PARA LOCALES Y MÓDULOS
+                if(tipo.toLowerCase() === 'local' && !isVacancy) locContrato++; 
+                else if (tipo.toLowerCase() !== 'local') { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
+
+                // LÓGICA DE FIRMAS 
                 if(tipo.toLowerCase() === 'local') {
                     if(!isVacancy) {
                         if(estatusFirma.includes('firmado')) locFirmados++;
@@ -804,9 +822,7 @@
                     }
                 } 
                 else if (tipo.toLowerCase() !== 'local') { 
-                    modTot++; 
-                    if(isVacancy) modVacancy++; 
-                    else {
+                    if(!isVacancy) {
                         if(estatusFirma.includes('firmado')) modFirmados++;
                         else if(estatusFirma.includes('acordado')) modAcordados++;
                     }
@@ -823,36 +839,39 @@
                 if(fechaPactadaPopup !== '-' && parseDate(fechaPactadaPopup)) entregasCoordinadas++;
                 if(recepcionadoStatus === 'SÍ') localesEntregados++;
 
+                let alertaArq = getCol(row, 'Estatus Arquitectura');
+                let alertaEsp = getCol(row, 'Estatus Especialidades');
                 let numRevArq = parseInt(getCol(row, '# de revision de arq')) || 0;
                 let numRevEsp = parseInt(getCol(row, '# de revision de esp')) || parseInt(getCol(row, '# de revision de especialidades')) || parseInt(getCol(row, '# de revision de arq de especialidades')) || 0;
 
                 // LÓGICA ESTRICTA DE ESTADOS HDL (SECCIÓN 3)
-                if(estHdlLower.startsWith('sin proy')) { 
+                let isProximo = (numRevArq >= 3 || alertaArq.toLowerCase().includes('aprobado')) && (numRevEsp >= 3 || alertaEsp.toLowerCase().includes('aprobado'));
+
+                if (estHdlLower.startsWith('sin proy')) { 
                     totSinProy++; listSinProy.push(marca); 
+                    if(tipo.toLowerCase() === 'local') sinProyLoc++; else sinProyMod++;
                 }
-                else if(estHdlLower.includes('joca')) { 
-                    totJocaEntregado++; listJocaEntregado.push(marca); 
+                else if (recepcionadoStatus === 'SÍ') { 
+                    totLocEntregadosSec3++; listLocEntregadosSec3.push(marca); 
                 }
-                else if(estHdlLower.includes('aprobado')) { 
-                    totAprobHdl++; listAprobHdl.push(marca); 
+                else if (estHdlLower.includes('obra') || estHdlLower.includes('aperturado')) { 
+                    totEnObraHdl++; listEnObraHdl.push(marca); 
+                    if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++;
                 }
-                else if(estHdlLower.includes('permiso')) { 
+                else if (estHdlLower.includes('permiso')) { 
                     totPermiso++; listPermiso.push(marca); 
                 }
-                else if(estHdlLower.includes('obra') || estHdlLower.includes('aperturado')) { 
-                    totEnObraHdl++; listEnObraHdl.push(marca); 
-                    if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; 
+                else if (isProximo) { 
+                    totProximosObra++; listProximosObra.push(marca); 
                 }
-                else if(estHdlLower.includes('revis') || estHdlLower.includes('observ')) { 
-                    if (numRevArq >= 3 || numRevEsp >= 3) {
-                        totProximosObra++; listProximosObra.push(marca);
-                    } else {
-                        totRevObs++; listRevObs.push(marca); 
-                    }
+                else if (estHdlLower.includes('aprobado')) { 
+                    totAprobHdl++; listAprobHdl.push(marca); 
                 }
+                else if (estHdlLower.includes('revis') || estHdlLower.includes('observ')) { 
+                    totRevObs++; listRevObs.push(marca); 
+                }
+                if(estHdlLower.includes('aperturado')) aperturas++; 
 
-                let alertaArq = getCol(row, 'Estatus Arquitectura');
-                let alertaEsp = getCol(row, 'Estatus Especialidades');
 
                 let pctArq = 0, pctEsp = 0;
                 if (alertaArq.toLowerCase().includes('aprobado')) { pctArq = 100; } else if (numRevArq >= 4) { pctArq = 90; } else { pctArq = numRevArq * 25; }
@@ -880,7 +899,8 @@
 
                     dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
 
-                    let horaPactada = getCol(row, 'Hora pactada') || '-';
+                    // Corrección HORA
+                    let horaPactada = getCol(row, 'Hora') || getCol(row, 'Hora pactada') || getCol(row, 'Hora de entrega') || '-';
                     let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
                     let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || '-';
@@ -1052,7 +1072,7 @@
             setVal('kpi-mod-acordados', modAcordados);
             setVal('kpi-mod-vacancy', modVacancy);
             
-            // ACTUALIZACIÓN LÓGICA P&C 
+            // ACTUALIZACIÓN LÓGICA P&C (El total es todos los entregados)
             setVal('kpi-pc-ent-big', pcEnt + pcObs);
             setVal('kpi-pc-ejec', pcEjec);
             setVal('kpi-pc-term', pcTerm);
@@ -1068,21 +1088,24 @@
             setVal('kpi-hdl-ent-inf', entregasInformadas);
             setVal('kpi-hdl-ent-coord', entregasCoordinadas);
             
-            // ACTUALIZACIÓN KPIs SECCIÓN 3 (INCLUYENDO JOCA Y PRÓXIMOS)
+            // ACTUALIZACIÓN KPIs SECCIÓN 3
             setVal('kpi-sin-proy', totSinProy);
+            setVal('kpi-sin-proy-loc', sinProyLoc);
+            setVal('kpi-sin-proy-mod', sinProyMod);
+            
             setVal('kpi-rev-obs', totRevObs);
-            setVal('kpi-proximos', totProximosObra);
             setVal('kpi-aprob-hdl', totAprobHdl);
             setVal('kpi-permiso', totPermiso);
-            setVal('kpi-joca', totJocaEntregado);
+            setVal('kpi-proximos', totProximosObra);
+            setVal('kpi-loc-entregados-sec3', totLocEntregadosSec3);
             setVal('kpi-enobra-hdl', totEnObraHdl);
 
             setVal('tooltip-sin-proy', listSinProy.length > 0 ? listSinProy.join('\n') : 'Ninguno');
             setVal('tooltip-rev-obs', listRevObs.length > 0 ? listRevObs.join('\n') : 'Ninguno');
-            setVal('tooltip-proximos', listProximosObra.length > 0 ? listProximosObra.join('\n') : 'Ninguno');
             setVal('tooltip-aprob-hdl', listAprobHdl.length > 0 ? listAprobHdl.join('\n') : 'Ninguno');
             setVal('tooltip-permiso', listPermiso.length > 0 ? listPermiso.join('\n') : 'Ninguno');
-            setVal('tooltip-joca', listJocaEntregado.length > 0 ? listJocaEntregado.join('\n') : 'Ninguno');
+            setVal('tooltip-proximos', listProximosObra.length > 0 ? listProximosObra.join('\n') : 'Ninguno');
+            setVal('tooltip-loc-entregados-sec3', listLocEntregadosSec3.length > 0 ? listLocEntregadosSec3.join('\n') : 'Ninguno');
             setVal('tooltip-enobra-hdl', listEnObraHdl.length > 0 ? listEnObraHdl.join('\n') : 'Ninguno');
             
             dataSec2.sort((a, b) => {
@@ -1144,6 +1167,7 @@
                 }
             });
 
+            // ACTUALIZAR KPIS SEC 5
             setVal('kpi-sec5-ing', s5_ing);
             setVal('kpi-sec5-pend', s5_pend);
             setVal('kpi-sec5-rev', s5_rev);
