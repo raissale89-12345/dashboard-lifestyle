@@ -47,7 +47,7 @@
         .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
         .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 
-        /* TOOLTIP RÁPIDO CORREGIDO */
+        /* TOOLTIP RÁPIDO */
         .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 12px; border-radius: 8px; color: white; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); box-shadow: 0 10px 25px rgba(0,0,0,0.5); min-width: 180px; display: flex; flex-direction: column; gap: 4px; }
         .tt-head { font-weight: 900; font-size: 13px; color: #F0B3F0; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #334155; line-height: 1; }
         .tt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; gap: 12px; line-height: 1; margin-bottom: 2px;}
@@ -325,13 +325,13 @@
             </div>
             
             <div class="relative group p-2 bg-orange-50 border border-orange-200 rounded-lg text-center cursor-default flex flex-col justify-center">
-                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev / Observado</p>
+                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Obs.</p>
                 <p class="text-xl font-black text-orange-600" id="kpi-rev-obs">0</p>
                 <div class="kpi-tooltip" id="tooltip-rev-obs">Ninguno</div>
             </div>
             
             <div class="relative group p-2 bg-blue-50 border border-blue-200 rounded-lg text-center cursor-default flex flex-col justify-center">
-                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobado</p>
+                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobados</p>
                 <p class="text-xl font-black text-blue-600" id="kpi-aprob-hdl">0</p>
                 <div class="kpi-tooltip" id="tooltip-aprob-hdl">Ninguno</div>
             </div>
@@ -341,7 +341,7 @@
                 <p class="text-xl font-black text-emerald-600" id="kpi-permiso">0</p>
                 <div class="kpi-tooltip" id="tooltip-permiso">Ninguno</div>
             </div>
-            
+
             <div class="relative group p-2 bg-cyan-50 border border-cyan-200 rounded-lg text-center cursor-default flex flex-col justify-center">
                 <p class="text-[9px] font-bold text-cyan-700 uppercase leading-tight">Próximos a Obra</p>
                 <p class="text-xl font-black text-cyan-600" id="kpi-proximos">0</p>
@@ -811,9 +811,6 @@
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, mapClass: mapStatusClass };
                 storeData[marca.toLowerCase()] = storeData[id]; 
                 
-                if(tipo.toLowerCase() === 'local' && !isVacancy) locContrato++; 
-                else if (tipo.toLowerCase() !== 'local') { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
-
                 // LÓGICA DE FIRMAS 
                 if(tipo.toLowerCase() === 'local') {
                     if(!isVacancy) {
@@ -851,7 +848,7 @@
                     totSinProy++; listSinProy.push(marca); 
                     if(tipo.toLowerCase() === 'local') sinProyLoc++; else sinProyMod++;
                 }
-                else if (recepcionadoStatus === 'SÍ') { 
+                else if (recepcionadoStatus === 'SÍ' || estHdlLower.includes('entregado')) { 
                     totLocEntregadosSec3++; listLocEntregadosSec3.push(marca); 
                 }
                 else if (estHdlLower.includes('obra') || estHdlLower.includes('aperturado')) { 
@@ -871,7 +868,6 @@
                     totRevObs++; listRevObs.push(marca); 
                 }
                 if(estHdlLower.includes('aperturado')) aperturas++; 
-
 
                 let pctArq = 0, pctEsp = 0;
                 if (alertaArq.toLowerCase().includes('aprobado')) { pctArq = 100; } else if (numRevArq >= 4) { pctArq = 90; } else { pctArq = numRevArq * 25; }
@@ -1032,7 +1028,7 @@
                 }
             });
 
-            // LOGICA RÁPIDA DE TOOLTIP SOBRE EL MAPA (REPARADO Y BLINDADO)
+            // LOGICA RÁPIDA DE TOOLTIP SOBRE EL MAPA
             const mapContainer = document.querySelector('.map-container');
             const fastTooltip = document.getElementById('fast-tooltip');
             
@@ -1061,7 +1057,7 @@
                 polygon.addEventListener('mouseleave', function() { fastTooltip.style.display = 'none'; });
             });
 
-            // ACTUALIZACIÓN DE LOCALES Y MÓDULOS (FIRMADOS / ACORDADOS)
+            // ACTUALIZACIÓN DE LOCALES Y MÓDULOS
             locVacancy = locTot - (locFirmados + locAcordados); 
             setVal('kpi-loc-firmados', locFirmados);
             setVal('kpi-loc-acordados', locAcordados);
@@ -1072,7 +1068,7 @@
             setVal('kpi-mod-acordados', modAcordados);
             setVal('kpi-mod-vacancy', modVacancy);
             
-            // ACTUALIZACIÓN LÓGICA P&C (El total es todos los entregados)
+            // ACTUALIZACIÓN LÓGICA P&C
             setVal('kpi-pc-ent-big', pcEnt + pcObs);
             setVal('kpi-pc-ejec', pcEjec);
             setVal('kpi-pc-term', pcTerm);
