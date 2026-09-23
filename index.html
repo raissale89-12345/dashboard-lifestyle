@@ -27,12 +27,10 @@
 
         .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
         
-        /* AJUSTES PARA ANCLAR EL MAPA PERFECTAMENTE */
         .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); line-height: 0; display: block; }
         .map-bg { width: 100%; height: auto; display: block; object-fit: contain; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } 
         
-        /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
         .store-polygon { pointer-events: auto; fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
         .status-vacancy { fill: rgba(248, 250, 252, 0.5); stroke: #e2e8f0; } 
         .status-pc-ejec { fill: #cbd5e1; stroke: #64748b; } 
@@ -43,14 +41,16 @@
         .store-polygon:hover { opacity: 0.9; stroke-width: 4px; stroke: #E3004F !important; }
         .store-polygon.selected { stroke: #E3004F !important; stroke-width: 5px !important; fill-opacity: 1; }
 
-        /* LEYENDA DEL MAPA HORIZONTAL Y TRANSPARENTE */
-        .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; line-height: normal; }
+        .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
         .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 
-        /* TOOLTIP RÁPIDO CORREGIDO (Restaurando line-height) */
-        .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 12px 16px; border-radius: 8px; color: white; font-size: 11px; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); white-space: nowrap; box-shadow: 0 10px 25px rgba(0,0,0,0.5); line-height: 1.6 !important; }
+        .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 12px; border-radius: 8px; color: white; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); box-shadow: 0 10px 25px rgba(0,0,0,0.5); min-width: 180px; display: flex; flex-direction: column; gap: 4px; }
+        .tt-head { font-weight: 900; font-size: 13px; color: #F0B3F0; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #334155; line-height: 1; }
+        .tt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; gap: 12px; line-height: 1; margin-bottom: 2px;}
+        .tt-lbl { color: #94a3b8; }
+        .tt-val { font-weight: bold; }
 
-        .table-wrapper { width: 100%; max-height: 500px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; line-height: normal; }
+        .table-wrapper { width: 100%; max-height: 500px; overflow-y: auto; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; font-size: 0.65rem; }
         thead tr:first-child th { position: sticky; top: 0; z-index: 20; background-color: #4A154B; color: #ffffff; padding: 6px 8px; text-align: left; font-weight: 600; cursor: pointer; user-select: none; }
         thead tr:first-child th:hover { background-color: #6a1e6b; }
@@ -112,18 +112,18 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-mallplaza flex flex-col justify-between">
                 <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Locales</p><p class="text-3xl font-black text-plum mt-1" id="kpi-loc-tot">77</p></div>
-                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[8.5px] font-bold text-slate-500 gap-1">
-                    <span>Firmados: <strong class="text-slate-800" id="kpi-loc-firmados">0</strong></span>
-                    <span>Acordados: <strong class="text-slate-800" id="kpi-loc-acordados">0</strong></span>
-                    <span>Vacancy: <strong class="text-mallplaza" id="kpi-loc-vacancy">0</strong></span>
+                <div class="grid grid-cols-3 gap-1 mt-2 pt-2 border-t border-slate-200 text-[8px] font-bold text-slate-500 text-center">
+                    <div class="flex flex-col">Firmados<strong class="text-slate-800 text-[10px]" id="kpi-loc-firmados">0</strong></div>
+                    <div class="flex flex-col">Acordados<strong class="text-slate-800 text-[10px]" id="kpi-loc-acordados">0</strong></div>
+                    <div class="flex flex-col text-mallplaza">Vacancy<strong class="text-[10px]" id="kpi-loc-vacancy">0</strong></div>
                 </div>
             </div>
             <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl shadow-sm border-l-4 border-l-crimson flex flex-col justify-between">
                 <div><p class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider">Total Módulos</p><p class="text-3xl font-black text-plum mt-1" id="kpi-mod-tot">0</p></div>
-                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-200 text-[8.5px] font-bold text-slate-500 gap-1">
-                    <span>Firmados: <strong class="text-slate-800" id="kpi-mod-firmados">0</strong></span>
-                    <span>Acordados: <strong class="text-slate-800" id="kpi-mod-acordados">0</strong></span>
-                    <span>Vacancy: <strong class="text-crimson" id="kpi-mod-vacancy">0</strong></span>
+                <div class="grid grid-cols-3 gap-1 mt-2 pt-2 border-t border-slate-200 text-[8px] font-bold text-slate-500 text-center">
+                    <div class="flex flex-col">Firmados<strong class="text-slate-800 text-[10px]" id="kpi-mod-firmados">0</strong></div>
+                    <div class="flex flex-col">Acordados<strong class="text-slate-800 text-[10px]" id="kpi-mod-acordados">0</strong></div>
+                    <div class="flex flex-col text-crimson">Vacancy<strong class="text-[10px]" id="kpi-mod-vacancy">0</strong></div>
                 </div>
             </div>
             
@@ -182,7 +182,6 @@
                     <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full border border-slate-300 bg-slate-50"></span> Sin Asignar <span id="legend-vacancy" class="text-xs text-slate-500 ml-1">0</span></div>
                 </div>
 
-                <!-- TOOLTIP FLOTANTE TIPO TABLA (CORREGIDO) -->
                 <div id="fast-tooltip" class="fast-tooltip"></div>
 
                 <img src="plano trujillo.png" alt="Plano MPT" class="map-bg" id="mall-image" onerror="this.src='https://via.placeholder.com/1500x500?text=Sube+tu+imagen+(plano+trujillo.png)'">
@@ -255,7 +254,7 @@
             </div>
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Locales Observados</p>
-                <p class="text-xl font-black text-orange-500" id="kpi-sec2-obs">0</p>
+                <p class="text-xl font-black text-orange-500" id="kpi-sec2-observados">0</p>
             </div>
             <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg text-center border-b-4 border-emerald-500">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Recepcionados OP</p>
@@ -309,16 +308,21 @@
             <span id="count-sec3" class="counter-pill">0</span>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
             <div class="relative group p-2 bg-slate-50 border border-slate-200 rounded-lg text-center cursor-default">
                 <p class="text-[9px] font-bold text-slate-400 uppercase">Sin Proyecto</p>
                 <p class="text-xl font-black text-slate-500" id="kpi-sin-proy">0</p>
                 <div class="kpi-tooltip" id="tooltip-sin-proy">Ninguno</div>
             </div>
             <div class="relative group p-2 bg-orange-50 border border-orange-200 rounded-lg text-center cursor-default">
-                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Observado</p>
+                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Obs.</p>
                 <p class="text-xl font-black text-orange-600" id="kpi-rev-obs">0</p>
                 <div class="kpi-tooltip" id="tooltip-rev-obs">Ninguno</div>
+            </div>
+            <div class="relative group p-2 bg-cyan-50 border border-cyan-200 rounded-lg text-center cursor-default">
+                <p class="text-[9px] font-bold text-cyan-700 uppercase">Próximos Obra</p>
+                <p class="text-xl font-black text-cyan-600" id="kpi-proximos">0</p>
+                <div class="kpi-tooltip" id="tooltip-proximos">Ninguno</div>
             </div>
             <div class="relative group p-2 bg-blue-50 border border-blue-200 rounded-lg text-center cursor-default">
                 <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobados</p>
@@ -329,6 +333,11 @@
                 <p class="text-[9px] font-bold text-emerald-700 uppercase">Con Permiso</p>
                 <p class="text-xl font-black text-emerald-600" id="kpi-permiso">0</p>
                 <div class="kpi-tooltip" id="tooltip-permiso">Ninguno</div>
+            </div>
+            <div class="relative group p-2 bg-purple-50 border border-purple-200 rounded-lg text-center cursor-default">
+                <p class="text-[9px] font-bold text-purple-700 uppercase">JOCA Entregado</p>
+                <p class="text-xl font-black text-purple-600" id="kpi-joca">0</p>
+                <div class="kpi-tooltip" id="tooltip-joca">Ninguno</div>
             </div>
             <div class="relative group p-2 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition cursor-default">
                 <p class="text-[9px] font-bold text-lightpink uppercase">En Obra</p>
@@ -673,6 +682,7 @@
         const getHdlBadge = (estHdl) => {
             let s = estHdl.toLowerCase();
             if(s.includes('sin proy')) return `<span class="badge bg-red-100 text-red-700 uppercase">${estHdl}</span>`;
+            if(s.includes('joca')) return `<span class="badge bg-purple-100 text-purple-700 uppercase">${estHdl}</span>`;
             if(s.includes('revis') || s.includes('observ')) return `<span class="badge bg-orange-100 text-orange-700 uppercase">${estHdl}</span>`;
             if(s.includes('aprobado')) return `<span class="badge bg-green-100 text-green-700 uppercase">${estHdl}</span>`;
             if(s.includes('permiso')) return `<span class="badge bg-emerald-100 text-emerald-700 uppercase">${estHdl}</span>`;
@@ -745,11 +755,10 @@
             let s2_entregados = 0, s2_observados = 0, s2_recepcionados = 0;
             let dataSec2 = [];
 
-            let totSinProy = 0, totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totEnObraHdl = 0;
-            let listSinProy = [], listRevObs = [], listAprobHdl = [], listPermiso = [], listEnObraHdl = [];
+            let totSinProy = 0, totRevObs = 0, totProximosObra = 0, totAprobHdl = 0, totPermiso = 0, totJocaEntregado = 0, totEnObraHdl = 0;
+            let listSinProy = [], listRevObs = [], listProximosObra = [], listAprobHdl = [], listPermiso = [], listJocaEntregado = [], listEnObraHdl = [];
 
             let kpiMapOperando = 0, kpiMapImplem = 0, kpiMapPcTerm = 0, kpiMapPcEjec = 0, kpiMapVacancy = 0;
-
             let dataSec5 = [];
             let s5_ing = 0, s5_pend = 0, s5_rev = 0, s5_apr = 0, s5_obs = 0;
 
@@ -764,7 +773,7 @@
                 let avancePc = parseFloat(getCol(row, 'Avance P&C')) || 0; 
                 let estHdl = getCol(row, 'Estatus general') || '-'; 
                 let estPc = getCol(row, 'Estatus') || '-';
-                let estatusFirma = getCol(row, 'Estatus de firma').toLowerCase() || getCol(row, 'estatus de firma').toLowerCase() || '';
+                let estatusFirma = getCol(row, 'estatus de firma').toLowerCase() || '';
                 
                 let recepcionadoStatus = getCol(row, 'Entregado') || '-';
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
@@ -787,17 +796,19 @@
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, mapClass: mapStatusClass };
                 storeData[marca.toLowerCase()] = storeData[id]; 
                 
-                if (tipo.toLowerCase() === 'local') {
-                    if (!isVacancy) {
-                        if (estatusFirma.includes('acordado')) locAcordados++;
-                        else locFirmados++; 
+                // LÓGICA DE FIRMAS PARA LOCALES Y MÓDULOS
+                if(tipo.toLowerCase() === 'local') {
+                    if(!isVacancy) {
+                        if(estatusFirma.includes('firmado')) locFirmados++;
+                        else if(estatusFirma.includes('acordado')) locAcordados++;
                     }
-                } else {
+                } 
+                else if (tipo.toLowerCase() !== 'local') { 
                     modTot++; 
-                    if (isVacancy) modVacancy++;
+                    if(isVacancy) modVacancy++; 
                     else {
-                        if (estatusFirma.includes('acordado')) modAcordados++;
-                        else modFirmados++;
+                        if(estatusFirma.includes('firmado')) modFirmados++;
+                        else if(estatusFirma.includes('acordado')) modAcordados++;
                     }
                 }
 
@@ -812,18 +823,36 @@
                 if(fechaPactadaPopup !== '-' && parseDate(fechaPactadaPopup)) entregasCoordinadas++;
                 if(recepcionadoStatus === 'SÍ') localesEntregados++;
 
-                if(estHdlLower.includes('sin proy')) { totSinProy++; listSinProy.push(marca); }
-                else if(estHdlLower.includes('revis') || estHdlLower.includes('observ')) { totRevObs++; listRevObs.push(marca); }
-                else if(estHdlLower.includes('aprobado')) { totAprobHdl++; listAprobHdl.push(marca); }
-                else if(estHdlLower.includes('permiso')) { totPermiso++; listPermiso.push(marca); }
-                else if(estHdlLower.includes('obra')) { totEnObraHdl++; listEnObraHdl.push(marca); if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; }
-                if(estHdlLower.includes('aperturado')) aperturas++; 
+                let numRevArq = parseInt(getCol(row, '# de revision de arq')) || 0;
+                let numRevEsp = parseInt(getCol(row, '# de revision de esp')) || parseInt(getCol(row, '# de revision de especialidades')) || parseInt(getCol(row, '# de revision de arq de especialidades')) || 0;
+
+                // LÓGICA ESTRICTA DE ESTADOS HDL (SECCIÓN 3)
+                if(estHdlLower.startsWith('sin proy')) { 
+                    totSinProy++; listSinProy.push(marca); 
+                }
+                else if(estHdlLower.includes('joca')) { 
+                    totJocaEntregado++; listJocaEntregado.push(marca); 
+                }
+                else if(estHdlLower.includes('aprobado')) { 
+                    totAprobHdl++; listAprobHdl.push(marca); 
+                }
+                else if(estHdlLower.includes('permiso')) { 
+                    totPermiso++; listPermiso.push(marca); 
+                }
+                else if(estHdlLower.includes('obra') || estHdlLower.includes('aperturado')) { 
+                    totEnObraHdl++; listEnObraHdl.push(marca); 
+                    if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++; 
+                }
+                else if(estHdlLower.includes('revis') || estHdlLower.includes('observ')) { 
+                    if (numRevArq >= 3 || numRevEsp >= 3) {
+                        totProximosObra++; listProximosObra.push(marca);
+                    } else {
+                        totRevObs++; listRevObs.push(marca); 
+                    }
+                }
 
                 let alertaArq = getCol(row, 'Estatus Arquitectura');
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
-
-                let numRevArq = parseInt(getCol(row, '# de revision de arq')) || 0;
-                let numRevEsp = parseInt(getCol(row, '# de revision de esp')) || parseInt(getCol(row, '# de revision de especialidades')) || parseInt(getCol(row, '# de revision de arq de especialidades')) || 0;
 
                 let pctArq = 0, pctEsp = 0;
                 if (alertaArq.toLowerCase().includes('aprobado')) { pctArq = 100; } else if (numRevArq >= 4) { pctArq = 90; } else { pctArq = numRevArq * 25; }
@@ -837,9 +866,9 @@
 
                     sumaPc += avancePc; validPcCount++;
                     
-                    if (fecReal !== '-' && parseDate(fecReal)) s2_entregados++;
-                    if (estPcLower.includes('observado')) s2_observados++;
-
+                    if(fecReal !== '-' && parseDate(fecReal)) s2_entregados++; 
+                    if(estPcLower.includes('observado')) s2_observados++; 
+                    
                     let statusEvidencia1 = getCol(row, 'Evidencia Fotográfica') || '-';
                     let isEvidenciaReady = statusEvidencia1.toLowerCase().includes('si') || statusEvidencia1.toLowerCase().includes('sí');
                     let btnEvidencia = `<a href="https://drive.google.com/drive/folders/1YCgT5QQToCBy3w1b2QaRq1wjW-CiZnwI?usp=drive_link" target="_blank" class="btn-mail ${isEvidenciaReady ? 'btn-success' : ''}">${isEvidenciaReady ? '✅ Listo' : '📁 Evidencia'}</a>`;
@@ -983,7 +1012,7 @@
                 }
             });
 
-            // LOGICA RÁPIDA DE TOOLTIP SOBRE EL MAPA CON TABLA ORDENADA
+            // LOGICA RÁPIDA DE TOOLTIP SOBRE EL MAPA (REPARADO Y BLINDADO)
             const mapContainer = document.querySelector('.map-container');
             const fastTooltip = document.getElementById('fast-tooltip');
             
@@ -998,59 +1027,63 @@
                     
                     if(data && !data.name.toLowerCase().includes('vacancy')) {
                         fastTooltip.innerHTML = `
-                            <div class="font-black text-[13px] text-lightpink border-b border-slate-600 pb-1 mb-2">${data.name.toUpperCase()}</div>
-                            <table class="w-full text-left border-collapse">
-                                <tr><td class="text-slate-400 pr-3 pb-1">Avance P&C:</td><td class="font-bold pb-1 text-right">${data.pc}%</td></tr>
-                                <tr><td class="text-slate-400 pr-3 pb-1">Estatus HDL:</td><td class="font-bold pb-1 text-right">${data.hdl}</td></tr>
-                                <tr><td class="text-slate-400 pr-3">Recepcionado:</td><td class="font-bold text-right ${data.recepcionado === 'SÍ' ? 'text-green-400' : ''}">${data.recepcionado}</td></tr>
-                            </table>
+                            <div class="tt-head">${data.name.toUpperCase()}</div>
+                            <div class="tt-row"><span class="tt-lbl">Avance P&C:</span> <span class="tt-val">${data.pc}%</span></div>
+                            <div class="tt-row"><span class="tt-lbl">Estatus HDL:</span> <span class="tt-val">${data.hdl}</span></div>
+                            <div class="tt-row"><span class="tt-lbl">Recepcionado:</span> <span class="tt-val ${data.recepcionado === 'SÍ' ? 'text-green-400' : ''}">${data.recepcionado}</span></div>
                         `;
-                        fastTooltip.style.display = 'block';
+                        fastTooltip.style.display = 'flex';
                         let rect = mapContainer.getBoundingClientRect();
                         fastTooltip.style.left = (e.clientX - rect.left) + 'px';
-                        fastTooltip.style.top = (e.clientY - rect.top - 15) + 'px';
+                        fastTooltip.style.top = (e.clientY - rect.top - 20) + 'px';
                     }
                 });
                 polygon.addEventListener('mouseleave', function() { fastTooltip.style.display = 'none'; });
             });
 
-
-            setVal('tooltip-sin-proy', listSinProy.length > 0 ? listSinProy.join('\n') : 'Ninguno');
-            setVal('tooltip-rev-obs', listRevObs.length > 0 ? listRevObs.join('\n') : 'Ninguno');
-            setVal('tooltip-aprob-hdl', listAprobHdl.length > 0 ? listAprobHdl.join('\n') : 'Ninguno');
-            setVal('tooltip-permiso', listPermiso.length > 0 ? listPermiso.join('\n') : 'Ninguno');
-            setVal('tooltip-enobra-hdl', listEnObraHdl.length > 0 ? listEnObraHdl.join('\n') : 'Ninguno');
-
-            locVacancy = locTot - locFirmados - locAcordados; 
-            if(locVacancy < 0) locVacancy = 0;
-            
+            // ACTUALIZACIÓN DE LOCALES Y MÓDULOS (FIRMADOS / ACORDADOS)
+            locVacancy = locTot - (locFirmados + locAcordados); 
             setVal('kpi-loc-firmados', locFirmados);
             setVal('kpi-loc-acordados', locAcordados);
             setVal('kpi-loc-vacancy', locVacancy);
             
+            setVal('kpi-mod-tot', modTot);
             setVal('kpi-mod-firmados', modFirmados);
             setVal('kpi-mod-acordados', modAcordados);
             setVal('kpi-mod-vacancy', modVacancy);
             
+            // ACTUALIZACIÓN LÓGICA P&C 
             setVal('kpi-pc-ent-big', pcEnt + pcObs);
-            setVal('kpi-pc-obs', pcObs);
             setVal('kpi-pc-ejec', pcEjec);
             setVal('kpi-pc-term', pcTerm);
+            setVal('kpi-pc-obs', pcObs);
             
             setVal('kpi-obra-tot', obraLoc + obraMod);
             setVal('kpi-obra-loc', obraLoc);
             setVal('kpi-obra-mod', obraMod);
             setVal('kpi-aperturas', aperturas);
             
+            // ACTUALIZACIÓN LÓGICA HDL ENTREGAS
             setVal('kpi-hdl-tot', localesEntregados);
             setVal('kpi-hdl-ent-inf', entregasInformadas);
             setVal('kpi-hdl-ent-coord', entregasCoordinadas);
             
+            // ACTUALIZACIÓN KPIs SECCIÓN 3 (INCLUYENDO JOCA Y PRÓXIMOS)
             setVal('kpi-sin-proy', totSinProy);
             setVal('kpi-rev-obs', totRevObs);
+            setVal('kpi-proximos', totProximosObra);
             setVal('kpi-aprob-hdl', totAprobHdl);
             setVal('kpi-permiso', totPermiso);
+            setVal('kpi-joca', totJocaEntregado);
             setVal('kpi-enobra-hdl', totEnObraHdl);
+
+            setVal('tooltip-sin-proy', listSinProy.length > 0 ? listSinProy.join('\n') : 'Ninguno');
+            setVal('tooltip-rev-obs', listRevObs.length > 0 ? listRevObs.join('\n') : 'Ninguno');
+            setVal('tooltip-proximos', listProximosObra.length > 0 ? listProximosObra.join('\n') : 'Ninguno');
+            setVal('tooltip-aprob-hdl', listAprobHdl.length > 0 ? listAprobHdl.join('\n') : 'Ninguno');
+            setVal('tooltip-permiso', listPermiso.length > 0 ? listPermiso.join('\n') : 'Ninguno');
+            setVal('tooltip-joca', listJocaEntregado.length > 0 ? listJocaEntregado.join('\n') : 'Ninguno');
+            setVal('tooltip-enobra-hdl', listEnObraHdl.length > 0 ? listEnObraHdl.join('\n') : 'Ninguno');
             
             dataSec2.sort((a, b) => {
                 let dateA = parseDate(a.fecComp); let dateB = parseDate(b.fecComp);
@@ -1087,9 +1120,10 @@
 
             setVal('kpi-sec2-promedio', validPcCount > 0 ? (sumaPc / validPcCount).toFixed(1) + '%' : '0%');
             setVal('kpi-sec2-entregados', s2_entregados);
-            setVal('kpi-sec2-obs', s2_observados);
+            setVal('kpi-sec2-observados', s2_observados); 
             setVal('kpi-sec2-recepcionados', s2_recepcionados);
 
+            // SEC 5 ORDENAMIENTO 
             dataSec5.sort((a, b) => {
                 let dateA = parseDate(a.fecEnvioDoc); let dateB = parseDate(b.fecEnvioDoc);
                 if(!dateA && !dateB) return 0; if(!dateA) return 1; if(!dateB) return -1;
