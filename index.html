@@ -27,10 +27,12 @@
 
         .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
         
+        /* AJUSTES PARA ANCLAR EL MAPA PERFECTAMENTE */
         .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); line-height: 0; display: block; }
         .map-bg { width: 100%; height: auto; display: block; object-fit: contain; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } 
         
+        /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
         .store-polygon { pointer-events: auto; fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
         .status-vacancy { fill: rgba(248, 250, 252, 0.5); stroke: #e2e8f0; } 
         .status-pc-ejec { fill: #cbd5e1; stroke: #64748b; } 
@@ -41,9 +43,11 @@
         .store-polygon:hover { opacity: 0.9; stroke-width: 4px; stroke: #E3004F !important; }
         .store-polygon.selected { stroke: #E3004F !important; stroke-width: 5px !important; fill-opacity: 1; }
 
+        /* LEYENDA DEL MAPA HORIZONTAL Y TRANSPARENTE */
         .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
         .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 
+        /* TOOLTIP RÁPIDO */
         .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 12px; border-radius: 8px; color: white; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); box-shadow: 0 10px 25px rgba(0,0,0,0.5); min-width: 180px; display: flex; flex-direction: column; gap: 4px; }
         .tt-head { font-weight: 900; font-size: 13px; color: #F0B3F0; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #334155; line-height: 1; }
         .tt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; gap: 12px; line-height: 1; margin-bottom: 2px;}
@@ -170,7 +174,6 @@
         <div id="content-sec1" class="hidden mt-4">
             <div class="map-container">
                 
-                <!-- LEYENDA HORIZONTAL FLOTANTE Y TRANSPARENTE -->
                 <div class="map-legend-container">
                     <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs text-green-700 ml-1">0</span></div>
                     <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-slate-300"></span> En Implementación <span id="legend-implem" class="text-xs text-plum ml-1">0</span></div>
@@ -305,7 +308,8 @@
             <span id="count-sec3" class="counter-pill">0</span>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        <!-- CUADRÍCULA DE 8 COLUMNAS EXACTAS -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
             
             <div class="relative group p-2 bg-slate-50 border border-slate-200 rounded-lg flex flex-col justify-between cursor-default">
                 <p class="text-[9px] font-bold text-slate-400 uppercase text-center">Sin Proyecto</p>
@@ -318,7 +322,7 @@
             </div>
             
             <div class="relative group p-2 bg-orange-50 border border-orange-200 rounded-lg text-center cursor-default flex flex-col justify-center">
-                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev / Observado</p>
+                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Obs.</p>
                 <p class="text-xl font-black text-orange-600" id="kpi-rev-obs">0</p>
                 <div class="kpi-tooltip" id="tooltip-rev-obs">Ninguno</div>
             </div>
@@ -334,7 +338,7 @@
                 <p class="text-xl font-black text-emerald-600" id="kpi-permiso">0</p>
                 <div class="kpi-tooltip" id="tooltip-permiso">Ninguno</div>
             </div>
-            
+
             <div class="relative group p-2 bg-cyan-50 border border-cyan-200 rounded-lg text-center cursor-default flex flex-col justify-center">
                 <p class="text-[9px] font-bold text-cyan-700 uppercase leading-tight">Próximos a Obra</p>
                 <p class="text-xl font-black text-cyan-600" id="kpi-proximos">0</p>
@@ -347,10 +351,9 @@
                 <div class="kpi-tooltip" id="tooltip-loc-entregados-sec3">Ninguno</div>
             </div>
 
-            <!-- NUEVO KPI JOCA -->
-            <div class="relative group p-2 bg-purple-50 border border-purple-200 rounded-lg text-center cursor-default flex flex-col justify-center">
-                <p class="text-[9px] font-bold text-purple-700 uppercase leading-tight">JOCA Entregado</p>
-                <p class="text-xl font-black text-purple-600" id="kpi-joca">0</p>
+            <div class="relative group p-2 bg-indigo-50 border border-indigo-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-indigo-700 uppercase leading-tight">JOCA Entregado</p>
+                <p class="text-xl font-black text-indigo-600" id="kpi-joca">0</p>
                 <div class="kpi-tooltip" id="tooltip-joca">Ninguno</div>
             </div>
             
@@ -594,16 +597,23 @@
             });
         }
 
-        // BÚSQUEDA PRECISA (Evita confundir "Hora" con "Hora pactada")
+        // BÚSQUEDA PRECISA (ANTI-ERRORES Y ANTI-BOM)
         const getCol = (row, colName) => {
+            const search = colName.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             const keys = Object.keys(row);
-            const search = colName.trim().toLowerCase();
-            const searchNormalized = search.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
             
-            let foundKey = keys.find(k => k.trim().toLowerCase() === search);
+            // 1. Coincidencia Exacta (limpiando caracteres ocultos)
+            let foundKey = keys.find(k => {
+                let cleanK = k.replace(/^\uFEFF/, '').trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                return cleanK === search;
+            });
             
-            if(!foundKey) {
-                foundKey = keys.find(k => k.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === searchNormalized);
+            // 2. Coincidencia Flexible (Si la columna exacta no se encuentra, busca una que la contenga)
+            if (!foundKey) {
+                foundKey = keys.find(k => {
+                    let cleanK = k.replace(/^\uFEFF/, '').trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    return cleanK.includes(search);
+                });
             }
             return foundKey ? safeString(row[foundKey]) : '';
         };
@@ -705,9 +715,9 @@
         const getHdlBadge = (estHdl) => {
             let s = estHdl.toLowerCase();
             if(s.includes('sin proy')) return `<span class="badge bg-red-100 text-red-700 uppercase">${estHdl}</span>`;
-            if(s.includes('joca')) return `<span class="badge bg-purple-100 text-purple-700 uppercase">${estHdl}</span>`;
+            if(s.includes('joca')) return `<span class="badge bg-indigo-100 text-indigo-700 uppercase">${estHdl}</span>`;
             if(s.includes('revis') || s.includes('observ')) return `<span class="badge bg-orange-100 text-orange-700 uppercase">${estHdl}</span>`;
-            if(s.includes('aprobado')) return `<span class="badge bg-green-100 text-green-700 uppercase">${estHdl}</span>`;
+            if(s.includes('aprobado')) return `<span class="badge bg-blue-100 text-blue-700 uppercase">${estHdl}</span>`;
             if(s.includes('permiso')) return `<span class="badge bg-emerald-100 text-emerald-700 uppercase">${estHdl}</span>`;
             if(s.includes('obra') || s.includes('aperturado')) return `<span class="badge bg-plum text-white uppercase">${estHdl}</span>`;
             return `<span class="badge badge-neutral uppercase">${estHdl}</span>`;
@@ -797,7 +807,9 @@
                 let avancePc = parseFloat(getCol(row, 'Avance P&C')) || 0; 
                 let estHdl = getCol(row, 'Estatus general') || '-'; 
                 let estPc = getCol(row, 'Estatus') || '-';
-                let estatusFirma = getCol(row, 'estatus de firma').toLowerCase() || '';
+                
+                // LA NUEVA BÚSQUEDA DE ESTATUS DE FIRMA ES 100% FLEXIBLE 
+                let estatusFirma = getCol(row, 'estatus de firma').toLowerCase() || getCol(row, 'firma').toLowerCase() || '';
                 
                 let recepcionadoStatus = getCol(row, 'Entregado') || '-';
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
@@ -851,8 +863,9 @@
                 let alertaArq = getCol(row, 'Estatus Arquitectura');
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
                 
-                let colRevArq = getCol(row, '# de revision de arq') || getCol(row, 'revision de arq');
-                let colRevEsp = getCol(row, '# de revision de esp') || getCol(row, 'revision de esp') || getCol(row, '# de revision de especialidades') || getCol(row, '# de revision de arq de especialidades');
+                // BÚSQUEDA PRECISA PARA EVITAR CONFUSIONES CON "ESPECIALIDADES" SOLA
+                let colRevArq = getCol(row, 'revision de arq');
+                let colRevEsp = getCol(row, '# de revision de esp') || getCol(row, 'revision de esp');
                 
                 let numRevArq = parseInt(colRevArq) || 0;
                 let numRevEsp = parseInt(colRevEsp) || 0;
@@ -864,7 +877,7 @@
                     totSinProy++; listSinProy.push(marca); 
                     if(tipo.toLowerCase() === 'local') sinProyLoc++; else sinProyMod++;
                 }
-                else if (recepcionadoStatus === 'SÍ' || estHdlLower.includes('entregado')) { 
+                else if (recepcionadoStatus === 'SÍ' || estHdlLower.includes('entregado') || estPcLower.includes('entregado')) { 
                     totLocEntregadosSec3++; listLocEntregadosSec3.push(marca); 
                 }
                 else if (estHdlLower.includes('obra') || estHdlLower.includes('aperturado')) { 
@@ -901,7 +914,7 @@
 
                     sumaPc += avancePc; validPcCount++;
                     
-                    if(fecReal !== '' && fecReal !== '-') s2_entregados++; 
+                    if(fecReal !== '' && fecReal !== '-' && parseDate(fecReal) !== null) s2_entregados++; 
                     if(estPcLower.includes('observ')) s2_observados++; 
                     
                     let statusEvidencia1 = getCol(row, 'Evidencia Fotográfica') || '-';
@@ -915,8 +928,8 @@
 
                     dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
 
-                    // Corrección HORA
-                    let horaPactada = getCol(row, 'Hora') || getCol(row, 'Hora pactada') || getCol(row, 'Hora de entrega') || '-';
+                    // BÚSQUEDA PRECISA DE LA HORA PARA EVITAR "HORA PACTADA"
+                    let horaPactada = getCol(row, 'hora') || '-';
                     let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
                     let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || '-';
