@@ -308,8 +308,7 @@
             <span id="count-sec3" class="counter-pill">0</span>
         </div>
         
-        <!-- CUADRÍCULA DE 8 COLUMNAS EXACTAS -->
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
             
             <div class="relative group p-2 bg-slate-50 border border-slate-200 rounded-lg flex flex-col justify-between cursor-default">
                 <p class="text-[9px] font-bold text-slate-400 uppercase text-center">Sin Proyecto</p>
@@ -322,7 +321,7 @@
             </div>
             
             <div class="relative group p-2 bg-orange-50 border border-orange-200 rounded-lg text-center cursor-default flex flex-col justify-center">
-                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev. / Obs.</p>
+                <p class="text-[9px] font-bold text-orange-700 uppercase">En Rev / Observado</p>
                 <p class="text-xl font-black text-orange-600" id="kpi-rev-obs">0</p>
                 <div class="kpi-tooltip" id="tooltip-rev-obs">Ninguno</div>
             </div>
@@ -597,24 +596,17 @@
             });
         }
 
-        // BÚSQUEDA PRECISA (ANTI-ERRORES Y ANTI-BOM)
+        // BÚSQUEDA SÚPER LIMPIA Y EXACTA (Ignora espacios basura y el BOM de Sheets)
         const getCol = (row, colName) => {
             const search = colName.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             const keys = Object.keys(row);
             
-            // 1. Coincidencia Exacta (limpiando caracteres ocultos)
+            // Buscar coincidencia exacta tras limpiar
             let foundKey = keys.find(k => {
                 let cleanK = k.replace(/^\uFEFF/, '').trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 return cleanK === search;
             });
             
-            // 2. Coincidencia Flexible (Si la columna exacta no se encuentra, busca una que la contenga)
-            if (!foundKey) {
-                foundKey = keys.find(k => {
-                    let cleanK = k.replace(/^\uFEFF/, '').trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    return cleanK.includes(search);
-                });
-            }
             return foundKey ? safeString(row[foundKey]) : '';
         };
 
@@ -803,13 +795,14 @@
                 
                 let marca = getCol(row, 'Operador') || '-'; 
                 let tipo = getCol(row, 'Tipo') || 'Local';
-                let anioAper = getCol(row, 'Año Apertura') || '-';
+                let anioAper = getCol(row, 'Año de Apertura') || getCol(row, 'Año Apertura') || '-';
                 let avancePc = parseFloat(getCol(row, 'Avance P&C')) || 0; 
                 let estHdl = getCol(row, 'Estatus general') || '-'; 
                 let estPc = getCol(row, 'Estatus') || '-';
                 
-                // LA NUEVA BÚSQUEDA DE ESTATUS DE FIRMA ES 100% FLEXIBLE 
-                let estatusFirma = getCol(row, 'estatus de firma').toLowerCase() || getCol(row, 'firma').toLowerCase() || '';
+                // LEER FIRMA EXACTAMENTE DEL NOMBRE QUE ME DISTE (FLEXIBLE)
+                let estatusFirma = getCol(row, 'estatus de firma') || getCol(row, 'firma') || '';
+                estatusFirma = estatusFirma.toLowerCase();
                 
                 let recepcionadoStatus = getCol(row, 'Entregado') || '-';
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
@@ -863,9 +856,9 @@
                 let alertaArq = getCol(row, 'Estatus Arquitectura');
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
                 
-                // BÚSQUEDA PRECISA PARA EVITAR CONFUSIONES CON "ESPECIALIDADES" SOLA
-                let colRevArq = getCol(row, 'revision de arq');
-                let colRevEsp = getCol(row, '# de revision de esp') || getCol(row, 'revision de esp');
+                // BUSCAR NÚMEROS DE REVISIÓN USANDO VARIAS FORMAS POSIBLES
+                let colRevArq = getCol(row, '# de revision de arq') || getCol(row, 'revision de arq');
+                let colRevEsp = getCol(row, '# de revision de especialidades') || getCol(row, 'revision de esp');
                 
                 let numRevArq = parseInt(colRevArq) || 0;
                 let numRevEsp = parseInt(colRevEsp) || 0;
@@ -928,8 +921,8 @@
 
                     dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
 
-                    // BÚSQUEDA PRECISA DE LA HORA PARA EVITAR "HORA PACTADA"
-                    let horaPactada = getCol(row, 'hora') || '-';
+                    // Corrección HORA
+                    let horaPactada = getCol(row, 'Hora') || getCol(row, 'Hora pactada') || getCol(row, 'Hora de entrega') || '-';
                     let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
                     let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || '-';
