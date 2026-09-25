@@ -27,12 +27,10 @@
 
         .burbuja-seccion { background-color: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; margin-bottom: 24px; }
         
-        /* AJUSTES PARA ANCLAR EL MAPA PERFECTAMENTE */
         .map-container { position: relative; width: 100%; max-width: 1400px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; background: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); line-height: 0; display: block; }
         .map-bg { width: 100%; height: auto; display: block; object-fit: contain; }
         .svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; } 
         
-        /* COLORES INTELIGENTES DEL MAPA TEMÁTICO */
         .store-polygon { pointer-events: auto; fill: rgba(241, 245, 249, 0.3); stroke: rgba(0,0,0,0.05); stroke-width: 2px; cursor: pointer; transition: all 0.3s ease; }
         .status-vacancy { fill: rgba(248, 250, 252, 0.5); stroke: #e2e8f0; } 
         .status-pc-ejec { fill: #cbd5e1; stroke: #64748b; } 
@@ -43,11 +41,9 @@
         .store-polygon:hover { opacity: 0.9; stroke-width: 4px; stroke: #E3004F !important; }
         .store-polygon.selected { stroke: #E3004F !important; stroke-width: 5px !important; fill-opacity: 1; }
 
-        /* LEYENDA DEL MAPA HORIZONTAL Y TRANSPARENTE */
         .map-legend-container { position: absolute; top: 12px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; z-index: 20; pointer-events: none; padding: 0 10px; }
         .legend-pill { background: rgba(255, 255, 255, 0.9); padding: 4px 12px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05); color: #1e293b; backdrop-filter: blur(2px); display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; white-space: nowrap; }
 
-        /* TOOLTIP RÁPIDO */
         .fast-tooltip { position: absolute; background: rgba(15, 23, 42, 0.95); padding: 12px; border-radius: 8px; color: white; z-index: 50; display: none; pointer-events: none; border: 1px solid #334155; transform: translate(-50%, -100%); box-shadow: 0 10px 25px rgba(0,0,0,0.5); min-width: 180px; display: flex; flex-direction: column; gap: 4px; }
         .tt-head { font-weight: 900; font-size: 13px; color: #F0B3F0; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #334155; line-height: 1; }
         .tt-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; gap: 12px; line-height: 1; margin-bottom: 2px;}
@@ -83,9 +79,6 @@
         
         .toggle-btn { display: flex; justify-content: center; align-items: center; width: 100%; padding: 8px; margin-top: 12px; background-color: #f8fafc; border-radius: 8px; color: #4A154B; font-size: 0.75rem; font-weight: 700; cursor: pointer; border: 1px solid #e2e8f0; transition: all 0.2s; }
         .toggle-btn:hover { background-color: #e2e8f0; }
-        
-        .kpi-tooltip { display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 105%; background-color: rgba(30, 41, 59, 0.95); color: #fff; font-size: 0.65rem; padding: 8px 10px; border-radius: 6px; white-space: pre-wrap; z-index: 50; text-align: left; min-width: 120px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); line-height: 1.4; font-weight: normal; max-height: 200px; overflow-y: auto;}
-        .group:hover .kpi-tooltip { display: block; }
     </style>
 </head>
 <body class="p-2 md:p-6 max-w-[1600px] mx-auto">
@@ -177,6 +170,7 @@
         <div id="content-sec1" class="hidden mt-4">
             <div class="map-container">
                 
+                <!-- LEYENDA HORIZONTAL FLOTANTE Y TRANSPARENTE -->
                 <div class="map-legend-container">
                     <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Operando / Recep. <span id="legend-recep" class="text-xs text-green-700 ml-1">0</span></div>
                     <div class="legend-pill"><span class="w-2.5 h-2.5 rounded-full bg-plum border border-slate-300"></span> En Implementación <span id="legend-implem" class="text-xs text-plum ml-1">0</span></div>
@@ -330,7 +324,7 @@
             </div>
             
             <div class="relative group p-2 bg-blue-50 border border-blue-200 rounded-lg text-center cursor-default flex flex-col justify-center">
-                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobado</p>
+                <p class="text-[9px] font-bold text-blue-700 uppercase">Aprobados</p>
                 <p class="text-xl font-black text-blue-600" id="kpi-aprob-hdl">0</p>
                 <div class="kpi-tooltip" id="tooltip-aprob-hdl">Ninguno</div>
             </div>
@@ -347,10 +341,17 @@
                 <div class="kpi-tooltip" id="tooltip-proximos">Ninguno</div>
             </div>
             
-            <div class="relative group p-2 bg-purple-50 border border-purple-200 rounded-lg text-center cursor-default flex flex-col justify-center">
-                <p class="text-[9px] font-bold text-purple-700 uppercase leading-tight">Locales Entregados</p>
-                <p class="text-xl font-black text-purple-600" id="kpi-loc-entregados-sec3">0</p>
+            <div class="relative group p-2 bg-green-50 border border-green-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-green-700 uppercase leading-tight">Locales Entregados</p>
+                <p class="text-xl font-black text-green-600" id="kpi-loc-entregados-sec3">0</p>
                 <div class="kpi-tooltip" id="tooltip-loc-entregados-sec3">Ninguno</div>
+            </div>
+
+            <!-- NUEVO KPI JOCA -->
+            <div class="relative group p-2 bg-purple-50 border border-purple-200 rounded-lg text-center cursor-default flex flex-col justify-center">
+                <p class="text-[9px] font-bold text-purple-700 uppercase leading-tight">JOCA Entregado</p>
+                <p class="text-xl font-black text-purple-600" id="kpi-joca">0</p>
+                <div class="kpi-tooltip" id="tooltip-joca">Ninguno</div>
             </div>
             
             <div class="relative group p-2 bg-plum text-white rounded-lg shadow-sm text-center transform hover:scale-105 transition cursor-default flex flex-col justify-center">
@@ -593,12 +594,16 @@
             });
         }
 
-        // FUNCIÓN ANTI-ERRORES PARA BUSCAR COLUMNAS FLEXIBLES
+        // BÚSQUEDA PRECISA (Evita confundir "Hora" con "Hora pactada")
         const getCol = (row, colName) => {
             const keys = Object.keys(row);
-            let foundKey = keys.find(k => k.trim().toLowerCase() === colName.trim().toLowerCase());
-            if (!foundKey) {
-                foundKey = keys.find(k => k.trim().toLowerCase().includes(colName.trim().toLowerCase()));
+            const search = colName.trim().toLowerCase();
+            const searchNormalized = search.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+            
+            let foundKey = keys.find(k => k.trim().toLowerCase() === search);
+            
+            if(!foundKey) {
+                foundKey = keys.find(k => k.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === searchNormalized);
             }
             return foundKey ? safeString(row[foundKey]) : '';
         };
@@ -774,8 +779,8 @@
             let dataSec2 = [];
 
             let totSinProy = 0, sinProyLoc = 0, sinProyMod = 0;
-            let totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totProximosObra = 0, totLocEntregadosSec3 = 0, totEnObraHdl = 0;
-            let listSinProy = [], listRevObs = [], listAprobHdl = [], listPermiso = [], listProximosObra = [], listLocEntregadosSec3 = [], listEnObraHdl = [];
+            let totRevObs = 0, totAprobHdl = 0, totPermiso = 0, totProximosObra = 0, totLocEntregadosSec3 = 0, totEnObraHdl = 0, totJocaEntregado = 0;
+            let listSinProy = [], listRevObs = [], listAprobHdl = [], listPermiso = [], listProximosObra = [], listLocEntregadosSec3 = [], listEnObraHdl = [], listJocaEntregado = [];
 
             let kpiMapOperando = 0, kpiMapImplem = 0, kpiMapPcTerm = 0, kpiMapPcEjec = 0, kpiMapVacancy = 0;
             let dataSec5 = [];
@@ -792,13 +797,13 @@
                 let avancePc = parseFloat(getCol(row, 'Avance P&C')) || 0; 
                 let estHdl = getCol(row, 'Estatus general') || '-'; 
                 let estPc = getCol(row, 'Estatus') || '-';
-                let estatusFirma = getCol(row, 'firma').toLowerCase() || '';
+                let estatusFirma = getCol(row, 'estatus de firma').toLowerCase() || '';
                 
                 let recepcionadoStatus = getCol(row, 'Entregado') || '-';
                 if(recepcionadoStatus.toLowerCase() === 'si' || recepcionadoStatus.toLowerCase() === 'sí') recepcionadoStatus = 'SÍ';
                 else if(recepcionadoStatus !== '-') recepcionadoStatus = 'NO';
                 
-                let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC') || getCol(row, 'Fecha pactada');
+                let fechaPactadaPopup = getCol(row, 'Fecha pactada de entrega de local HDL > SSCC') || getCol(row, 'Fecha pactada') || '-';
                 let isVacancy = marca.toLowerCase().includes('vacancy') || marca.toLowerCase().includes('sin locatario') || marca === '-';
                 
                 let estHdlLower = estHdl.toLowerCase();
@@ -815,7 +820,10 @@
                 storeData[id] = { name: marca, pc: avancePc, hdl: estHdl, fechaPactada: printDate(fechaPactadaPopup), recepcionado: recepcionadoStatus, mapClass: mapStatusClass };
                 storeData[marca.toLowerCase()] = storeData[id]; 
                 
-                // LÓGICA DE FIRMAS (Flexible)
+                if(tipo.toLowerCase() === 'local' && !isVacancy) locContrato++; 
+                else if (tipo.toLowerCase() !== 'local') { modTot++; if(isVacancy) modVacancy++; else modNombre++; }
+
+                // LÓGICA DE FIRMAS 
                 if(tipo.toLowerCase() === 'local') {
                     if(!isVacancy) {
                         if(estatusFirma.includes('firmad')) locFirmados++;
@@ -842,8 +850,12 @@
 
                 let alertaArq = getCol(row, 'Estatus Arquitectura');
                 let alertaEsp = getCol(row, 'Estatus Especialidades');
-                let numRevArq = parseInt(getCol(row, 'revision de arq')) || 0;
-                let numRevEsp = parseInt(getCol(row, 'revision de esp')) || 0;
+                
+                let colRevArq = getCol(row, '# de revision de arq') || getCol(row, 'revision de arq');
+                let colRevEsp = getCol(row, '# de revision de esp') || getCol(row, 'revision de esp') || getCol(row, '# de revision de especialidades') || getCol(row, '# de revision de arq de especialidades');
+                
+                let numRevArq = parseInt(colRevArq) || 0;
+                let numRevEsp = parseInt(colRevEsp) || 0;
 
                 // LÓGICA ESTRICTA DE ESTADOS HDL (SECCIÓN 3)
                 let isProximo = (numRevArq >= 3 || alertaArq.toLowerCase().includes('aprobado')) && (numRevEsp >= 3 || alertaEsp.toLowerCase().includes('aprobado'));
@@ -859,10 +871,13 @@
                     totEnObraHdl++; listEnObraHdl.push(marca); 
                     if(tipo.toLowerCase() === 'local') obraLoc++; else obraMod++;
                 }
+                else if (estHdlLower.includes('joca')) { 
+                    totJocaEntregado++; listJocaEntregado.push(marca); 
+                }
                 else if (estHdlLower.includes('permiso')) { 
                     totPermiso++; listPermiso.push(marca); 
                 }
-                else if (isProximo) { 
+                else if (isProximo && (estHdlLower.includes('revis') || estHdlLower.includes('observ'))) { 
                     totProximosObra++; listProximosObra.push(marca); 
                 }
                 else if (estHdlLower.includes('aprobado')) { 
@@ -871,16 +886,16 @@
                 else if (estHdlLower.includes('revis') || estHdlLower.includes('observ')) { 
                     totRevObs++; listRevObs.push(marca); 
                 }
+                
                 if(estHdlLower.includes('aperturado')) aperturas++; 
-
 
                 let pctArq = 0, pctEsp = 0;
                 if (alertaArq.toLowerCase().includes('aprobado')) { pctArq = 100; } else if (numRevArq >= 4) { pctArq = 90; } else { pctArq = numRevArq * 25; }
                 if (alertaEsp.toLowerCase().includes('aprobado')) { pctEsp = 100; } else if (numRevEsp >= 4) { pctEsp = 90; } else { pctEsp = numRevEsp * 25; }
 
                 if(!isVacancy) {
-                    let fecComp = getCol(row, 'Fecha compromiso de entrega'); 
-                    let fecReal = getCol(row, 'Real a Operaciones');
+                    let fecComp = getCol(row, 'Fecha compromiso de entrega de local') || getCol(row, 'Fecha compromiso de entrega') || '-'; 
+                    let fecReal = getCol(row, 'Fecha de entrega Real a Operaciones') || getCol(row, 'Real a Operaciones') || '-';
                     let fecCompLevObs = getCol(row, 'Fecha compromiso de Lev. Observ.');
                     let fecRealLevObs = getCol(row, 'Fecha Real de levantamiento de obs.');
 
@@ -901,7 +916,7 @@
                     dataSec2.push({ marca, avancePc, estPcLower, estPc, fecComp, fecReal, fecCompLevObs, fecRealLevObs, btnEvidencia, btnActaFinal });
 
                     // Corrección HORA
-                    let horaPactada = getCol(row, 'Hora') || '-';
+                    let horaPactada = getCol(row, 'Hora') || getCol(row, 'Hora pactada') || getCol(row, 'Hora de entrega') || '-';
                     let fecInicioObra = getCol(row, 'Fecha inicio de obra según SSCC') || '-';
                     
                     let statusCorreoEnt = getCol(row, 'Correo de coordinación de entrega de local HDL > SSCC') || '-';
@@ -1033,7 +1048,7 @@
                 }
             });
 
-            // LOGICA RÁPIDA DE TOOLTIP SOBRE EL MAPA (REPARADO Y BLINDADO)
+            // LOGICA RÁPIDA DE TOOLTIP SOBRE EL MAPA
             const mapContainer = document.querySelector('.map-container');
             const fastTooltip = document.getElementById('fast-tooltip');
             
@@ -1098,6 +1113,7 @@
             setVal('kpi-aprob-hdl', totAprobHdl);
             setVal('kpi-permiso', totPermiso);
             setVal('kpi-proximos', totProximosObra);
+            setVal('kpi-joca', totJocaEntregado);
             setVal('kpi-loc-entregados-sec3', totLocEntregadosSec3);
             setVal('kpi-enobra-hdl', totEnObraHdl);
 
@@ -1106,6 +1122,7 @@
             setVal('tooltip-aprob-hdl', listAprobHdl.length > 0 ? listAprobHdl.join('\n') : 'Ninguno');
             setVal('tooltip-permiso', listPermiso.length > 0 ? listPermiso.join('\n') : 'Ninguno');
             setVal('tooltip-proximos', listProximosObra.length > 0 ? listProximosObra.join('\n') : 'Ninguno');
+            setVal('tooltip-joca', listJocaEntregado.length > 0 ? listJocaEntregado.join('\n') : 'Ninguno');
             setVal('tooltip-loc-entregados-sec3', listLocEntregadosSec3.length > 0 ? listLocEntregadosSec3.join('\n') : 'Ninguno');
             setVal('tooltip-enobra-hdl', listEnObraHdl.length > 0 ? listEnObraHdl.join('\n') : 'Ninguno');
             
